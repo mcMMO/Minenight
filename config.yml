@@ -1,0 +1,12 @@
+# Logging levels for various mechanics
+# Levels are generally 1, 2, or 3 where:
+#   1 is sparse logging
+#   2 is verbose logging
+#   3 is excessive logging
+logging:
+  #
+  # Messages during initialization
+  setup: 0
+  #
+  # Messages for Zone management
+  zone: 0
