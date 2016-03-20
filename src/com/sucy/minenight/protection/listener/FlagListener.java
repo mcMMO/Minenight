@@ -30,7 +30,6 @@ import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
 import com.sucy.minenight.util.ListenerUtil;
-import net.minecraft.server.v1_9_R1.PlayerInventory;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
