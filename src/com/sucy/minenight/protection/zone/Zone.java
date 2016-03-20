@@ -47,7 +47,7 @@ public class Zone
         MAX_Y = "ymax",
         WORLD = "world",
         FLAGS = "flag",
-        SPAWNS = "spawn";
+        SPAWNS = "prevent";
 
     private HashSet<Integer> chunks;
     private HashSet<String> flags;
