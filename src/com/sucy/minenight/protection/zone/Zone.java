@@ -30,7 +30,9 @@ import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,19 +42,27 @@ import java.util.List;
 public class Zone
 {
     private static final String
-        BORDER_1 = "border1",
-        BORDER_2 = "border2",
-        Z_INDEX = "zIndex",
+        Z_INDEX = "priority",
+        MIN_Y = "ymin",
+        MAX_Y = "ymax",
         WORLD = "world",
-        FLAGS = "flag";
+        FLAGS = "flag",
+        SPAWNS = "spawn";
 
     private HashSet<Integer> chunks;
     private HashSet<String> flags;
+    private HashSet<String> spawns;
     private String name;
+    private String world;
     private int zIndex;
+    private int minY;
+    private int maxY;
 
-    protected Location min;
-    protected Location max;
+    protected ZonePoint min;
+    protected ZonePoint max;
+
+    private ArrayList<ZonePoint> points;
+    private ArrayList<Double> collision;
 
     /**
      * Loads zone data from the config data
@@ -65,11 +75,10 @@ public class Zone
         chunks = new HashSet<Integer>();
 
         // Load basic data
-        World world = Bukkit.getWorld(data.getString(WORLD));
-        min = loadLoc(world, data.getSection(BORDER_1));
-        max = loadLoc(world, data.getSection(BORDER_2));
+        world = data.getString(WORLD);
         zIndex = data.getInt(Z_INDEX);
-        this.validate();
+        minY = data.getInt(MIN_Y);
+        maxY = data.getInt(MAX_Y);
 
         // Load flag data
         List<String> list = data.getList(FLAGS);
@@ -77,6 +86,40 @@ public class Zone
         for (String key : list)
         {
             flags.add(key.toUpperCase().replace(" ", "_"));
+        }
+
+        // Load spawn data
+        list = data.getList(FLAGS);
+        spawns = new HashSet<String>();
+        for (String key : list)
+        {
+            spawns.add(key.toUpperCase().replace(" ", "_"));
+        }
+
+        // Load coordinates
+        min = new ZonePoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        max = new ZonePoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        int i = 1;
+        points = new ArrayList<ZonePoint>();
+        while (data.isSection("" + i))
+        {
+            DataSection pointData = data.getSection("" + i);
+            ZonePoint point = new ZonePoint(pointData.getInt("x"), pointData.getInt("z"));
+            min.x = Math.min(min.x, point.x);
+            min.z = Math.min(min.z, point.z);
+            max.x = Math.max(max.x, point.x);
+            max.z = Math.max(max.z, point.z);
+            points.add(point);
+        }
+
+        // Pre-calculate some values for bounds checking
+        int j;
+        collision = new ArrayList<Double>();
+        for (i = 0, j = points.size() - 1; i < points.size(); j = i++)
+        {
+            ZonePoint p1 = points.get(i);
+            ZonePoint p2 = points.get(j);
+            collision.add((double)(p2.x - p1.x) / (p2.z - p1.z));
         }
     }
 
@@ -89,15 +132,26 @@ public class Zone
      */
     public boolean inChunk(int x, int z)
     {
-        int minX = min.getBlockX() >> 4;
-        int maxX = max.getBlockX() >> 4;
-        int minZ = min.getBlockZ() >> 4;
-        int maxZ = max.getBlockZ() >> 4;
+        int minX = min.x >> 4;
+        int maxX = max.x >> 4;
+        int minZ = min.z >> 4;
+        int maxZ = max.z >> 4;
 
         return x >= minX
             && x <= maxX
             && z >= minZ
             && z <= maxZ;
+    }
+
+    /**
+     * Checks whether or not the entity can spawn in the zone
+     *
+     * @param entity entity to check
+     * @return true if can spawn, false otherwise
+     */
+    public boolean canSpawn(Entity entity)
+    {
+        return spawns.contains(entity.getType().name());
     }
 
     /**
@@ -137,7 +191,7 @@ public class Zone
      */
     public String getWorldName()
     {
-        return min.getWorld().getName();
+        return world;
     }
 
     /**
@@ -148,17 +202,18 @@ public class Zone
      */
     public boolean contains(Location loc)
     {
-        int x = loc.getBlockX();
-        int y = loc.getBlockY();
-        int z = loc.getBlockZ();
+        if (loc.getY() < minY || loc.getY() > maxY)
+            return false;
 
-        return
-            x >= min.getX()
-            && x <= max.getX()
-            && y >= min.getY()
-            && y <= max.getY()
-            && z >= min.getZ()
-            && z <= max.getZ();
+        boolean contained = false;
+        int num = points.size();
+        for (int i = 0, j = num - 1; i < num; j = i++)
+        {
+            if (((points.get(i).z > loc.getZ()) != (points.get(j).z > loc.getZ()))
+                && (loc.getX() < (loc.getZ() - points.get(i).z) * collision.get(i) + points.get(i).x))
+                contained = !contained;
+        }
+        return contained;
     }
 
     /**
@@ -180,48 +235,6 @@ public class Zone
     public int getZIndex()
     {
         return zIndex;
-    }
-
-    /**
-     * Validates the min/max order of the bounds
-     */
-    private void validate() {
-        // Make sure bounds follow the min/max order
-        if (min.getX() > max.getX())
-        {
-            double x = min.getX();
-            min.setX(max.getX());
-            max.setX(x);
-        }
-        if (min.getY() > max.getY())
-        {
-            double y = min.getY();
-            min.setY(max.getY());
-            max.setY(y);
-        }
-        if (min.getZ() > max.getZ())
-        {
-            double z = min.getZ();
-            min.setZ(max.getZ());
-            max.setZ(z);
-        }
-    }
-
-    /**
-     * Loads a location from the config data
-     *
-     * @param world   world to use
-     * @param locData location data section
-     * @return parsed location
-     */
-    private Location loadLoc(World world, DataSection locData)
-    {
-        return new Location(
-            world,
-            locData.getInt("x"),
-            locData.getInt("y"),
-            locData.getInt("z")
-        );
     }
 
     /**

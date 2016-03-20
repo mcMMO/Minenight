@@ -97,16 +97,17 @@ public class ZoneManager
         int count = 0;
         Logger.log(LogType.SETUP, 1, "Loading zones...");
 
-        CommentedConfig file = Minenight.getConfig("zones");
+        CommentedConfig file = Minenight.getConfig("protection");
         file.saveDefaultConfig();
         DataSection config = file.getConfig();
 
         // Load in each zone, using base keys as the zone names
-        for (String key : config.keys())
+        DataSection zonesData = config.getSection("zones");
+        for (String key : zonesData.keys())
         {
             try
             {
-                Zone zone = new Zone(key, config.getSection(key));
+                Zone zone = new Zone(key, zonesData.getSection(key));
 
                 // Create the list for the world if not done so already
                 if (!active.containsKey(zone.getWorldName()))

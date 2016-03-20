@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.protection.zone.ZoneFlag
+ * com.sucy.minenight.protection.zone.ZonePoint
  *
  * The MIT License (MIT)
  *
@@ -26,29 +26,23 @@
  */
 package com.sucy.minenight.protection.zone;
 
-public enum ZoneFlag
+/**
+ * A simple X/Z coordinate pair used for zones
+ */
+public class ZonePoint
 {
-    // Player vs player combat
-    PVP,
+    public int x;
+    public int z;
 
-    // Players taking damage
-    GOD,
-
-    // Block placement/breaking
-    PROTECT,
-
-    // Dropping items
-    DROP,
-
-    // Moving items in inventory
-    MODIFY,
-
-    // Dealing damage to players
-    HURT,
-
-    // Healing players
-    HEAL,
-
-    // Pushing players out of region
-    RESTRICT
+    /**
+     * Initializes a point with the given coordinates
+     *
+     * @param x x coordinate
+     * @param z z coordinate
+     */
+    public ZonePoint(int x, int z)
+    {
+        this.x = x;
+        this.z = z;
+    }
 }

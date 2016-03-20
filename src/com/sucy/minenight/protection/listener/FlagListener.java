@@ -50,23 +50,16 @@ public class FlagListener implements Listener
      * @param event event details
      */
     @EventHandler
-    public void onMonsterSpawn(EntitySpawnEvent event)
+    public void onSpawn(EntitySpawnEvent event)
     {
-        // Handle blocking monsters
-        if ((event.getEntity() instanceof Monster
-             || event.getEntity() instanceof Slime
-             || event.getEntity() instanceof Ghast)
-            && !ZoneManager.isProhibited(event.getLocation(), ZoneFlag.MONSTER))
+        // Handle blocking spawns
+        if (event.getEntity() instanceof LivingEntity || event.getEntityType() == EntityType.EXPERIENCE_ORB)
         {
-            event.setCancelled(true);
-        }
-
-        // Handle blocking animals
-        if ((event.getEntity() instanceof Animals
-             || event.getEntity() instanceof Ambient)
-            && !ZoneManager.isProhibited(event.getLocation(), ZoneFlag.ANIMAL))
-        {
-            event.setCancelled(true);
+            Zone zone = ZoneManager.getZone(event.getLocation());
+            if (zone != null && !zone.canSpawn(event.getEntity()))
+            {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -119,7 +112,7 @@ public class FlagListener implements Listener
         if (!(event.getEntity() instanceof LivingEntity))
         {
             Player player = ListenerUtil.getPlayerDamager(event);
-            if (ZoneManager.isProhibited(event.getEntity().getLocation(), ZoneFlag.BLOCK, player))
+            if (ZoneManager.isProhibited(event.getEntity().getLocation(), ZoneFlag.PROTECT, player))
                 event.setCancelled(true);
         }
     }
@@ -132,7 +125,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event)
     {
-        if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.BLOCK, event.getPlayer()))
+        if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, event.getPlayer()))
             event.setCancelled(true);
     }
 
@@ -144,7 +137,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onPlaceBlock(BlockPlaceEvent event)
     {
-        if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.BLOCK, event.getPlayer()))
+        if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, event.getPlayer()))
             event.setCancelled(true);
     }
 
@@ -158,7 +151,7 @@ public class FlagListener implements Listener
     {
         if (event.getEntity() instanceof Player)
         {
-            if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.BLOCK, (Player)event.getEntity()))
+            if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, (Player)event.getEntity()))
                 event.setCancelled(true);
         }
     }
