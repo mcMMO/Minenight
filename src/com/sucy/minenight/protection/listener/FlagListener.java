@@ -30,6 +30,7 @@ import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
 import com.sucy.minenight.util.ListenerUtil;
+import net.minecraft.server.v1_9_R1.PlayerInventory;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,6 +39,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 
 /**
  * Handles applying zone flags to events happening in said zones
@@ -60,6 +63,34 @@ public class FlagListener implements Listener
             {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    /**
+     * Handles DROP flag, stopping players from dropping items in prohibited zones
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event)
+    {
+        if (ZoneManager.isProhibited(event.getPlayer().getLocation(), ZoneFlag.DROP, event.getPlayer()))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Handles MODIFY flag, stopping players from modifying their inventory
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onModify(InventoryClickEvent event)
+    {
+        if (ZoneManager.isProhibited(event.getWhoClicked().getLocation(), ZoneFlag.MODIFY, (Player)event.getWhoClicked()))
+        {
+            event.setCancelled(true);
         }
     }
 
