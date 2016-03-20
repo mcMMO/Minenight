@@ -151,7 +151,7 @@ public class Zone
      */
     public boolean canSpawn(Entity entity)
     {
-        return spawns.contains(entity.getType().name());
+        return !spawns.contains(entity.getType().name());
     }
 
     /**
