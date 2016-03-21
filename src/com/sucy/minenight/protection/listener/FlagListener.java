@@ -26,6 +26,9 @@
  */
 package com.sucy.minenight.protection.listener;
 
+import com.sucy.minenight.protection.Protection;
+import com.sucy.minenight.protection.event.PlayerEnterZoneEvent;
+import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
 import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
@@ -48,8 +51,18 @@ import org.bukkit.event.player.PlayerDropItemEvent;
  */
 public class FlagListener implements Listener
 {
+    private Protection protection;
+
     /**
-     * Handles MONSTER and ANIMAL zone flags, blocking spawns when disabled.
+     * @param protection reference to management class
+     */
+    public FlagListener(Protection protection)
+    {
+        this.protection = protection;
+    }
+
+    /**
+     * Handles prevented spawns in zones
      *
      * @param event event details
      */
@@ -65,6 +78,38 @@ public class FlagListener implements Listener
                 event.setCancelled(true);
             }
         }
+    }
+
+    /**
+     * Handles when a player enters a zone
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onEnter(PlayerEnterZoneEvent event)
+    {
+        Zone zone = event.getZone();
+
+        if (zone.hasFlag(ZoneFlag.HEAL))
+            protection.getHealEffect().getPlayers().add(event.getPlayer());
+        if (zone.hasFlag(ZoneFlag.HURT))
+            protection.getHurtEffect().getPlayers().add(event.getPlayer());
+    }
+
+    /**
+     * Handles when a player leaves a zone
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onLeave(PlayerLeaveZoneEvent event)
+    {
+        Zone zone = event.getZone();
+
+        if (zone.hasFlag(ZoneFlag.HEAL))
+            protection.getHealEffect().getPlayers().remove(event.getPlayer());
+        if (zone.hasFlag(ZoneFlag.HURT))
+            protection.getHurtEffect().getPlayers().remove(event.getPlayer());
     }
 
     /**

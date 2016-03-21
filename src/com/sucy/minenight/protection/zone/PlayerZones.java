@@ -26,8 +26,8 @@
  */
 package com.sucy.minenight.protection.zone;
 
-import com.sucy.minenight.protection.event.PlayerZoneEnterEvent;
-import com.sucy.minenight.protection.event.PlayerZoneLeaveEvent;
+import com.sucy.minenight.protection.event.PlayerEnterZoneEvent;
+import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
 import com.sucy.minenight.util.log.LogType;
 import com.sucy.minenight.util.log.Logger;
 import org.bukkit.Location;
@@ -44,7 +44,6 @@ public class PlayerZones
     private Zone     top;
     private Location lastLoc;
     private Location tempLoc;
-    private Player   player;
 
     /**
      * Holds a reference to the player for handling
@@ -52,11 +51,10 @@ public class PlayerZones
      */
     public PlayerZones(Player player)
     {
-        this.player = player;
         lastLoc = player.getLocation().add(-10, -10, -10);
         tempLoc = player.getLocation();
 
-        update();
+        update(player);
     }
 
     public Zone getTop()
@@ -65,10 +63,23 @@ public class PlayerZones
     }
 
     /**
-     * Updates the zone sets, triggering events if necessary
+     * Updates the player's zones if necessary
+     *
+     * @param player player reference
      */
-    public void update()
+    public void update(Player player)
     {
+        // When dead, leave all zones
+        if (player.isDead())
+        {
+            for (Zone zone : zones)
+            {
+                PlayerLeaveZoneEvent.invoke(player, zone);
+            }
+            zones.clear();
+            return;
+        }
+
         // Ignore update if locations match
         if (lastLoc != null)
         {
@@ -96,7 +107,7 @@ public class PlayerZones
             // Entering a zone
             if (k == zones.size())
             {
-                PlayerZoneEnterEvent.invoke(player, zone);
+                PlayerEnterZoneEvent.invoke(player, zone);
                 Logger.log(LogType.ZONE, 1, player.getName() + " entered " + zone.getName());
             }
 
@@ -105,7 +116,7 @@ public class PlayerZones
             {
                 for (; j < k; j++)
                 {
-                    PlayerZoneLeaveEvent.invoke(player, zones.get(j));
+                    PlayerLeaveZoneEvent.invoke(player, zones.get(j));
                     Logger.log(LogType.ZONE, 1, player.getName() + " left " + zones.get(j));
                 }
                 j++;
@@ -117,7 +128,7 @@ public class PlayerZones
         // Left remaining zones
         for (; j < zones.size(); j++)
         {
-            PlayerZoneLeaveEvent.invoke(player, zones.get(j));
+            PlayerLeaveZoneEvent.invoke(player, zones.get(j));
             Logger.log(LogType.ZONE, 1, player.getName() + " left " + zones.get(j));
         }
 

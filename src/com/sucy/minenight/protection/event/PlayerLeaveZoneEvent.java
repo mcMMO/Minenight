@@ -33,26 +33,26 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * Event for a player entering a new zone
+ * Event for a player leaving a new zone
  */
-public class PlayerZoneEnterEvent extends Event
+public class PlayerLeaveZoneEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
     private Player player;
     private Zone   zone;
 
     /**
-     * @param player player entering the zone
-     * @param zone   zone being entered
+     * @param player player leaving the zone
+     * @param zone   zone being left
      */
-    public PlayerZoneEnterEvent(Player player, Zone zone)
+    public PlayerLeaveZoneEvent(Player player, Zone zone)
     {
         this.player = player;
         this.zone = zone;
     }
 
     /**
-     * @return the player that entered the zone
+     * @return the player that left the zone
      */
     public Player getPlayer()
     {
@@ -60,7 +60,7 @@ public class PlayerZoneEnterEvent extends Event
     }
 
     /**
-     * @return the zone that was entered
+     * @return the zone that was left
      */
     public Zone getZone()
     {
@@ -87,11 +87,11 @@ public class PlayerZoneEnterEvent extends Event
     /**
      * Launches an event using the given details
      *
-     * @param player player entering the zone
-     * @param zone   zone being entered
+     * @param player player leaving the zone
+     * @param zone   zone being left
      */
     public static void invoke(Player player, Zone zone)
     {
-        Bukkit.getPluginManager().callEvent(new PlayerZoneEnterEvent(player, zone));
+        Bukkit.getPluginManager().callEvent(new PlayerLeaveZoneEvent(player, zone));
     }
 }

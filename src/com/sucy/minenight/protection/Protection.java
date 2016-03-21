@@ -27,24 +27,91 @@
 package com.sucy.minenight.protection;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.protection.effect.EffectTimer;
+import com.sucy.minenight.protection.effect.FlagTask;
 import com.sucy.minenight.protection.listener.ChunkListener;
 import com.sucy.minenight.protection.listener.FlagListener;
 import com.sucy.minenight.protection.listener.MovementListener;
+import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
+import com.sucy.minenight.util.config.CommentedConfig;
+import com.sucy.minenight.util.config.parse.DataSection;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Handles zones and the flags inside of them
  */
 public class Protection
 {
+    private static HashMap<ZoneFlag, List<String>> permissions = new HashMap<ZoneFlag, List<String>>();
+
+    private static final String ZONES  = "zones";
+    private static final String FLAGS  = "flags";
+    private static final String PERMS  = "permissions";
+    private static final String TICKS  = "ticks";
+    private static final String AMOUNT = "amount";
+
+    private FlagTask    flagTask;
+    private EffectTimer hurtEffect;
+    private EffectTimer healEffect;
+
+    /**
+     * Checks if the player has the needed
+     * permission to bypass the flag effects
+     *
+     * @param player player to check for
+     * @param flag   flag to check for
+     * @return true if has bypass perms, false otherwise
+     */
+    public static boolean hasPermissions(Player player, ZoneFlag flag)
+    {
+        List<String> perms = permissions.get(flag);
+        if (perms == null)
+            return true;
+
+        for (String perm : perms)
+            if (player.hasPermission(perm))
+                return true;
+
+        return false;
+    }
+
+    /**
+     * @return flag effect for hurting players
+     */
+    public EffectTimer getHurtEffect()
+    {
+        return hurtEffect;
+    }
+
+    /**
+     * @return flag effect for healing players
+     */
+    public EffectTimer getHealEffect()
+    {
+        return healEffect;
+    }
+
     /**
      * Sets up the plugin, loading config data and setting up listeners
      */
     public void setup()
     {
-        ZoneManager.init();
+        CommentedConfig file = Minenight.getConfig("protection");
+        file.saveDefaultConfig();
+        DataSection config = file.getConfig();
 
-        Minenight.registerListener(new FlagListener());
+        loadFlagSettings(config.getSection(FLAGS));
+        ZoneManager.init(config.getSection(ZONES));
+
+        flagTask = new FlagTask(this);
+
+        Minenight.registerListener(new FlagListener(this));
         Minenight.registerListener(new ChunkListener());
         Minenight.registerListener(new MovementListener());
     }
@@ -54,6 +121,31 @@ public class Protection
      */
     public void cleanup()
     {
+        permissions.clear();
+        flagTask.cancel();
+
         ZoneManager.cleanup();
+    }
+
+    /**
+     * Loads settings from the flag section of the config
+     */
+    private void loadFlagSettings(DataSection data)
+    {
+        DataSection protect = data.getSection("protect");
+        permissions.put(ZoneFlag.PROTECT, protect.getList(PERMS));
+
+        DataSection restrict = data.getSection("restrict");
+        permissions.put(ZoneFlag.RESTRICT, restrict.getList(PERMS));
+
+        DataSection heal = data.getSection("heal");
+        int ticks = heal.getInt(TICKS);
+        int amount = heal.getInt(AMOUNT);
+        healEffect = new EffectTimer(ticks, amount);
+
+        DataSection hurt = data.getSection("hurt");
+        ticks = hurt.getInt(TICKS);
+        amount = hurt.getInt(AMOUNT);
+        hurtEffect = new EffectTimer(ticks, amount);
     }
 }

@@ -28,7 +28,9 @@ package com.sucy.minenight.protection.listener;
 
 import com.sucy.minenight.protection.zone.ZoneManager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 /**
@@ -41,10 +43,11 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR)
     public void onLogin(PlayerLoginEvent event)
     {
-        ZoneManager.init(event.getPlayer());
+        if (event.getResult() == PlayerLoginEvent.Result.ALLOWED)
+            ZoneManager.init(event.getPlayer());
     }
 
     /**
@@ -52,10 +55,32 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event)
     {
         ZoneManager.clear(event.getPlayer());
+    }
+
+    /**
+     * Updates player zones on death
+     *
+     * @param event event details
+     */
+    @EventHandler (priority = EventPriority.MONITOR)
+    public void onDeath(PlayerDeathEvent event)
+    {
+        ZoneManager.update(event.getEntity());
+    }
+
+    /**
+     * Update player zones on respawn
+     *
+     * @param event event details
+     */
+    @EventHandler (priority = EventPriority.MONITOR)
+    public void onRespawn(PlayerRespawnEvent event)
+    {
+        ZoneManager.update(event.getPlayer());
     }
 
     /**
@@ -63,7 +88,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event)
     {
         ZoneManager.update(event.getPlayer());
@@ -74,7 +99,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR)
     public void onChangeWorld(PlayerChangedWorldEvent event)
     {
         ZoneManager.update(event.getPlayer());
@@ -85,7 +110,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event)
     {
         ZoneManager.update(event.getPlayer());

@@ -27,6 +27,7 @@
 package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.LogType;
@@ -81,7 +82,7 @@ public class ZoneManager
      */
     public static void update(Player player)
     {
-        playerZones.get(player.getUniqueId()).update();
+        playerZones.get(player.getUniqueId()).update(player);
     }
 
     /**
@@ -99,12 +100,12 @@ public class ZoneManager
     /**
      * Initializes the manager, loading data from configs
      */
-    public static void init()
+    public static void init(DataSection zoneData)
     {
         if (init)
             return;
 
-        load();
+        load(zoneData);
         applyChunks();
 
         // Initializes players that are already online
@@ -129,23 +130,18 @@ public class ZoneManager
     /**
      * Loads zones from the config
      */
-    private static void load()
+    private static void load(DataSection zoneData)
     {
         int count = 0;
-
-        CommentedConfig file = Minenight.getConfig("protection");
-        file.saveDefaultConfig();
-        DataSection config = file.getConfig();
 
         Logger.log(LogType.SETUP, 1, "Loading zones...");
 
         // Load in each zone, using base keys as the zone names
-        DataSection zonesData = config.getSection("zones");
-        for (String key : zonesData.keys())
+        for (String key : zoneData.keys())
         {
             try
             {
-                Zone zone = new Zone(key, zonesData.getSection(key));
+                Zone zone = new Zone(key, zoneData.getSection(key));
 
                 // Create the list for the world if not done so already
                 if (!active.containsKey(zone.getWorldName()))
@@ -345,7 +341,9 @@ public class ZoneManager
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag, Player player)
     {
-        return player == null || player.hasPermission("protection.ignoreowner") || isAllowed(loc, flag);
+        return player == null
+               || Protection.hasPermissions(player, flag)
+               || isAllowed(loc, flag);
     }
 
     /**
