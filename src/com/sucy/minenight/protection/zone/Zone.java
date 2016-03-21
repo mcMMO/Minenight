@@ -119,6 +119,13 @@ public class Zone
             center.x /= points.size();
             center.z /= points.size();
         }
+        if (points.size() == 2) {
+            points.clear();
+            points.add(new ZonePoint(min.x, min.z));
+            points.add(new ZonePoint(min.x, max.z));
+            points.add(new ZonePoint(max.x, max.z));
+            points.add(new ZonePoint(max.x, min.z));
+        }
 
         // Pre-calculate some values for bounds checking
         int j;
