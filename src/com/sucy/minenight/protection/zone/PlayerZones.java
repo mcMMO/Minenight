@@ -81,14 +81,11 @@ public class PlayerZones
         }
 
         // Ignore update if locations match
-        if (lastLoc != null)
-        {
-            player.getLocation(tempLoc);
-            if ((int) tempLoc.getX() == (int) lastLoc.getX()
-                && (int) tempLoc.getY() == (int) lastLoc.getY()
-                && (int) tempLoc.getZ() == (int) lastLoc.getZ())
-                return;
-        }
+        player.getLocation(tempLoc);
+        if ((int) tempLoc.getX() == (int) lastLoc.getX()
+            && (int) tempLoc.getY() == (int) lastLoc.getY()
+            && (int) tempLoc.getZ() == (int) lastLoc.getZ())
+            return;
 
         // Grab new zones
         top = ZoneManager.getZones(temp, player.getLocation(tempLoc));
@@ -132,9 +129,12 @@ public class PlayerZones
             Logger.log(LogType.ZONE, 1, player.getName() + " left " + zones.get(j));
         }
 
-        // Swap the array references
+        // Swap references
         ZoneList swap = temp;
         temp = zones;
         zones = swap;
+        Location loc = tempLoc;
+        tempLoc = lastLoc;
+        lastLoc = loc;
     }
 }
