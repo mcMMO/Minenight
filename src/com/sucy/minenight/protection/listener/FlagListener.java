@@ -34,19 +34,23 @@ import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
 import com.sucy.minenight.protection.zone.ZonePoint;
 import com.sucy.minenight.util.ListenerUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
+
+import java.util.List;
 
 /**
  * Handles applying zone flags to events happening in said zones
@@ -54,6 +58,7 @@ import org.bukkit.util.Vector;
 public class FlagListener implements Listener
 {
     private Protection protection;
+    private Location   temp;
 
     /**
      * @param protection reference to management class
@@ -61,6 +66,7 @@ public class FlagListener implements Listener
     public FlagListener(Protection protection)
     {
         this.protection = protection;
+        temp = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
     }
 
     /**
@@ -99,7 +105,7 @@ public class FlagListener implements Listener
         if (zone.hasFlag(ZoneFlag.RESTRICT) && !Protection.hasPermissions(event.getPlayer(), zone, ZoneFlag.RESTRICT))
         {
             ZonePoint center = event.getZone().getCenter();
-            Vector dir = event.getPlayer().getLocation().subtract(center.x, 0, center.z).toVector();
+            Vector dir = event.getPlayer().getLocation(temp).subtract(center.x, 0, center.z).toVector();
             dir.setY(0);
             event.getPlayer().setVelocity(dir.normalize().multiply(3).setY(0.5));
         }
@@ -198,7 +204,7 @@ public class FlagListener implements Listener
         if (!(event.getEntity() instanceof LivingEntity))
         {
             Player player = ListenerUtil.getPlayerDamager(event);
-            if (ZoneManager.isProhibited(event.getEntity().getLocation(), ZoneFlag.PROTECT, player))
+            if (ZoneManager.isProhibited(event.getEntity().getLocation(temp), ZoneFlag.PROTECT, player))
                 event.setCancelled(true);
         }
     }
@@ -211,7 +217,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event)
     {
-        if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, event.getPlayer()))
+        if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
             event.setCancelled(true);
     }
 
@@ -223,22 +229,93 @@ public class FlagListener implements Listener
     @EventHandler
     public void onPlaceBlock(BlockPlaceEvent event)
     {
-        if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, event.getPlayer()))
+        if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
             event.setCancelled(true);
     }
 
     /**
-     * Stop the interactions with objects where prohibited
+     * Stops blocks melting in protected zones
      *
      * @param event event details
      */
     @EventHandler
-    public void onInteract(EntityInteractEvent event)
+    public void onMelt(BlockFadeEvent event)
     {
-        if (event.getEntity() instanceof Player)
-        {
-            if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, (Player) event.getEntity()))
+        Material type = event.getBlock().getType();
+        if (type == Material.ICE || type == Material.SNOW || type == Material.SNOW_BLOCK)
+            if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
                 event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onFreeze(BlockFormEvent event)
+    {
+        if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
+            event.setCancelled(true);
+    }
+
+    /**
+     * Stops interactions in protected zones
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event)
+    {
+        if (ZoneManager.isProhibited(event.getClickedBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
+            event.setCancelled(true);
+    }
+
+    /**
+     * Stops ignition of blocks
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onIgnite(BlockIgniteEvent event)
+    {
+        Location loc = event.getBlock().getLocation(temp);
+
+        // Non-player ignition
+        if (event.getPlayer() == null)
+        {
+            if (ZoneManager.isProhibited(loc, ZoneFlag.PROTECT))
+            event.setCancelled(true);
         }
+
+        // Player ignition
+        else if (ZoneManager.isProhibited(loc, ZoneFlag.PROTECT, event.getPlayer()))
+        {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Stops explosions damaging protected areas
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onExplode(EntityExplodeEvent event)
+    {
+        List<Block> list = event.blockList();
+        for (int i = 0; i < list.size(); i++)
+        {
+            if (ZoneManager.isProhibited(list.get(i).getLocation(temp), ZoneFlag.PROTECT))
+                list.remove(i--);
+        }
+    }
+
+    /**
+     * Stops those pesky endermen from taking blocks in protected zones
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onEnderman(EntityChangeBlockEvent event)
+    {
+        if (event.getEntity().getType() == EntityType.ENDERMAN
+            && ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
+            event.setCancelled(true);
     }
 }
