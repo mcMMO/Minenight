@@ -341,15 +341,12 @@ public class ZoneManager
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag, Player player)
     {
-        if (player == null)
+        if (player == null || Protection.hasPermissions(player, flag))
             return true;
 
-        Zone zone = getZone(player);
-        boolean allowed = zone == null
-               || Protection.hasPermissions(player, flag)
+        Zone zone = getZone(loc);
+        return zone == null
                || !zone.hasFlag(flag);
-        Logger.log(LogType.ZONE, 1, flag.name() + " - " + allowed);
-        return allowed;
     }
 
     /**
@@ -357,11 +354,43 @@ public class ZoneManager
      *
      * @param loc  location the action is being performed at
      * @param flag flag related to the action
+     * @param player player doing the action
      *
      * @return true if allowed, false otherwise
      */
     public static boolean isProhibited(Location loc, ZoneFlag flag, Player player)
     {
         return !isAllowed(loc, flag, player);
+    }
+
+    /**
+     * Checks whether or not an action is allowed
+     *
+     * @param flag   the flag related to the action
+     * @param player player doing the action
+     *
+     * @return true if allowed, false otherwise
+     */
+    public static boolean isAllowed(ZoneFlag flag, Player player)
+    {
+        if (player == null || Protection.hasPermissions(player, flag))
+            return true;
+
+        Zone zone = getZone(player);
+        return zone == null
+               || !zone.hasFlag(flag);
+    }
+
+    /**
+     * Checks whether or not an action is not alled
+     *
+     * @param flag flag related to the action
+     * @param player player doing the action
+     *
+     * @return true if allowed, false otherwise
+     */
+    public static boolean isProhibited(ZoneFlag flag, Player player)
+    {
+        return !isAllowed(flag, player);
     }
 }

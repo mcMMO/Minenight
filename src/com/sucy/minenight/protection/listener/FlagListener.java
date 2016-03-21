@@ -129,7 +129,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onDrop(PlayerDropItemEvent event)
     {
-        if (ZoneManager.isProhibited(event.getPlayer().getLocation(), ZoneFlag.DROP, event.getPlayer()))
+        if (ZoneManager.isProhibited(ZoneFlag.DROP, event.getPlayer()))
         {
             event.setCancelled(true);
         }
@@ -143,7 +143,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onModify(InventoryClickEvent event)
     {
-        if (ZoneManager.isProhibited(event.getWhoClicked().getLocation(), ZoneFlag.MODIFY, (Player) event.getWhoClicked()))
+        if (ZoneManager.isProhibited(ZoneFlag.MODIFY, (Player) event.getWhoClicked()))
         {
             event.setCancelled(true);
         }
