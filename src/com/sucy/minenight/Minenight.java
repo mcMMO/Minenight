@@ -56,6 +56,7 @@ public class Minenight extends JavaPlugin
      * Retrieves a config by name
      *
      * @param name name of the config
+     *
      * @return config data
      */
     public static CommentedConfig getConfig(String name)
@@ -67,6 +68,7 @@ public class Minenight extends JavaPlugin
      * Retrieves the data from a config by name
      *
      * @param name name of the config
+     *
      * @return config data
      */
     public static DataSection getConfigData(String name)

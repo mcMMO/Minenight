@@ -256,9 +256,13 @@ public abstract class CommandHandler implements CommandExecutor
                 continue;
             index++;
             if (index <= (page - 1) * 7 || index > page * 7) continue;
-            sender.sendMessage(ChatColor.GOLD + "/" + label.toLowerCase() + " " + TextSizer.expand(key + " "
-                                                                                                   + ChatColor.LIGHT_PURPLE + commands.get(key).getArgsString() + ChatColor.GRAY, maxSize, false)
-                               + ChatColor.GRAY + "- " + commands.get(key).getDescription());
+            sender.sendMessage(
+                ChatColor.GOLD + "/" + label.toLowerCase() + " " + TextSizer.expand(
+                    key + " "
+                    + ChatColor.LIGHT_PURPLE + commands.get(key).getArgsString() + ChatColor.GRAY, maxSize, false
+                )
+                + ChatColor.GRAY + "- " + commands.get(key).getDescription()
+            );
         }
 
         sender.sendMessage(BREAK);

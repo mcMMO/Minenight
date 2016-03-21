@@ -41,26 +41,26 @@ public class Zone
 {
     private static final String
         Z_INDEX = "priority",
-        MIN_Y = "ymin",
-        MAX_Y = "ymax",
-        WORLD = "world",
-        FLAGS = "flag",
-        SPAWNS = "prevent";
+        MIN_Y   = "ymin",
+        MAX_Y   = "ymax",
+        WORLD   = "world",
+        FLAGS   = "flag",
+        SPAWNS  = "prevent";
 
     private HashSet<Integer> chunks;
-    private HashSet<String> flags;
-    private HashSet<String> spawns;
-    private String name;
-    private String world;
-    private int zIndex;
-    private int minY;
-    private int maxY;
+    private HashSet<String>  flags;
+    private HashSet<String>  spawns;
+    private String           name;
+    private String           world;
+    private int              zIndex;
+    private int              minY;
+    private int              maxY;
 
     protected ZonePoint min;
     protected ZonePoint max;
 
     private ArrayList<ZonePoint> points;
-    private ArrayList<Double> collision;
+    private ArrayList<Double>    collision;
 
     /**
      * Loads zone data from the config data
@@ -118,7 +118,7 @@ public class Zone
         {
             ZonePoint p1 = points.get(i);
             ZonePoint p2 = points.get(j);
-            collision.add((double)(p2.x - p1.x) / (p2.z - p1.z));
+            collision.add((double) (p2.x - p1.x) / (p2.z - p1.z));
         }
     }
 
@@ -127,20 +127,22 @@ public class Zone
      *
      * @param x chunk X coordinate
      * @param z chunk Y coordinate
+     *
      * @return true if contains, false otherwise
      */
     public boolean inChunk(int x, int z)
     {
         return x >= min.x
-            && x <= max.x
-            && z >= min.z
-            && z <= max.z;
+               && x <= max.x
+               && z >= min.z
+               && z <= max.z;
     }
 
     /**
      * Checks whether or not the entity can spawn in the zone
      *
      * @param entity entity to check
+     *
      * @return true if can spawn, false otherwise
      */
     public boolean canSpawn(Entity entity)
@@ -152,6 +154,7 @@ public class Zone
      * Marks a chunk as active for the zone
      *
      * @param hash chunk coordinate hash integer
+     *
      * @return true if was the first active chunk, false otherwise
      */
     public boolean activate(int hash)
@@ -164,6 +167,7 @@ public class Zone
      * Marks a chunk as inactive for the zone
      *
      * @param hash chunk coordinate hash integer
+     *
      * @return true if was the last active chunk, false otherwise
      */
     public boolean deactivate(int hash)
@@ -192,6 +196,7 @@ public class Zone
      * Checks if the zone contains the given location
      *
      * @param loc location to check against
+     *
      * @return true if contained, false otherwise
      */
     public boolean contains(Location loc)
@@ -214,6 +219,7 @@ public class Zone
      * Checks if the zone has the given flag
      *
      * @param flag flag key
+     *
      * @return true if it has the flag, false otherwise
      */
     public boolean hasFlag(ZoneFlag flag)

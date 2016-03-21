@@ -27,8 +27,6 @@
 package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.Minenight;
-import com.sucy.minenight.protection.event.PlayerZoneEnterEvent;
-import com.sucy.minenight.protection.event.PlayerZoneLeaveEvent;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.LogType;
@@ -42,7 +40,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -53,7 +50,7 @@ public class ZoneManager
     private static boolean init = false;
 
     private static HashMap<String, ArrayList<Zone>> active = new HashMap<String, ArrayList<Zone>>();
-    private static HashMap<String, ZoneList> zones  = new HashMap<String, ZoneList>();
+    private static HashMap<String, ZoneList>        zones  = new HashMap<String, ZoneList>();
 
     private static HashMap<UUID, PlayerZones> playerZones = new HashMap<UUID, PlayerZones>();
 
@@ -91,6 +88,7 @@ public class ZoneManager
      * Gets the active zone for the player
      *
      * @param player player to get the zone for
+     *
      * @return the zone the player is in or null if not in any
      */
     public static Zone getZone(Player player)
@@ -226,6 +224,7 @@ public class ZoneManager
      *
      * @param x chunk X coordinate
      * @param z chunk Y coordinate
+     *
      * @return hash integer
      */
     private static int toHash(int x, int z)
@@ -249,6 +248,7 @@ public class ZoneManager
      * Gets a zone by a location
      *
      * @param loc location to check for
+     *
      * @return zone containing the location or null if none found
      */
     public static Zone getZone(Location loc)
@@ -277,6 +277,7 @@ public class ZoneManager
      *
      * @param list list to store results in
      * @param loc  location to check for
+     *
      * @return top level zone out of the found list or null if none were found
      */
     public static Zone getZones(ZoneList list, Location loc)
@@ -311,6 +312,7 @@ public class ZoneManager
      *
      * @param loc  location the action is being performed at
      * @param flag flag related to the action
+     *
      * @return true if allowed, false otherwise
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag)
@@ -324,6 +326,7 @@ public class ZoneManager
      *
      * @param loc  location the action is being performed at
      * @param flag flag related to the action
+     *
      * @return true if allowed, false otherwise
      */
     public static boolean isProhibited(Location loc, ZoneFlag flag)
@@ -337,6 +340,7 @@ public class ZoneManager
      * @param loc    location the action is being performed at
      * @param flag   the flag related to the action
      * @param player player doing the action
+     *
      * @return true if allowed, false otherwise
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag, Player player)
@@ -349,6 +353,7 @@ public class ZoneManager
      *
      * @param loc  location the action is being performed at
      * @param flag flag related to the action
+     *
      * @return true if allowed, false otherwise
      */
     public static boolean isProhibited(Location loc, ZoneFlag flag, Player player)

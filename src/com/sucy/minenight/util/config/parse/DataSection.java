@@ -510,10 +510,12 @@ public class DataSection
 
         if (!data.containsKey(key)) return fallback;
         Object obj = data.get(key);
-        try {
+        try
+        {
             return Byte.parseByte(obj.toString());
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return fallback;
         }
     }
@@ -537,10 +539,12 @@ public class DataSection
 
         if (!data.containsKey(key)) return fallback;
         Object obj = data.get(key);
-        try {
+        try
+        {
             return Short.parseShort(obj.toString());
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return fallback;
         }
     }
@@ -564,10 +568,12 @@ public class DataSection
 
         if (!data.containsKey(key)) return fallback;
         Object obj = data.get(key);
-        try {
+        try
+        {
             return Integer.parseInt(obj.toString());
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return fallback;
         }
     }
@@ -591,10 +597,12 @@ public class DataSection
 
         if (!data.containsKey(key)) return -1;
         Object obj = data.get(key);
-        try {
+        try
+        {
             return Float.parseFloat(obj.toString());
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return fallback;
         }
     }
@@ -618,10 +626,12 @@ public class DataSection
 
         if (!data.containsKey(key)) return fallback;
         Object obj = data.get(key);
-        try {
+        try
+        {
             return Double.parseDouble(obj.toString());
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return fallback;
         }
     }
@@ -643,7 +653,8 @@ public class DataSection
             return section == null ? fallback : section.getList(pieces[1], fallback);
         }
 
-        if (!data.containsKey(key)) {
+        if (!data.containsKey(key))
+        {
             return fallback;
         }
         Object obj = data.get(key);
@@ -775,7 +786,7 @@ public class DataSection
     /**
      * Dumps the data contents into the stream
      *
-     * @param write  stream to dump to
+     * @param write stream to dump to
      *
      * @throws java.io.IOException
      */
@@ -801,6 +812,7 @@ public class DataSection
      * Returns the YAML string for the config data
      *
      * @param quote the character to wrap strings in
+     *
      * @return YAML data string
      */
     public String toString(char quote)
@@ -809,7 +821,7 @@ public class DataSection
         dump(builder, 0, quote);
         return builder.toString();
     }
-    
+
     private void dump(StringBuilder builder, int indent, char quote)
     {
         // Create spacing to use

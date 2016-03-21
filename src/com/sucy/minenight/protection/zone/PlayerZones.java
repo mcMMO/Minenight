@@ -41,10 +41,10 @@ public class PlayerZones
     private ZoneList zones = new ZoneList();
     private ZoneList temp  = new ZoneList();
 
-    private Zone top;
+    private Zone     top;
     private Location lastLoc;
     private Location tempLoc;
-    private Player player;
+    private Player   player;
 
     /**
      * Holds a reference to the player for handling
@@ -73,9 +73,9 @@ public class PlayerZones
         if (lastLoc != null)
         {
             player.getLocation(tempLoc);
-            if ((int)tempLoc.getX() == (int)lastLoc.getX()
-                && (int)tempLoc.getY() == (int)lastLoc.getY()
-                && (int)tempLoc.getZ() == (int)lastLoc.getZ())
+            if ((int) tempLoc.getX() == (int) lastLoc.getX()
+                && (int) tempLoc.getY() == (int) lastLoc.getY()
+                && (int) tempLoc.getZ() == (int) lastLoc.getZ())
                 return;
         }
 
@@ -84,7 +84,7 @@ public class PlayerZones
 
         // Launch events for changes
         int i = 0, j = 0, k = 0;
-        while(i < temp.size())
+        while (i < temp.size())
         {
             k = j;
 

@@ -30,7 +30,9 @@ import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
 import com.sucy.minenight.util.ListenerUtil;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -87,7 +89,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onModify(InventoryClickEvent event)
     {
-        if (ZoneManager.isProhibited(event.getWhoClicked().getLocation(), ZoneFlag.MODIFY, (Player)event.getWhoClicked()))
+        if (ZoneManager.isProhibited(event.getWhoClicked().getLocation(), ZoneFlag.MODIFY, (Player) event.getWhoClicked()))
         {
             event.setCancelled(true);
         }
@@ -103,7 +105,7 @@ public class FlagListener implements Listener
     {
         if (event.getEntity() instanceof Player)
         {
-            Player defender = (Player)event.getEntity();
+            Player defender = (Player) event.getEntity();
             Zone zone = ZoneManager.getZone(defender);
 
             // God mode
@@ -181,7 +183,7 @@ public class FlagListener implements Listener
     {
         if (event.getEntity() instanceof Player)
         {
-            if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, (Player)event.getEntity()))
+            if (ZoneManager.isProhibited(event.getBlock().getLocation(), ZoneFlag.PROTECT, (Player) event.getEntity()))
                 event.setCancelled(true);
         }
     }

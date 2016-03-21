@@ -110,22 +110,22 @@ public class CommandManager
             add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
             add("{buttons}");
         }},
-            helpNoButton   = new ArrayList<String>()
-            {{
-                    add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
-                    add(ChatColor.DARK_GREEN + "{title} - Command Usage {page}");
-                    add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
-                    add("{commands}");
-                    add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
-                }},
-            commandUsage   = new ArrayList<String>()
-            {{
-                    add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
-                    add(ChatColor.GOLD + "{command}");
-                    add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
-                    add(ChatColor.GRAY + "{description}");
-                    add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
-                }};
+        helpNoButton   = new ArrayList<String>()
+        {{
+                add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
+                add(ChatColor.DARK_GREEN + "{title} - Command Usage {page}");
+                add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
+                add("{commands}");
+                add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
+            }},
+        commandUsage   = new ArrayList<String>()
+        {{
+                add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
+                add(ChatColor.GOLD + "{command}");
+                add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
+                add(ChatColor.GRAY + "{description}");
+                add(ChatColor.DARK_GRAY + "-----------------------------------------------------");
+            }};
 
     private static boolean invalidRegistration = false;
 
@@ -460,10 +460,14 @@ public class CommandManager
 
                         ConfigurableCommand sub = c.getSubCommand(key);
                         String args = sub.getArgs().replace("[", optionalArgs + "[").replace("<", requiredArgs + "<");
-                        sender.sendMessage(line.replace("{commands}",
-                                                        command + "/" + c.toString() + " "
-                                                        + TextSizer.expand(key + " " + args, maxSize, false)
-                                                        + ChatColor.GRAY + "- " + description + sub.getDescription()));
+                        sender.sendMessage(
+                            line.replace(
+                                "{commands}",
+                                command + "/" + c.toString() + " "
+                                + TextSizer.expand(key + " " + args, maxSize, false)
+                                + ChatColor.GRAY + "- " + description + sub.getDescription()
+                            )
+                        );
                     }
                 }
                 else if (line.contains("{buttons}"))
@@ -493,10 +497,14 @@ public class CommandManager
 
                         ConfigurableCommand sub = c.getSubCommand(key);
                         String args = sub.getArgs().replace("[", optionalArgs + "[").replace("<", requiredArgs + "<");
-                        sender.sendMessage(line.replace("{commands}",
-                                                        command + "/" + c.toString() + " "
-                                                        + TextSizer.expand(key + " " + args, maxSize, false)
-                                                        + ChatColor.GRAY + "- " + description + sub.getDescription()));
+                        sender.sendMessage(
+                            line.replace(
+                                "{commands}",
+                                command + "/" + c.toString() + " "
+                                + TextSizer.expand(key + " " + args, maxSize, false)
+                                + ChatColor.GRAY + "- " + description + sub.getDescription()
+                            )
+                        );
                     }
                 }
                 else sender.sendMessage(line.replace("{title}", titleString).replace("{page}", pageString));
@@ -518,10 +526,14 @@ public class CommandManager
 
                         ConfigurableCommand sub = c.getSubCommand(key);
                         String args = sub.getArgs().replace("[", optionalArgs + "[").replace("<", requiredArgs + "<");
-                        sender.sendMessage(line.replace("{commands}",
-                                                        command + "/" + c.toString() + " "
-                                                        + TextSizer.expandConsole(key + " " + args, maxSize, false)
-                                                        + ChatColor.GRAY + "- " + description + sub.getDescription()));
+                        sender.sendMessage(
+                            line.replace(
+                                "{commands}",
+                                command + "/" + c.toString() + " "
+                                + TextSizer.expandConsole(key + " " + args, maxSize, false)
+                                + ChatColor.GRAY + "- " + description + sub.getDescription()
+                            )
+                        );
                     }
                 }
                 else sender.sendMessage(line.replace("{title}", titleString).replace("{page}", pageString));
@@ -584,14 +596,14 @@ public class CommandManager
         nextPageHover = TextFormatter.colorString(config.getString(NEXT_PAGE_HOVER, nextPageHover));
         prevPageHover = TextFormatter.colorString(config.getString(PREV_PAGE_HOVER, prevPageHover));
         helpWithButton = config.has(HELP_BUTTON) && config.isList(HELP_BUTTON)
-                ? TextFormatter.colorStringList(config.getList(HELP_BUTTON))
-                : helpWithButton;
+            ? TextFormatter.colorStringList(config.getList(HELP_BUTTON))
+            : helpWithButton;
         helpNoButton = config.has(HELP_NO_BUTTON) && config.isList(HELP_NO_BUTTON)
-                ? TextFormatter.colorStringList(config.getList(HELP_NO_BUTTON))
-                : helpNoButton;
+            ? TextFormatter.colorStringList(config.getList(HELP_NO_BUTTON))
+            : helpNoButton;
         commandUsage = config.has(COMMAND_USAGE) && config.isList(COMMAND_USAGE)
-                ? TextFormatter.colorStringList(config.getList(COMMAND_USAGE))
-                : commandUsage;
+            ? TextFormatter.colorStringList(config.getList(COMMAND_USAGE))
+            : commandUsage;
     }
 
     /**

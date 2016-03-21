@@ -32,9 +32,7 @@ package com.sucy.minenight.util.log;
 public enum LogType
 {
     SETUP,
-    ZONE,
-
-    ;
+    ZONE,;
 
     /**
      * The key for the logging type matching the config.yml vale

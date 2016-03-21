@@ -113,7 +113,8 @@ public class CommentedLanguageConfig extends CommentedConfig
 
         List<String> lines;
         if (!getConfig().has(key)) return null;
-        else if (getConfig().isList(key)) {
+        else if (getConfig().isList(key))
+        {
             lines = getConfig().getList(key);
         }
         else
@@ -175,13 +176,17 @@ public class CommentedLanguageConfig extends CommentedConfig
             String string = match.group(1);
             if (player)
             {
-                sb.replace(match.start() + sb.length() - size, match.end(),
-                           (TextSizer.measureString(string) > playerSize - 2 ? string : TextSizer.expand(string, playerSize, front)));
+                sb.replace(
+                    match.start() + sb.length() - size, match.end(),
+                    (TextSizer.measureString(string) > playerSize - 2 ? string : TextSizer.expand(string, playerSize, front))
+                );
             }
             else
             {
-                sb.replace(match.start() + sb.length() - size, match.end(),
-                           (string.length() > consoleSize ? string : TextSizer.expandConsole(string, consoleSize, front)));
+                sb.replace(
+                    match.start() + sb.length() - size, match.end(),
+                    (string.length() > consoleSize ? string : TextSizer.expandConsole(string, consoleSize, front))
+                );
             }
         }
     }

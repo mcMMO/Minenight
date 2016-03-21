@@ -140,22 +140,24 @@ public class LocationData
         if (pieces.length == 4)
         {
             return new Location(
-                    Bukkit.getWorld(pieces[0]),
-                    Double.parseDouble(pieces[1]),
-                    Double.parseDouble(pieces[2]),
-                    Double.parseDouble(pieces[3]));
+                Bukkit.getWorld(pieces[0]),
+                Double.parseDouble(pieces[1]),
+                Double.parseDouble(pieces[2]),
+                Double.parseDouble(pieces[3])
+            );
         }
 
         // Detailed locations
         else if (pieces.length == 6)
         {
             return new Location(
-                    Bukkit.getWorld(pieces[0]),
-                    Double.parseDouble(pieces[1]),
-                    Double.parseDouble(pieces[2]),
-                    Double.parseDouble(pieces[3]),
-                    Float.parseFloat(pieces[4]),
-                    Float.parseFloat(pieces[5]));
+                Bukkit.getWorld(pieces[0]),
+                Double.parseDouble(pieces[1]),
+                Double.parseDouble(pieces[2]),
+                Double.parseDouble(pieces[3]),
+                Float.parseFloat(pieces[4]),
+                Float.parseFloat(pieces[5])
+            );
         }
 
         // Invalid format

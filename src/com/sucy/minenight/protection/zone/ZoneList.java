@@ -26,7 +26,6 @@
  */
 package com.sucy.minenight.protection.zone;
 
-import com.sucy.minenight.util.log.Logger;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
@@ -43,8 +42,8 @@ import java.util.Iterator;
 public class ZoneList implements Iterable<Zone>, Iterator<Zone>
 {
     private transient Zone[] data;
-    private int size;
-    private int capacity;
+    private           int    size;
+    private           int    capacity;
 
     /**
      * Initializes a new list with a starting size of 4
@@ -93,6 +92,7 @@ public class ZoneList implements Iterable<Zone>, Iterator<Zone>
      * Retrieves a zone by index
      *
      * @param index array index
+     *
      * @return zone at the index
      */
     public Zone get(int index)

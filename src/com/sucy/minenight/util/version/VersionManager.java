@@ -373,14 +373,14 @@ public class VersionManager
         if (isVersionAtMost(V1_5_2))
         {
             entity.setMaxHealth((int) amount);
-            entity.setHealth(Math.min(Math.max(1, (int)prevHealth + (int)amount - (int)prevMax), (int)amount));
+            entity.setHealth(Math.min(Math.max(1, (int) prevHealth + (int) amount - (int) prevMax), (int) amount));
         }
 
         // 1.6.2 and beyond use double values
         else
         {
             entity.setMaxHealth(amount);
-            entity.setHealth(Math.min(Math.max(1, prevHealth + amount - prevMax), (int)amount));
+            entity.setHealth(Math.min(Math.max(1, prevHealth + amount - prevMax), (int) amount));
         }
     }
 
@@ -517,23 +517,29 @@ public class VersionManager
      *
      * @return array of online players
      */
-    public static Player[] getOnlinePlayers() {
-        if (isVersionAtLeast(V1_8_8)) {
+    public static Player[] getOnlinePlayers()
+    {
+        if (isVersionAtLeast(V1_8_8))
+        {
             ArrayList<Player> list = new ArrayList<Player>();
             Collection<? extends Player> online = Bukkit.getOnlinePlayers();
-            for (Object player : online) {
-                if (player instanceof Player) {
-                    list.add((Player)player);
+            for (Object player : online)
+            {
+                if (player instanceof Player)
+                {
+                    list.add((Player) player);
                 }
             }
             return list.toArray(new Player[list.size()]);
         }
-        else {
+        else
+        {
             try
             {
-                return (Player[])Bukkit.class.getMethod("getOnlinePlayers").invoke(null);
+                return (Player[]) Bukkit.class.getMethod("getOnlinePlayers").invoke(null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return new Player[0];
             }
         }

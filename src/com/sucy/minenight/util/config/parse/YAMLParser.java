@@ -163,7 +163,7 @@ public class YAMLParser
      *
      * @param lines  lines to parse
      * @param indent current indent
-     * @param quote character strings are wrapped in
+     * @param quote  character strings are wrapped in
      *
      * @return parsed data
      */
@@ -174,7 +174,8 @@ public class YAMLParser
         while (i < lines.length && ((spaces = countSpaces(lines[i])) >= indent || lines[i].charAt(spaces) == '#'))
         {
             // When the entire line is just spaces, continue
-            if (lines[i].length() == spaces) {
+            if (lines[i].length() == spaces)
+            {
                 i++;
                 continue;
             }
