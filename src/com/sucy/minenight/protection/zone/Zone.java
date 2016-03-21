@@ -27,9 +27,7 @@
 package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.util.config.parse.DataSection;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
@@ -89,7 +87,7 @@ public class Zone
         }
 
         // Load spawn data
-        list = data.getList(FLAGS);
+        list = data.getList(SPAWNS);
         spawns = new HashSet<String>();
         for (String key : list)
         {
@@ -98,18 +96,19 @@ public class Zone
 
         // Load coordinates
         min = new ZonePoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        max = new ZonePoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        max = new ZonePoint(Integer.MIN_VALUE, Integer.MIN_VALUE);
         int i = 1;
         points = new ArrayList<ZonePoint>();
         while (data.isSection("" + i))
         {
             DataSection pointData = data.getSection("" + i);
             ZonePoint point = new ZonePoint(pointData.getInt("x"), pointData.getInt("z"));
-            min.x = Math.min(min.x, point.x);
-            min.z = Math.min(min.z, point.z);
-            max.x = Math.max(max.x, point.x);
-            max.z = Math.max(max.z, point.z);
+            min.x = Math.min(min.x, point.x >> 4);
+            min.z = Math.min(min.z, point.z >> 4);
+            max.x = Math.max(max.x, point.x >> 4);
+            max.z = Math.max(max.z, point.z >> 4);
             points.add(point);
+            i++;
         }
 
         // Pre-calculate some values for bounds checking
@@ -132,15 +131,10 @@ public class Zone
      */
     public boolean inChunk(int x, int z)
     {
-        int minX = min.x >> 4;
-        int maxX = max.x >> 4;
-        int minZ = min.z >> 4;
-        int maxZ = max.z >> 4;
-
-        return x >= minX
-            && x <= maxX
-            && z >= minZ
-            && z <= maxZ;
+        return x >= min.x
+            && x <= max.x
+            && z >= min.z
+            && z <= max.z;
     }
 
     /**
