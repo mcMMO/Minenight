@@ -341,9 +341,15 @@ public class ZoneManager
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag, Player player)
     {
-        return player == null
+        if (player == null)
+            return true;
+
+        Zone zone = getZone(player);
+        boolean allowed = zone == null
                || Protection.hasPermissions(player, flag)
-               || isAllowed(loc, flag);
+               || !zone.hasFlag(flag);
+        Logger.log(LogType.ZONE, 1, flag.name() + " - " + allowed);
+        return allowed;
     }
 
     /**

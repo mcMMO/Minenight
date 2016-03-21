@@ -72,7 +72,7 @@ public class Protection
     {
         List<String> perms = permissions.get(flag);
         if (perms == null)
-            return true;
+            return false;
 
         for (String perm : perms)
             if (player.hasPermission(perm))
