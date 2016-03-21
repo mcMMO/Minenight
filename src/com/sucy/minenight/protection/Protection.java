@@ -74,7 +74,7 @@ public class Protection
             return false;
 
         String perm = permissions.get(flag);
-        return player.hasPermission(perm) || player.hasPermission(perm + "." + zone);
+        return player.hasPermission(perm) || player.hasPermission(perm + "." + zone.getName());
     }
 
     /**
