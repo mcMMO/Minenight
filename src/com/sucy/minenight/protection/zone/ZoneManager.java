@@ -27,10 +27,13 @@
 package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.protection.event.PlayerZoneEnterEvent;
+import com.sucy.minenight.protection.event.PlayerZoneLeaveEvent;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.LogType;
 import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -39,6 +42,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -49,9 +53,29 @@ public class ZoneManager
     private static boolean init = false;
 
     private static HashMap<String, ArrayList<Zone>> active = new HashMap<String, ArrayList<Zone>>();
-    private static HashMap<String, ArrayList<Zone>> zones  = new HashMap<String, ArrayList<Zone>>();
+    private static HashMap<String, ZoneList> zones  = new HashMap<String, ZoneList>();
 
-    private static HashMap<UUID, Zone> playerZones = new HashMap<UUID, Zone>();
+    private static HashMap<UUID, PlayerZones> playerZones = new HashMap<UUID, PlayerZones>();
+
+    /**
+     * Initializes the zone data for the player
+     *
+     * @param player player to initialize for
+     */
+    public static void init(Player player)
+    {
+        playerZones.put(player.getUniqueId(), new PlayerZones(player));
+    }
+
+    /**
+     * Player to clear the zone data for
+     *
+     * @param player player to clear for
+     */
+    public static void clear(Player player)
+    {
+        playerZones.remove(player.getUniqueId());
+    }
 
     /**
      * Updates the zone that the player is in
@@ -60,7 +84,18 @@ public class ZoneManager
      */
     public static void update(Player player)
     {
-        playerZones.put(player.getUniqueId(), getZone(player.getLocation()));
+        playerZones.get(player.getUniqueId()).update();
+    }
+
+    /**
+     * Gets the active zone for the player
+     *
+     * @param player player to get the zone for
+     * @return the zone the player is in or null if not in any
+     */
+    public static Zone getZone(Player player)
+    {
+        return playerZones.get(player.getUniqueId()).getTop();
     }
 
     /**
@@ -73,6 +108,10 @@ public class ZoneManager
 
         load();
         applyChunks();
+
+        // Initializes players that are already online
+        for (Player player : VersionManager.getOnlinePlayers())
+            init(player);
     }
 
     /**
@@ -95,11 +134,12 @@ public class ZoneManager
     private static void load()
     {
         int count = 0;
-        Logger.log(LogType.SETUP, 1, "Loading zones...");
 
         CommentedConfig file = Minenight.getConfig("protection");
         file.saveDefaultConfig();
         DataSection config = file.getConfig();
+
+        Logger.log(LogType.SETUP, 1, "Loading zones...");
 
         // Load in each zone, using base keys as the zone names
         DataSection zonesData = config.getSection("zones");
@@ -113,7 +153,7 @@ public class ZoneManager
                 if (!active.containsKey(zone.getWorldName()))
                 {
                     active.put(zone.getWorldName(), new ArrayList<Zone>());
-                    zones.put(zone.getWorldName(), new ArrayList<Zone>());
+                    zones.put(zone.getWorldName(), new ZoneList());
                 }
 
                 // Zones start of as inactive
@@ -141,7 +181,7 @@ public class ZoneManager
         int x = chunk.getX();
         int z = chunk.getZ();
         int hash = toHash(x, z);
-        ArrayList<Zone> iterableZones = zones.get(chunk.getWorld().getName());
+        ZoneList iterableZones = zones.get(chunk.getWorld().getName());
         if (iterableZones != null)
         {
             for (Zone zone : iterableZones)
@@ -166,7 +206,7 @@ public class ZoneManager
         int x = chunk.getX();
         int z = chunk.getZ();
         int hash = toHash(x, z);
-        ArrayList<Zone> iterableZones = zones.get(chunk.getWorld().getName());
+        ZoneList iterableZones = zones.get(chunk.getWorld().getName());
         if (iterableZones != null)
         {
             for (Zone zone : iterableZones)
@@ -200,6 +240,8 @@ public class ZoneManager
     public static void cleanup()
     {
         active.clear();
+        zones.clear();
+        playerZones.clear();
         init = false;
     }
 
@@ -225,6 +267,40 @@ public class ZoneManager
             {
                 match = zone;
                 high = zone.getZIndex();
+            }
+        }
+        return match;
+    }
+
+    /**
+     * Gets all zones containing the location and puts them in the list
+     *
+     * @param list list to store results in
+     * @param loc  location to check for
+     * @return top level zone out of the found list or null if none were found
+     */
+    public static Zone getZones(ZoneList list, Location loc)
+    {
+        list.clear();
+
+        // Grab the zones for the world
+        ArrayList<Zone> worldZones = active.get(loc.getWorld().getName());
+        if (worldZones == null)
+            return null;
+
+        // Find the zone with the highest Z-Index
+        int high = Integer.MIN_VALUE;
+        Zone match = null;
+        for (Zone zone : worldZones)
+        {
+            if (zone.contains(loc))
+            {
+                list.add(zone);
+                if (zone.getZIndex() > high)
+                {
+                    match = zone;
+                    high = zone.getZIndex();
+                }
             }
         }
         return match;

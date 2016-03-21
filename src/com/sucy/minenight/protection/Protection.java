@@ -29,6 +29,7 @@ package com.sucy.minenight.protection;
 import com.sucy.minenight.Minenight;
 import com.sucy.minenight.protection.listener.ChunkListener;
 import com.sucy.minenight.protection.listener.FlagListener;
+import com.sucy.minenight.protection.listener.MovementListener;
 import com.sucy.minenight.protection.zone.ZoneManager;
 
 /**
@@ -45,6 +46,7 @@ public class Protection
 
         Minenight.registerListener(new FlagListener());
         Minenight.registerListener(new ChunkListener());
+        Minenight.registerListener(new MovementListener());
     }
 
     /**

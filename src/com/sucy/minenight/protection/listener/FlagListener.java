@@ -103,7 +103,8 @@ public class FlagListener implements Listener
     {
         if (event.getEntity() instanceof Player)
         {
-            Zone zone = ZoneManager.getZone(event.getEntity().getLocation());
+            Player defender = (Player)event.getEntity();
+            Zone zone = ZoneManager.getZone(defender);
 
             // God mode
             if (zone.hasFlag(ZoneFlag.GOD))
@@ -117,13 +118,12 @@ public class FlagListener implements Listener
             if (attacker != null)
             {
                 // OPs ignore PvP rules
-                Player defender = (Player) event.getEntity();
                 if (attacker.isOp() || defender.isOp())
                     return;
 
                 // Cancel PvP when prohibited
-                if (ZoneManager.isProhibited(attacker.getLocation(), ZoneFlag.PVP)
-                    || ZoneManager.isProhibited(defender.getLocation(), ZoneFlag.PVP))
+                if (zone.hasFlag(ZoneFlag.PVP)
+                    || ZoneManager.getZone(attacker).hasFlag(ZoneFlag.PVP))
                 {
                     event.setCancelled(true);
                 }

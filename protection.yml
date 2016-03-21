@@ -16,19 +16,19 @@ zones:
     priority: 1
     world: worldname
     ymin: 0
-    ymax: 0
+    ymax: 255
     1:
-      x: 0
-      z: 0
+      x: -50
+      z: -50
     2:
-      x: 0
-      z: 0
+      x: 50
+      z: -50
     3:
-      x: 0
-      z: 0
+      x: 50
+      z: 50
     4:
-      x: 0
-      z: 0
+      x: -50
+      z: 50
     flag:
     - protect
     - restrict
@@ -46,23 +46,23 @@ zones:
     ymin: 0
     ymax: 0
     1:
-      x: 0
+      x: -30
       z: 0
     2:
-      x: 0
-      z: 0
+      x: -10
+      z: 20
     3:
-      x: 0
-      z: 0
+      x: 10
+      z: 20
     4:
-      x: 0
+      x: 30
       z: 0
     5:
-      x: 0
-      z: 0
+      x: 10
+      z: -20
     6:
-      x: 0
-      z: 0
+      x: -10
+      z: -20
     flag:
     - protect
     - restrict
