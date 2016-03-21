@@ -32,6 +32,7 @@ import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
 import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
+import com.sucy.minenight.protection.zone.ZonePoint;
 import com.sucy.minenight.util.ListenerUtil;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -45,6 +46,7 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.util.Vector;
 
 /**
  * Handles applying zone flags to events happening in said zones
@@ -94,6 +96,13 @@ public class FlagListener implements Listener
             protection.getHealEffect().getPlayers().add(event.getPlayer());
         if (zone.hasFlag(ZoneFlag.HURT))
             protection.getHurtEffect().getPlayers().add(event.getPlayer());
+        if (zone.hasFlag(ZoneFlag.RESTRICT) && !Protection.hasPermissions(event.getPlayer(), ZoneFlag.RESTRICT))
+        {
+            ZonePoint center = event.getZone().getCenter();
+            Vector dir = event.getPlayer().getLocation().subtract(center.x, 0, center.z).toVector();
+            dir.setY(0);
+            event.getPlayer().setVelocity(dir.normalize().multiply(3).setY(0.5));
+        }
     }
 
     /**

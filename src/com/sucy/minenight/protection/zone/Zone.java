@@ -56,8 +56,9 @@ public class Zone
     private int              minY;
     private int              maxY;
 
-    protected ZonePoint min;
-    protected ZonePoint max;
+    private ZonePoint min;
+    private ZonePoint max;
+    private ZonePoint center;
 
     private ArrayList<ZonePoint> points;
     private ArrayList<Double>    collision;
@@ -97,6 +98,7 @@ public class Zone
         // Load coordinates
         min = new ZonePoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
         max = new ZonePoint(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        center = new ZonePoint(0, 0);
         int i = 1;
         points = new ArrayList<ZonePoint>();
         while (data.isSection("" + i))
@@ -107,8 +109,15 @@ public class Zone
             min.z = Math.min(min.z, point.z >> 4);
             max.x = Math.max(max.x, point.x >> 4);
             max.z = Math.max(max.z, point.z >> 4);
+            center.x += point.x;
+            center.z += point.z;
             points.add(point);
             i++;
+        }
+        if (points.size() > 0)
+        {
+            center.x /= points.size();
+            center.z /= points.size();
         }
 
         // Pre-calculate some values for bounds checking
@@ -120,6 +129,14 @@ public class Zone
             ZonePoint p2 = points.get(j);
             collision.add((double) (p2.x - p1.x) / (p2.z - p1.z));
         }
+    }
+
+    /**
+     * @return center of the zone, ignoring the y direction
+     */
+    public ZonePoint getCenter()
+    {
+        return center;
     }
 
     /**

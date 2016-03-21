@@ -1,71 +1,68 @@
-flags:
-  protect:
-    permissions:
-    - protection.protect.bypass.name
-  restrict:
-    permissions:
-    - protection.restrict.bypass.name
-  heal:
+flags: 
+  protect: 
+    permissions: 
+    - 'protection.protect.bypass.name'
+  restrict: 
+    permissions: 
+    - 'protection.restrict.bypass.name'
+  heal: 
     ticks: 1
     amount: 1
-  hurt:
+  hurt: 
     ticks: 1
     amount: 1
-zones:
-  zonename:
+zones: 
+  zonename: 
     priority: 1
-    world: worldname
+    world: 'world'
     ymin: 0
     ymax: 255
-    1:
+    1: 
       x: -50
       z: -50
-    2:
+    2: 
       x: 50
       z: -50
-    3:
+    3: 
       x: 50
       z: 50
-    4:
+    4: 
       x: -50
       z: 50
-    flag:
-    - protect
-    - restrict
-    - heal
-    - hurt
-    - god
-    - pvp
-    - drop
-    - modify
-    prevent:
-    - zombie
-  secondzonename:
+    flag: 
+    - 'protect'
+    - 'god'
+    - 'pvp'
+    - 'drop'
+    - 'modify'
+    prevent: 
+    - 'zombie'
+  secondzonename: 
     priority: 2
-    world: worldname
+    world: 'world'
     ymin: 0
-    ymax: 0
-    1:
+    ymax: 255
+    1: 
       x: -30
       z: 0
-    2:
+    2: 
       x: -10
       z: 20
-    3:
+    3: 
       x: 10
       z: 20
-    4:
+    4: 
       x: 30
       z: 0
-    5:
+    5: 
       x: 10
       z: -20
-    6:
+    6: 
       x: -10
       z: -20
-    flag:
-    - protect
-    - restrict
-    - heal
-    prevent:
-    - skeleton
+    flag: 
+    - 'protect'
+    - 'restrict'
+    - 'hurt'
+    prevent: 
+    - 'skeleton'
