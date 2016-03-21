@@ -32,6 +32,7 @@ import com.sucy.minenight.protection.effect.FlagTask;
 import com.sucy.minenight.protection.listener.ChunkListener;
 import com.sucy.minenight.protection.listener.FlagListener;
 import com.sucy.minenight.protection.listener.MovementListener;
+import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
 import com.sucy.minenight.util.config.CommentedConfig;
@@ -48,11 +49,10 @@ import java.util.List;
  */
 public class Protection
 {
-    private static HashMap<ZoneFlag, List<String>> permissions = new HashMap<ZoneFlag, List<String>>();
+    private static HashMap<ZoneFlag, String> permissions = new HashMap<ZoneFlag, String>();
 
     private static final String ZONES  = "zones";
     private static final String FLAGS  = "flags";
-    private static final String PERMS  = "permissions";
     private static final String TICKS  = "ticks";
     private static final String AMOUNT = "amount";
 
@@ -68,17 +68,13 @@ public class Protection
      * @param flag   flag to check for
      * @return true if has bypass perms, false otherwise
      */
-    public static boolean hasPermissions(Player player, ZoneFlag flag)
+    public static boolean hasPermissions(Player player, Zone zone, ZoneFlag flag)
     {
-        List<String> perms = permissions.get(flag);
-        if (perms == null)
+        if (!permissions.containsKey(flag))
             return false;
 
-        for (String perm : perms)
-            if (player.hasPermission(perm))
-                return true;
-
-        return false;
+        String perm = permissions.get(flag);
+        return player.hasPermission(perm) || player.hasPermission(perm + "." + zone);
     }
 
     /**
@@ -132,11 +128,8 @@ public class Protection
      */
     private void loadFlagSettings(DataSection data)
     {
-        DataSection protect = data.getSection("protect");
-        permissions.put(ZoneFlag.PROTECT, protect.getList(PERMS));
-
-        DataSection restrict = data.getSection("restrict");
-        permissions.put(ZoneFlag.RESTRICT, restrict.getList(PERMS));
+        permissions.put(ZoneFlag.PROTECT, "protection.protect.bypass");
+        permissions.put(ZoneFlag.RESTRICT, "protection.restrict.bypass");
 
         DataSection heal = data.getSection("heal");
         int ticks = heal.getInt(TICKS);

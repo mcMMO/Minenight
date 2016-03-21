@@ -96,7 +96,7 @@ public class FlagListener implements Listener
             protection.getHealEffect().getPlayers().add(event.getPlayer());
         if (zone.hasFlag(ZoneFlag.HURT))
             protection.getHurtEffect().getPlayers().add(event.getPlayer());
-        if (zone.hasFlag(ZoneFlag.RESTRICT) && !Protection.hasPermissions(event.getPlayer(), ZoneFlag.RESTRICT))
+        if (zone.hasFlag(ZoneFlag.RESTRICT) && !Protection.hasPermissions(event.getPlayer(), zone, ZoneFlag.RESTRICT))
         {
             ZonePoint center = event.getZone().getCenter();
             Vector dir = event.getPlayer().getLocation().subtract(center.x, 0, center.z).toVector();

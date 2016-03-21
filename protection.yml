@@ -1,10 +1,4 @@
-flags: 
-  protect: 
-    permissions: 
-    - 'protection.protect.bypass.name'
-  restrict: 
-    permissions: 
-    - 'protection.restrict.bypass.name'
+flags:
   heal: 
     ticks: 1
     amount: 1

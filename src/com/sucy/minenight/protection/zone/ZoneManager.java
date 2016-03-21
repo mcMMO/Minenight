@@ -341,11 +341,12 @@ public class ZoneManager
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag, Player player)
     {
-        if (player == null || Protection.hasPermissions(player, flag))
+        if (player == null)
             return true;
 
         Zone zone = getZone(loc);
         return zone == null
+               || Protection.hasPermissions(player, zone, flag)
                || !zone.hasFlag(flag);
     }
 
@@ -373,11 +374,12 @@ public class ZoneManager
      */
     public static boolean isAllowed(ZoneFlag flag, Player player)
     {
-        if (player == null || Protection.hasPermissions(player, flag))
+        if (player == null)
             return true;
 
         Zone zone = getZone(player);
         return zone == null
+               || Protection.hasPermissions(player, zone, flag)
                || !zone.hasFlag(flag);
     }
 
