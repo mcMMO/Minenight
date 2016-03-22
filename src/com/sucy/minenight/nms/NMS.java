@@ -1,10 +1,10 @@
 /**
- * SkillAPI
- * com.sucy.skill.log.LogType
+ * MineNight
+ * com.sucy.minenight.nms.NMS
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Steven Sucy
+ * Copyright (c) 2016 Steven Sucy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.util.log;
+package com.sucy.minenight.nms;
+
+import com.sucy.minenight.nms.v1_9_R1.NMSManager_19;
 
 /**
- * Different categories of logging
+ * Handles setting up and grabbing the manager for NMS functions
  */
-public enum LogType
+public class NMS
 {
-    SETUP,
-    ZONE,
-    HOLOGRAM,;
+    private static NMSManager manager;
 
     /**
-     * The key for the logging type matching the config.yml vale
+     * Retrieves the active manager for NMS classes
      *
-     * @return key name
+     * @return NMS manager
      */
-    public String key()
+    public static NMSManager getManager()
     {
-        return name().toLowerCase().replace("_", "-");
+        if (manager == null)
+        {
+            manager = new NMSManager_19();
+            manager.setup();
+        }
+        return manager;
     }
 }

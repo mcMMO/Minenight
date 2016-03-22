@@ -1,10 +1,10 @@
 /**
- * SkillAPI
- * com.sucy.skill.log.LogType
+ * MineNight
+ * com.sucy.minenight.util.Point
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Steven Sucy
+ * Copyright (c) 2016 Steven Sucy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.util.log;
+package com.sucy.minenight.util;
 
 /**
- * Different categories of logging
+ * A simple X/Z coordinate pair
  */
-public enum LogType
+public class Point
 {
-    SETUP,
-    ZONE,
-    HOLOGRAM,;
+    public int x;
+    public int z;
 
     /**
-     * The key for the logging type matching the config.yml vale
+     * Initializes a point with the given coordinates
      *
-     * @return key name
+     * @param x x coordinate
+     * @param z z coordinate
      */
-    public String key()
+    public Point(int x, int z)
     {
-        return name().toLowerCase().replace("_", "-");
+        this.x = x;
+        this.z = z;
     }
 }

@@ -129,6 +129,7 @@ public class LocationData
     public static Location parseLocation(String dataString)
     {
         // Must have a comma and not be null
+        dataString = dataString.replace(", ", ",");
         if (dataString == null || !dataString.contains(","))
         {
             return null;

@@ -1,10 +1,10 @@
 /**
- * SkillAPI
- * com.sucy.skill.log.LogType
+ * MineNight
+ * com.sucy.minenight.hologram.listener.ChunkListener
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Steven Sucy
+ * Copyright (c) 2016 Steven Sucy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.util.log;
+package com.sucy.minenight.hologram.listener;
+
+import com.sucy.minenight.hologram.Holograms;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
- * Different categories of logging
+ * Handles loading/unloading holograms by watching chunk changes
  */
-public enum LogType
+public class ChunkListener implements Listener
 {
-    SETUP,
-    ZONE,
-    HOLOGRAM,;
+    private Holograms holograms;
 
     /**
-     * The key for the logging type matching the config.yml vale
-     *
-     * @return key name
+     * @param holograms reference to manager
      */
-    public String key()
+    public ChunkListener(Holograms holograms)
     {
-        return name().toLowerCase().replace("_", "-");
+        this.holograms = holograms;
+    }
+
+    /**
+     * Passes load events to the management class
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onLoad(ChunkLoadEvent event)
+    {
+        holograms.load(event.getChunk());
+    }
+
+    /**
+     * Passes unload events to the management class
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onUnload(ChunkUnloadEvent event)
+    {
+        holograms.unload(event.getChunk());
     }
 }

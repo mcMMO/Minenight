@@ -26,9 +26,8 @@
  */
 package com.sucy.minenight.protection.zone;
 
-import com.sucy.minenight.Minenight;
 import com.sucy.minenight.protection.Protection;
-import com.sucy.minenight.util.config.CommentedConfig;
+import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.LogType;
 import com.sucy.minenight.util.log.Logger;
@@ -50,39 +49,34 @@ public class ZoneManager
 {
     private static boolean init = false;
 
+    private static HashMap<String, HashMap<ZoneFlag, ArrayList<Zone>>> activeByFlag = new HashMap<String, HashMap<ZoneFlag, ArrayList<Zone>>>();
+
     private static HashMap<String, ArrayList<Zone>> active = new HashMap<String, ArrayList<Zone>>();
     private static HashMap<String, ZoneList>        zones  = new HashMap<String, ZoneList>();
 
     private static HashMap<UUID, PlayerZones> playerZones = new HashMap<UUID, PlayerZones>();
 
     /**
-     * Initializes the zone data for the player
+     * Creates a new detection zone for triggering effects
+     * when a player gets near a point
      *
-     * @param player player to initialize for
+     * @param name   name of the zone for identification purposes
+     * @param loc    location of the object to detect for
+     * @param radius detection radius
      */
-    public static void init(Player player)
+    public static void createDetectionZone(String name, Location loc, int radius)
     {
-        playerZones.put(player.getUniqueId(), new PlayerZones(player));
-    }
-
-    /**
-     * Player to clear the zone data for
-     *
-     * @param player player to clear for
-     */
-    public static void clear(Player player)
-    {
-        playerZones.remove(player.getUniqueId());
-    }
-
-    /**
-     * Updates the zone that the player is in
-     *
-     * @param player player to retrieve for
-     */
-    public static void update(Player player)
-    {
-        playerZones.get(player.getUniqueId()).update(player);
+        Zone zone = new Zone(name, loc, radius);
+        checkWorld(zone.getWorldName());
+        zones.get(zone.getWorldName()).add(zone);
+        for (Chunk chunk : loc.getWorld().getLoadedChunks())
+        {
+            int x = chunk.getX();
+            int z = chunk.getZ();
+            int hash = MathFunc.chunkHash(x, z);
+            if (zone.inChunk(x, z) && zone.activate(hash))
+                activate(zone);
+        }
     }
 
     /**
@@ -98,149 +92,6 @@ public class ZoneManager
     }
 
     /**
-     * Initializes the manager, loading data from configs
-     */
-    public static void init(DataSection zoneData)
-    {
-        if (init)
-            return;
-
-        load(zoneData);
-        applyChunks();
-
-        // Initializes players that are already online
-        for (Player player : VersionManager.getOnlinePlayers())
-            init(player);
-    }
-
-    /**
-     * Applies loaded chunks for initial zones
-     */
-    private static void applyChunks()
-    {
-        for (World world : Bukkit.getWorlds())
-        {
-            for (Chunk chunk : world.getLoadedChunks())
-            {
-                load(chunk);
-            }
-        }
-    }
-
-    /**
-     * Loads zones from the config
-     */
-    private static void load(DataSection zoneData)
-    {
-        int count = 0;
-
-        Logger.log(LogType.SETUP, 1, "Loading zones...");
-
-        // Load in each zone, using base keys as the zone names
-        for (String key : zoneData.keys())
-        {
-            try
-            {
-                Zone zone = new Zone(key, zoneData.getSection(key));
-
-                // Create the list for the world if not done so already
-                if (!active.containsKey(zone.getWorldName()))
-                {
-                    active.put(zone.getWorldName(), new ArrayList<Zone>());
-                    zones.put(zone.getWorldName(), new ZoneList());
-                }
-
-                // Zones start of as inactive
-                zones.get(zone.getWorldName()).add(zone);
-
-                count++;
-                Logger.log(LogType.SETUP, 2, "Loaded Zone: " + key);
-            }
-            catch (Exception ex)
-            {
-                Logger.invalid("Invalid zone config for zone \"" + key + "\" - " + ex.getMessage());
-            }
-        }
-
-        Logger.log(LogType.SETUP, 1, "Loaded " + count + " zones");
-    }
-
-    /**
-     * Loads zones inside the given chunk
-     *
-     * @param chunk chunk to load zones for
-     */
-    public static void load(Chunk chunk)
-    {
-        int x = chunk.getX();
-        int z = chunk.getZ();
-        int hash = toHash(x, z);
-        ZoneList iterableZones = zones.get(chunk.getWorld().getName());
-        if (iterableZones != null)
-        {
-            for (Zone zone : iterableZones)
-            {
-                if (zone.inChunk(x, z) && zone.activate(hash))
-                {
-                    active.get(chunk.getWorld().getName()).add(zone);
-
-                    Logger.log(LogType.ZONE, 1, zone.getName() + " was enabled");
-                }
-            }
-        }
-    }
-
-    /**
-     * Unloads zones inside the given chunk
-     *
-     * @param chunk chunk to unload zones for
-     */
-    public static void unload(Chunk chunk)
-    {
-        int x = chunk.getX();
-        int z = chunk.getZ();
-        int hash = toHash(x, z);
-        ZoneList iterableZones = zones.get(chunk.getWorld().getName());
-        if (iterableZones != null)
-        {
-            for (Zone zone : iterableZones)
-            {
-                if (zone.inChunk(x, z) && zone.deactivate(hash))
-                {
-                    active.get(chunk.getWorld().getName()).remove(zone);
-
-                    Logger.log(LogType.ZONE, 1, zone.getName() + " was disabled");
-                }
-            }
-        }
-    }
-
-    /**
-     * Converts chunk coordinates to a single integer for the hash set
-     *
-     * @param x chunk X coordinate
-     * @param z chunk Y coordinate
-     *
-     * @return hash integer
-     */
-    private static int toHash(int x, int z)
-    {
-        int off = 1 << 15;
-        return (x + off) | ((z + off) << 16);
-    }
-
-    /**
-     * Clears all stored data
-     */
-    public static void cleanup()
-    {
-        active.clear();
-        zones.clear();
-        playerZones.clear();
-        init = false;
-    }
-
-    /**
      * Gets a zone by a location
      *
      * @param loc location to check for
@@ -249,8 +100,36 @@ public class ZoneManager
      */
     public static Zone getZone(Location loc)
     {
+        return getZone(loc, active.get(loc.getWorld().getName()));
+    }
+
+    /**
+     * Gets a zone by a location for a given flag. This
+     * will execute faster than without searching for
+     * a specific flag.
+     *
+     * @param loc  loc to search for
+     * @param flag flag looking for
+     * @return zone containing the location with the flag or null if none found
+     */
+    public static Zone getZone(Location loc, ZoneFlag flag)
+    {
+        if (!activeByFlag.containsKey(loc.getWorld().getName()))
+            return null;
+        return getZone(loc, activeByFlag.get(loc.getWorld().getName()).get(flag));
+    }
+
+    /**
+     * Gets the top level zone out of the given zones that
+     * contains the given location
+     *
+     * @param loc        location to look for
+     * @param worldZones zones to look through
+     * @return top level zone containing the location or null if none found
+     */
+    private static Zone getZone(Location loc, ArrayList<Zone> worldZones)
+    {
         // Grab the zones for the world
-        ArrayList<Zone> worldZones = active.get(loc.getWorld().getName());
         if (worldZones == null)
             return null;
 
@@ -313,8 +192,7 @@ public class ZoneManager
      */
     public static boolean isAllowed(Location loc, ZoneFlag flag)
     {
-        Zone zone = getZone(loc);
-        return zone == null || !zone.hasFlag(flag);
+        return getZone(loc, flag) == null;
     }
 
     /**
@@ -344,10 +222,8 @@ public class ZoneManager
         if (player == null)
             return true;
 
-        Zone zone = getZone(loc);
-        return zone == null
-               || Protection.hasPermissions(player, zone, flag)
-               || !zone.hasFlag(flag);
+        Zone zone = getZone(loc, flag);
+        return zone == null || Protection.hasPermissions(player, zone, flag);
     }
 
     /**
@@ -394,5 +270,197 @@ public class ZoneManager
     public static boolean isProhibited(ZoneFlag flag, Player player)
     {
         return !isAllowed(flag, player);
+    }
+
+    /**
+     * Loads zones inside the given chunk
+     *
+     * @param chunk chunk to load zones for
+     */
+    public static void load(Chunk chunk)
+    {
+        int x = chunk.getX();
+        int z = chunk.getZ();
+        int hash = MathFunc.chunkHash(x, z);
+        ZoneList iterableZones = zones.get(chunk.getWorld().getName());
+        if (iterableZones != null)
+            for (Zone zone : iterableZones)
+                if (zone.inChunk(x, z) && zone.activate(hash))
+                    activate(zone);
+    }
+
+    /**
+     * Activates a zone, allowing collision checks against it
+     *
+     * @param zone zone to activate
+     */
+    private static void activate(Zone zone)
+    {
+        active.get(zone.getWorldName()).add(zone);
+
+        HashMap<ZoneFlag, ArrayList<Zone>> byFlag = activeByFlag.get(zone.getWorldName());
+        for (ZoneFlag flag : zone.getFlags())
+            byFlag.get(flag).add(zone);
+
+        Logger.log(LogType.ZONE, 1, zone.getName() + " was enabled");
+    }
+
+    /**
+     * Unloads zones inside the given chunk
+     *
+     * @param chunk chunk to unload zones for
+     */
+    public static void unload(Chunk chunk)
+    {
+        int x = chunk.getX();
+        int z = chunk.getZ();
+        int hash = MathFunc.chunkHash(x, z);
+        ZoneList iterableZones = zones.get(chunk.getWorld().getName());
+        if (iterableZones != null)
+            for (Zone zone : iterableZones)
+                if (zone.inChunk(x, z) && zone.deactivate(hash))
+                    deactivate(zone);
+    }
+
+    private static void deactivate(Zone zone)
+    {
+        active.get(zone.getWorldName()).remove(zone);
+
+        HashMap<ZoneFlag, ArrayList<Zone>> byFlag = activeByFlag.get(zone.getWorldName());
+        for (ZoneFlag flag : zone.getFlags())
+            byFlag.get(flag).remove(zone);
+
+        Logger.log(LogType.ZONE, 1, zone.getName() + " was disabled");
+    }
+
+    /**
+     * Initializes the zone data for the player
+     *
+     * @param player player to initialize for
+     */
+    public static void init(Player player)
+    {
+        playerZones.put(player.getUniqueId(), new PlayerZones(player));
+    }
+
+    /**
+     * Player to clear the zone data for
+     *
+     * @param player player to clear for
+     */
+    public static void clear(Player player)
+    {
+        playerZones.remove(player.getUniqueId());
+    }
+
+    /**
+     * Updates the zone that the player is in
+     *
+     * @param player player to retrieve for
+     */
+    public static void update(Player player)
+    {
+        playerZones.get(player.getUniqueId()).update(player);
+    }
+
+    /**
+     * Initializes the manager, loading data from configs
+     */
+    public static void init(DataSection zoneData)
+    {
+        if (init)
+            return;
+
+        load(zoneData);
+        applyChunks();
+
+        // Initializes players that are already online
+        for (Player player : VersionManager.getOnlinePlayers())
+            init(player);
+    }
+
+    /**
+     * Applies loaded chunks for initial zones
+     */
+    private static void applyChunks()
+    {
+        for (World world : Bukkit.getWorlds())
+        {
+            for (Chunk chunk : world.getLoadedChunks())
+            {
+                load(chunk);
+            }
+        }
+    }
+
+    /**
+     * Loads zones from the config
+     */
+    private static void load(DataSection zoneData)
+    {
+        int count = 0;
+
+        Logger.log(LogType.SETUP, 1, "Loading zones...");
+
+        // Load in each zone, using base keys as the zone names
+        for (String key : zoneData.keys())
+        {
+            try
+            {
+                Zone zone = new Zone(key, zoneData.getSection(key));
+                checkWorld(zone.getWorldName());
+
+                // Zones start of as inactive
+                zones.get(zone.getWorldName()).add(zone);
+
+                count++;
+                Logger.log(LogType.SETUP, 2, "Loaded Zone: " + key);
+            }
+            catch (Exception ex)
+            {
+                Logger.invalid("Invalid zone config for zone \"" + key + "\" - " + ex.getMessage());
+            }
+        }
+
+        Logger.log(LogType.SETUP, 1, "Loaded " + count + " zones");
+    }
+
+    /**
+     * Checks to make sure the given world is added to the keys for zone maps
+     *
+     * @param world world to check for
+     */
+    private static void checkWorld(String world)
+    {
+        // Create the list for the world if not done so already
+        if (!active.containsKey(world))
+        {
+            active.put(world, new ArrayList<Zone>());
+            activeByFlag.put(world, makeFlagHashMap());
+            zones.put(world, new ZoneList());
+        }
+    }
+
+    /**
+     * @return an empty hashmap for the activeByFlag mappings
+     */
+    private static HashMap<ZoneFlag, ArrayList<Zone>> makeFlagHashMap()
+    {
+        HashMap<ZoneFlag, ArrayList<Zone>> map = new HashMap<ZoneFlag, ArrayList<Zone>>();
+        for (ZoneFlag flag : ZoneFlag.values())
+            map.put(flag, new ArrayList<Zone>());
+        return map;
+    }
+
+    /**
+     * Clears all stored data
+     */
+    public static void cleanup()
+    {
+        activeByFlag.clear();
+        active.clear();
+        zones.clear();
+        playerZones.clear();
+        init = false;
     }
 }

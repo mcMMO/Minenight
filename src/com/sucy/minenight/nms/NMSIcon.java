@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.protection.zone.ZonePoint
+ * com.sucy.minenight.nms.NMSIcon
  *
  * The MIT License (MIT)
  *
@@ -24,25 +24,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.protection.zone;
+package com.sucy.minenight.nms;
 
-/**
- * A simple X/Z coordinate pair used for zones
- */
-public class ZonePoint
+import org.bukkit.inventory.ItemStack;
+
+public interface NMSIcon extends NMSEntityBase
 {
-    public int x;
-    public int z;
+    public abstract void ride(NMSEntityBase vehicle);
 
-    /**
-     * Initializes a point with the given coordinates
-     *
-     * @param x x coordinate
-     * @param z z coordinate
-     */
-    public ZonePoint(int x, int z)
-    {
-        this.x = x;
-        this.z = z;
-    }
+    public abstract void setItem(ItemStack item);
 }

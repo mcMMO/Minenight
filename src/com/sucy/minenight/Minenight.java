@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight;
 
+import com.sucy.minenight.hologram.Holograms;
 import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.util.commands.CommandManager;
 import com.sucy.minenight.util.config.CommentedConfig;
@@ -94,6 +95,7 @@ public class Minenight extends JavaPlugin
 
     // Segments
     private Protection protection;
+    private Holograms  hologram;
 
     /**
      * Loads up all plugin segments and utility classes
@@ -120,9 +122,11 @@ public class Minenight extends JavaPlugin
 
         // Create segments
         protection = new Protection();
+        hologram = new Holograms();
 
         // Set up segments
         protection.setup();
+        hologram.setup();
     }
 
     /**
@@ -137,6 +141,7 @@ public class Minenight extends JavaPlugin
         }
 
         // Clean up segments
+        hologram.cleanup();
         protection.cleanup();
 
         // Clean up utilities

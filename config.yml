@@ -10,3 +10,6 @@ logging:
   #
   # Messages for Zone management
   zone: 0
+  #
+  # Messages for Hologram management
+  hologram: 0

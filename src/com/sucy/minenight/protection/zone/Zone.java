@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.protection.zone;
 
+import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -45,10 +46,10 @@ public class Zone
         MAX_Y   = "ymax",
         WORLD   = "world",
         FLAGS   = "flag",
-        SPAWNS  = "prevent";
+        SPAWNS = "prevent";
 
     private HashSet<Integer> chunks;
-    private HashSet<String>  flags;
+    private HashSet<ZoneFlag>  flags;
     private HashSet<String>  spawns;
     private String           name;
     private String           world;
@@ -56,12 +57,12 @@ public class Zone
     private int              minY;
     private int              maxY;
 
-    private ZonePoint min;
-    private ZonePoint max;
-    private ZonePoint center;
+    private Point min;
+    private Point max;
+    private Point center;
 
-    private ArrayList<ZonePoint> points;
-    private ArrayList<Double>    collision;
+    private ArrayList<Point>  points;
+    private ArrayList<Double> collision;
 
     /**
      * Loads zone data from the config data
@@ -81,10 +82,10 @@ public class Zone
 
         // Load flag data
         List<String> list = data.getList(FLAGS);
-        flags = new HashSet<String>();
+        flags = new HashSet<ZoneFlag>();
         for (String key : list)
         {
-            flags.add(key.toUpperCase().replace(" ", "_"));
+            flags.add(ZoneFlag.valueOf(key.toUpperCase().replace(" ", "_")));
         }
 
         // Load spawn data
@@ -96,15 +97,15 @@ public class Zone
         }
 
         // Load coordinates
-        min = new ZonePoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        max = new ZonePoint(Integer.MIN_VALUE, Integer.MIN_VALUE);
-        center = new ZonePoint(0, 0);
+        min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        center = new Point(0, 0);
         int i = 1;
-        points = new ArrayList<ZonePoint>();
+        points = new ArrayList<Point>();
         while (data.isSection("" + i))
         {
             DataSection pointData = data.getSection("" + i);
-            ZonePoint point = new ZonePoint(pointData.getInt("x"), pointData.getInt("z"));
+            Point point = new Point(pointData.getInt("x"), pointData.getInt("z"));
             min.x = Math.min(min.x, point.x >> 4);
             min.z = Math.min(min.z, point.z >> 4);
             max.x = Math.max(max.x, point.x >> 4);
@@ -121,19 +122,63 @@ public class Zone
         }
         if (points.size() == 2) {
             points.clear();
-            points.add(new ZonePoint(min.x, min.z));
-            points.add(new ZonePoint(min.x, max.z));
-            points.add(new ZonePoint(max.x, max.z));
-            points.add(new ZonePoint(max.x, min.z));
+            makeBox();
         }
 
-        // Pre-calculate some values for bounds checking
-        int j;
+        compute();
+    }
+
+    /**
+     * Creates a detection zone for something that triggers when
+     * a player gets nearby
+     *
+     * @param name name of the zone for identification purposes
+     * @param loc  location of the object to detect for
+     * @param rad  detection radius
+     */
+    public Zone(String name, Location loc, int rad)
+    {
+        this.name = name;
+        chunks = new HashSet<Integer>();
+
+        world = loc.getWorld().getName();
+        zIndex = Integer.MIN_VALUE;
+        minY = loc.getBlockY() - rad;
+        maxY = minY + (rad << 1);
+
+        flags = new HashSet<ZoneFlag>();
+        spawns = new HashSet<String>();
+
+        center = new Point(loc.getBlockX(), loc.getBlockZ());
+        min = new Point(center.x - rad, center.z - rad);
+        max = new Point(center.x + rad, center.z + rad);
+
+        points = new ArrayList<Point>();
+        makeBox();
+        compute();
+    }
+
+    /**
+     * Adds points to forma a box using min/max values
+     */
+    private void makeBox()
+    {
+        points.add(new Point(min.x, min.z));
+        points.add(new Point(min.x, max.z));
+        points.add(new Point(max.x, max.z));
+        points.add(new Point(max.x, min.z));
+    }
+
+    /**
+     * Computes values for collision detection early
+     */
+    private void compute()
+    {
         collision = new ArrayList<Double>();
-        for (i = 0, j = points.size() - 1; i < points.size(); j = i++)
+        for (int i = 0, j = points.size() - 1; i < points.size(); j = i++)
         {
-            ZonePoint p1 = points.get(i);
-            ZonePoint p2 = points.get(j);
+            Point p1 = points.get(i);
+            Point p2 = points.get(j);
             collision.add((double) (p2.x - p1.x) / (p2.z - p1.z));
         }
     }
@@ -141,7 +186,7 @@ public class Zone
     /**
      * @return center of the zone, ignoring the y direction
      */
-    public ZonePoint getCenter()
+    public Point getCenter()
     {
         return center;
     }
@@ -160,6 +205,26 @@ public class Zone
                && x <= max.x
                && z >= min.z
                && z <= max.z;
+    }
+
+    /**
+     * Checks if the zone has flags or not
+     *
+     * @return true if has flags, false otherwise
+     */
+    public boolean hasFlags()
+    {
+        return flags.size() > 0;
+    }
+
+    /**
+     * Retrieves the flags the zone has
+     *
+     * @return flags the zone has
+     */
+    public HashSet<ZoneFlag> getFlags()
+    {
+        return flags;
     }
 
     /**
@@ -248,7 +313,7 @@ public class Zone
      */
     public boolean hasFlag(ZoneFlag flag)
     {
-        return flags.contains(flag.name());
+        return flags.contains(flag);
     }
 
     /**

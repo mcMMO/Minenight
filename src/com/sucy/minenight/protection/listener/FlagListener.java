@@ -32,7 +32,7 @@ import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
 import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
-import com.sucy.minenight.protection.zone.ZonePoint;
+import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.ListenerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -104,7 +104,7 @@ public class FlagListener implements Listener
             protection.getHurtEffect().getPlayers().add(event.getPlayer());
         if (zone.hasFlag(ZoneFlag.RESTRICT) && !Protection.hasPermissions(event.getPlayer(), zone, ZoneFlag.RESTRICT))
         {
-            ZonePoint center = event.getZone().getCenter();
+            Point center = event.getZone().getCenter();
             Vector dir = event.getPlayer().getLocation(temp).subtract(center.x, 0, center.z).toVector();
             dir.setY(0);
             event.getPlayer().setVelocity(dir.normalize().multiply(3).setY(0.5));
@@ -169,7 +169,7 @@ public class FlagListener implements Listener
             Zone zone = ZoneManager.getZone(defender);
 
             // God mode
-            if (zone.hasFlag(ZoneFlag.GOD))
+            if (zone != null && zone.hasFlag(ZoneFlag.GOD))
             {
                 event.setCancelled(true);
                 return;
@@ -184,8 +184,9 @@ public class FlagListener implements Listener
                     return;
 
                 // Cancel PvP when prohibited
-                if (zone.hasFlag(ZoneFlag.PVP)
-                    || ZoneManager.getZone(attacker).hasFlag(ZoneFlag.PVP))
+                Zone zone2 = ZoneManager.getZone(attacker);
+                if ((zone != null && zone.hasFlag(ZoneFlag.PVP))
+                    || (zone2 != null && zone2.hasFlag(ZoneFlag.PVP)))
                 {
                     event.setCancelled(true);
                 }
@@ -262,7 +263,7 @@ public class FlagListener implements Listener
     @EventHandler
     public void onInteract(PlayerInteractEvent event)
     {
-        if (ZoneManager.isProhibited(event.getClickedBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
+        if (event.getClickedBlock() != null && ZoneManager.isProhibited(event.getClickedBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
             event.setCancelled(true);
     }
 
