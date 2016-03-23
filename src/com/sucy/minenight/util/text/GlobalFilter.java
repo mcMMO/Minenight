@@ -76,22 +76,23 @@ public class GlobalFilter
         int next = text.indexOf('{');
         if (next == -1) return text;
 
-        int end = -1;
+        int end = 0;
         StringBuilder sb = new StringBuilder();
         while (next != -1)
         {
-            end = text.indexOf('}', next);
-            if (end != -1)
+            int bracket = text.indexOf('}', next);
+            if (bracket != -1)
             {
-                sb.append(text, 0, next);
-                String filter = text.substring(next + 1, end);
+                sb.append(text, end, next);
+                end = bracket + 1;
+                String filter = text.substring(next + 1, bracket);
                 String value = map.get(filter);
                 if (value != null)
                     sb.append(value);
             }
             next = text.indexOf('{', next + 1);
         }
-        sb.append(text, end + 1, text.length());
+        sb.append(text, end, text.length());
         return sb.toString();
     }
 }
