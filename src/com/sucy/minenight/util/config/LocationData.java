@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.util.config;
 
+import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -38,6 +39,22 @@ import java.util.List;
  */
 public class LocationData
 {
+    /**
+     * Parses a location from a full section
+     *
+     * @param data section to parse
+     *
+     * @return parsed location
+     */
+    public static Location parse(DataSection data)
+    {
+        return new Location(
+            Bukkit.getWorld(data.getString("world")),
+            data.getDouble("x", 0),
+            data.getDouble("y", 0),
+            data.getDouble("z", 0)
+        );
+    }
 
     /**
      * <p>Serializes a location using as little space as possible</p>

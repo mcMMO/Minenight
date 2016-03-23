@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.hologram.listener.PlayerListener
+ * com.sucy.minenight.hologram.data.NameSettings
  *
  * The MIT License (MIT)
  *
@@ -24,46 +24,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.hologram.listener;
+package com.sucy.minenight.hologram.data;
 
-import com.sucy.minenight.hologram.Holograms;
-import com.sucy.minenight.nms.PacketInjector;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scoreboard.Scoreboard;
+import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.text.TextFormatter;
 
 /**
- * Handles events related to players and holograms
+ * Settings for a monster display name
  */
-public class PlayerListener implements Listener
+public class NameSettings
 {
-    private Holograms holograms;
-
-    private PacketInjector injector = new PacketInjector();
-
-    /**
-     * @param holograms reference to manager
-     */
-    public PlayerListener(Holograms holograms)
-    {
-        this.holograms = holograms;
-    }
+    public final int    proportion;
+    public final double percent;
+    public final String above;
+    public final String below;
+    public final String name;
 
     /**
-     * Add a packet injector to the player when they join
-     * in order to handle hologram visibility. Also sets
-     * up scoreboards for identity setup.
+     * Loads settings from config data
      *
-     * @param event event details
+     * @param data data to load from
      */
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event)
+    public NameSettings(DataSection data)
     {
-        injector.addPlayer(event.getPlayer());
+        proportion = data.getInt("proportional", -1);
+        percent = data.getInt("percent", 20) / 100.0;
 
-        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+        DataSection colors = data.getSection("colours");
+        above = TextFormatter.colorString(colors.getString("above"));
+        below = TextFormatter.colorString(colors.getString("below"));
 
+        name = TextFormatter.colorString(data.getList("format").get(0));
     }
 }

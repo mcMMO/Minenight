@@ -57,7 +57,7 @@ public class Hologram
     public Hologram(DataSection config)
     {
         this(
-            LocationData.parseLocation(config.getString("location")),
+            LocationData.parse(config),
             config.getList("format")
         );
     }
@@ -88,9 +88,6 @@ public class Hologram
             else
                 data.appendTextLine(TextFormatter.colorString(string));
         }
-        
-        if (isChunkLoaded())
-            show();
     }
 
     /**
@@ -107,6 +104,14 @@ public class Hologram
     }
 
     /**
+     * @return visibility data for the hologram
+     */
+    public Visibility getVisibility()
+    {
+        return data.getVisibility();
+    }
+
+    /**
      * @return chunk coordinates of the hologram
      */
     public Point getChunk()
@@ -118,6 +123,7 @@ public class Hologram
      * Checks if the hologram is in the given chunk
      *
      * @param chunk chunk to check
+     *
      * @return true if in the chunk, false otherwise
      */
     public boolean isInChunk(Chunk chunk)
@@ -173,6 +179,7 @@ public class Hologram
      * Parses a skull from the given skull filter
      *
      * @param filter filter to parse from
+     *
      * @return parsed skull
      */
     private ItemStack makeSkull(String filter)
@@ -188,6 +195,7 @@ public class Hologram
      * Parses an item from the given item filter
      *
      * @param filter filter to parse from
+     *
      * @return parsed item
      */
     private ItemStack makeItem(String filter)

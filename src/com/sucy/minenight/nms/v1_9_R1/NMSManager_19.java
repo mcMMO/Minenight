@@ -1,11 +1,11 @@
 package com.sucy.minenight.nms.v1_9_R1;
 
-import com.sucy.minenight.nms.NMSEntityBase;
-import com.sucy.minenight.nms.NMSManager;
 import com.sucy.minenight.hologram.display.LineData;
 import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.hologram.display.line.ItemLine;
 import com.sucy.minenight.hologram.display.line.TextLine;
+import com.sucy.minenight.nms.NMSEntityBase;
+import com.sucy.minenight.nms.NMSManager;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
@@ -51,6 +51,7 @@ public class NMSManager_19
      * @param entityClass custom entity's class
      * @param name        name of the entity
      * @param id          entity ID
+     *
      * @throws Exception
      */
     private void registerCustomEntity(Class entityClass, String name, int id) throws Exception
@@ -63,6 +64,7 @@ public class NMSManager_19
      * Retrieves a custom spawned entity by ID
      *
      * @param id entity ID
+     *
      * @return custom spawned entity
      */
     public NMSEntityBase getEntity(int id)
@@ -86,6 +88,7 @@ public class NMSManager_19
      * @param y     y coordinate
      * @param z     z coordinate
      * @param line  line owning the entity
+     *
      * @return created entity
      */
     public NMSStand spawnNMSArmorStand(org.bukkit.World world, double x, double y, double z, HologramLine line)
@@ -100,12 +103,14 @@ public class NMSManager_19
 
     /**
      * Spawns a custom item entity
+     *
      * @param world world to spawn in
      * @param x     x coordinate
      * @param y     y coordinate
      * @param z     z coordinate
      * @param line  line owning the entity
      * @param item  item to base it off of
+     *
      * @return created entity
      */
     public NMSItem spawnNMSItem(org.bukkit.World world, double x, double y, double z, ItemLine line, ItemStack item)
@@ -124,6 +129,7 @@ public class NMSManager_19
      *
      * @param nmsWorld  world to add to
      * @param nmsEntity entity to add
+     *
      * @return true if succeeded
      */
     private boolean addEntityToWorld(WorldServer nmsWorld, Entity nmsEntity)
@@ -191,7 +197,7 @@ public class NMSManager_19
             if (line.isSpawned())
             {
                 if ((line instanceof TextLine))
-                    connection.sendPacket(new PacketPlayOutSpawnEntityLiving((EntityLiving)((TextLine) line).getNameable()));
+                    connection.sendPacket(new PacketPlayOutSpawnEntityLiving((EntityLiving) ((TextLine) line).getNameable()));
                 else if ((line instanceof ItemLine))
                 {
                     ItemLine itemLine = (ItemLine) line;

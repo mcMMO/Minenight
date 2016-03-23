@@ -352,7 +352,7 @@ public class Particle
                 try
                 {
                     Object packet = packetClass.getConstructor(particleEnum, Boolean.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Integer.TYPE, int[].class)
-                            .newInstance(enumValue, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), dx, dy, dz, speed, count, extra);
+                        .newInstance(enumValue, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), dx, dy, dz, speed, count, extra);
 
                     for (Player player : VersionManager.getOnlinePlayers())
                     {

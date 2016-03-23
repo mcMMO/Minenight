@@ -1,13 +1,14 @@
 package com.sucy.minenight.nms;
 
+/**
+ * Interface for custom text entities
+ */
 public abstract interface NMSNameable extends NMSEntityBase
 {
-    public abstract void rename(String paramString);
-
-    public abstract String getCustomName();
+    /**
+     * Sets the display name of the entity
+     *
+     * @param name new name to use
+     */
+    public abstract void rename(String name);
 }
-
-/* Location:           D:\Downloads\Skype\HolographicDisplays.jar
- * Qualified Name:     com.gmail.filoghost.holographicdisplays.nms.interfaces.entity.NMSNameable
- * JD-Core Version:    0.6.2
- */

@@ -43,7 +43,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onLogin(PlayerLoginEvent event)
     {
         if (event.getResult() == PlayerLoginEvent.Result.ALLOWED)
@@ -55,7 +55,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event)
     {
         ZoneManager.clear(event.getPlayer());
@@ -66,7 +66,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event)
     {
         ZoneManager.update(event.getEntity());
@@ -77,7 +77,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onRespawn(PlayerRespawnEvent event)
     {
         ZoneManager.update(event.getPlayer());
@@ -88,7 +88,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event)
     {
         ZoneManager.update(event.getPlayer());
@@ -99,7 +99,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onChangeWorld(PlayerChangedWorldEvent event)
     {
         ZoneManager.update(event.getPlayer());
@@ -110,7 +110,7 @@ public class MovementListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event)
     {
         ZoneManager.update(event.getPlayer());

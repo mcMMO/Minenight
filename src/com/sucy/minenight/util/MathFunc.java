@@ -37,6 +37,7 @@ public class MathFunc
      * Squares a number
      *
      * @param num number to square
+     *
      * @return number squared
      */
     public static double sq(double num)
@@ -51,6 +52,7 @@ public class MathFunc
      * @param y1 point 1 y coord
      * @param x2 point 2 x coord
      * @param y2 point 2 y coord
+     *
      * @return distance squared
      */
     public static double dSq(double x1, double y1, double x2, double y2)
@@ -78,6 +80,7 @@ public class MathFunc
      * Gets chunk coords from the location
      *
      * @param loc location to use
+     *
      * @return chunk coordinates
      */
     public static Point getChunk(Location loc)

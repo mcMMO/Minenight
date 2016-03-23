@@ -39,10 +39,7 @@ import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Handles zones and the flags inside of them
@@ -66,6 +63,7 @@ public class Protection
      *
      * @param player player to check for
      * @param flag   flag to check for
+     *
      * @return true if has bypass perms, false otherwise
      */
     public static boolean hasPermissions(Player player, Zone zone, ZoneFlag flag)

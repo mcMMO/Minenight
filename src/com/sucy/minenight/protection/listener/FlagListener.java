@@ -32,8 +32,8 @@ import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
 import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
-import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.ListenerUtil;
+import com.sucy.minenight.util.Point;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,7 +44,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -281,7 +284,7 @@ public class FlagListener implements Listener
         if (event.getPlayer() == null)
         {
             if (ZoneManager.isProhibited(loc, ZoneFlag.PROTECT))
-            event.setCancelled(true);
+                event.setCancelled(true);
         }
 
         // Player ignition

@@ -33,13 +33,30 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import org.bukkit.entity.Player;
 
+/**
+ * Handles the interception of packets, applying effects where necessary
+ */
 public class PacketHandler extends ChannelDuplexHandler
 {
     private Player p;
 
-    public PacketHandler(final Player p) {
+    /**
+     * @param p player being managed
+     */
+    public PacketHandler(final Player p)
+    {
         this.p = p;
     }
+
+    /**
+     * Intercepts an outgoing packet
+     *
+     * @param ctx     channel context
+     * @param msg     packet being sent
+     * @param promise sending promise
+     *
+     * @throws Exception
+     */
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception
     {

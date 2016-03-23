@@ -1,10 +1,10 @@
 package com.sucy.minenight.nms;
 
-import com.sucy.minenight.nms.v1_9_R1.NMSStand;
-import com.sucy.minenight.nms.v1_9_R1.NMSItem;
 import com.sucy.minenight.hologram.display.LineData;
 import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.hologram.display.line.ItemLine;
+import com.sucy.minenight.nms.v1_9_R1.NMSItem;
+import com.sucy.minenight.nms.v1_9_R1.NMSStand;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +23,7 @@ public abstract interface NMSManager
      * Retrieves a custom spawned entity by ID
      *
      * @param id entity ID
+     *
      * @return custom spawned entity
      */
     public abstract NMSEntityBase getEntity(int id);
@@ -40,18 +41,21 @@ public abstract interface NMSManager
      * @param y     y coordinate
      * @param z     z coordinate
      * @param line  line owning the entity
+     *
      * @return created entity
      */
     public abstract NMSStand spawnNMSArmorStand(World world, double x, double y, double z, HologramLine line);
 
     /**
      * Spawns a custom item entity
+     *
      * @param world world to spawn in
      * @param x     x coordinate
      * @param y     y coordinate
      * @param z     z coordinate
      * @param line  line owning the entity
      * @param item  item to base it off of
+     *
      * @return created entity
      */
     public abstract NMSItem spawnNMSItem(World world, double x, double y, double z, ItemLine line, ItemStack item);

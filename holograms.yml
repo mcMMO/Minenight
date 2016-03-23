@@ -2,79 +2,76 @@ hurt:
   personal:
     ticks: 20
     format:
-    - '&e{value}'
-    source:
-    - player
-    - entity
-  others:
+    - &e{value}
+  players:
     ticks: 20
     format:
-    - '&c{value}'
-    source:
-    - player
-    - entity
-  enviroment:
+    - &c{value}
+  entity:
     ticks: 20
     format:
-    - '&c{value}'
+    - &c{value}
 heal:
-  all:
+  personal:
     ticks: 20
     format:
-    - '&a{value}'
+    - &a{value}
+  players:
+    ticks: 20
+    format:
+    - &a{value}
+  entity:
+    ticks: 20
+    format:
+    - &a{value}
 death:
-  murder:
+  players:
     ticks: 1200
     format:
-    - '{skull:player}'
-    - '&f☠ &eMurder &f☠'
-    - '&f{killer}'
-    - '&f&m{player}'
+    - {skull:killer}
+    - &f☠ &eMurder &f☠
+    - &f{killer}
+    - &f&m{player}
   entity:
     ticks: 1200
     format:
-    - '{skull:player}'
-    - '&f☠ &eDeath &f☠'
-    - '&f{entity}'
-    - '&f&m{player}'
-  champion:
-    ticks: 1200
-    format:
-    - '{skull:killer}'
-    - '&f♛ &eChampion &f♛'
-    - '&f{killer}'
-    - '&f&m{player}'
-  item:
-    ticks: 1200
-    format:
-    - '{item}'
-    - '&f✪ &eVictory &f✪'
-    - '&f{killer}'
-    - '&f&m{player}'
+    - {skull:player}
+    - &f☠ &eDeath &f☠
+    - &f{entity}
+    - &f&m{player}
 identity:
-  player:
+  players:
     proportional: 100
     percent: 20
-      below: '&c'
-      above: '&a'
+    colours:
+      below: &c
+      above: &a
     format:
-    - '{percent}{name}'
-    - '&f{health} &a❤'
-  monster:
-    proportional: {health}
+    - {colours}{name}
+    - &f{health} {colours}❤
+  entity:
+    proportional: {healthmax}
     percent: 20
-      below: '&c'
-      above: '&a'
+    colours:
+      below: &c
+      above: &a
     format:
-    - '&fLv{level} {percent}{name}'
-    - '&f{health} &a❤'
+    - &f{health} {colours}❤
 holograms:
   hologramone:
-    location: 'world, 0, 80, 0'
+    world: world
+    x: 11
+    y: 70
+    z: 29
     format:
-    - '&fHologram'
+    - {skull:Eniripsa96}
+    - &fHologram
   hologramtwo:
-    location: 'world, -20, 80, 0'
+    location:
+    world: world
+    x: 13
+    y: 70
+    z: 29
     format:
-    - '{item:diamond_sword}'
-    - '&fHologram Two'
+    - {item:diamond_sword}
+    - &fHologram Two

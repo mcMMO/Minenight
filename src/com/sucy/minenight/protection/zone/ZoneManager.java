@@ -110,6 +110,7 @@ public class ZoneManager
      *
      * @param loc  loc to search for
      * @param flag flag looking for
+     *
      * @return zone containing the location with the flag or null if none found
      */
     public static Zone getZone(Location loc, ZoneFlag flag)
@@ -125,6 +126,7 @@ public class ZoneManager
      *
      * @param loc        location to look for
      * @param worldZones zones to look through
+     *
      * @return top level zone containing the location or null if none found
      */
     private static Zone getZone(Location loc, ArrayList<Zone> worldZones)
@@ -229,8 +231,8 @@ public class ZoneManager
     /**
      * Checks whether or not an action is not alled
      *
-     * @param loc  location the action is being performed at
-     * @param flag flag related to the action
+     * @param loc    location the action is being performed at
+     * @param flag   flag related to the action
      * @param player player doing the action
      *
      * @return true if allowed, false otherwise
@@ -262,7 +264,7 @@ public class ZoneManager
     /**
      * Checks whether or not an action is not alled
      *
-     * @param flag flag related to the action
+     * @param flag   flag related to the action
      * @param player player doing the action
      *
      * @return true if allowed, false otherwise

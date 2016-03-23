@@ -1,9 +1,9 @@
 package com.sucy.minenight.nms.v1_9_R1;
 
+import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSNameable;
-import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
@@ -129,20 +129,36 @@ public class NMSStand extends EntityArmorStand
     // Remove functionality so it takes up less resources
 
     public EnumInteractionResult a(EntityHuman human, Vec3D vec3d, ItemStack itemstack, EnumHand enumhand) { return EnumInteractionResult.PASS; }
+
     public boolean c(NBTTagCompound nbttagcompound) { return false; }
+
     public boolean c(int i, ItemStack item) { return false; }
+
     public boolean d(NBTTagCompound nbttagcompound) { return false; }
+
     public boolean isInvulnerable(DamageSource source) { return true; }
+
     public boolean isCollidable() { return false; }
+
     public void a(AxisAlignedBB boundingBox) { }
+
     public void a(SoundEffect soundeffect, float f, float f1) { }
+
     public void a(NBTTagCompound nbttagcompound) { }
+
     public void b(NBTTagCompound nbttagcompound) { }
+
     public void e(NBTTagCompound nbttagcompound) { }
+
     public void f(NBTTagCompound nbttagcompound) { }
+
     public void m() { }
+
     public void die() { }
+
     public void setCustomName(String customName) { }
+
     public void setCustomNameVisible(boolean visible) { }
+
     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack) { }
 }

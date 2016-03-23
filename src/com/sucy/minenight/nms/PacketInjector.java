@@ -33,7 +33,8 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class PacketInjector {
+public class PacketInjector
+{
 
     private Field    playerCon;
     private Class<?> PlayerConnection;
@@ -110,9 +111,12 @@ public class PacketInjector {
         throws Exception
     {
         Channel ch = null;
-        try {
-            ch = (Channel)k.get(networkManager);
-        } catch (Exception e) {
+        try
+        {
+            ch = (Channel) k.get(networkManager);
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
         return ch;

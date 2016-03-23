@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.nms.NMSIcon
+ * com.sucy.minenight.hologram.data.ScoreboardSettings
  *
  * The MIT License (MIT)
  *
@@ -24,28 +24,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.nms;
+package com.sucy.minenight.hologram.data;
 
-import org.bukkit.inventory.ItemStack;
+import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.text.TextFormatter;
 
 /**
- * Interface for icon entities
+ * Settings for a scoreboard setup
  */
-public interface NMSIcon extends NMSEntityBase
+public class ScoreboardSettings extends NameSettings
 {
-    /**
-     * Makes the item ride the given vehicle
-     * in order to keep it in place
-     *
-     * @param vehicle vehicle to ride in
-     */
-    public abstract void ride(NMSEntityBase vehicle);
+    public final String prefix;
+    public final String suffix;
+    public final String subText;
 
     /**
-     * Sets the ItemStack for the EntityItem
-     * from a Bukkit item reference
+     * Loads settings from config data
      *
-     * @param item Bukkit item
+     * @param data data to load from
      */
-    public abstract void setItem(ItemStack item);
+    public ScoreboardSettings(DataSection data)
+    {
+        super(data);
+
+        int ind = name.indexOf("{name}");
+        prefix = TextFormatter.colorString(name.substring(0, ind));
+        suffix = TextFormatter.colorString(name.substring(ind + 6));
+
+        String under = data.getList("format").get(1);
+        int bot = under.indexOf("{health}");
+        subText = under.substring(bot + 8);
+    }
 }

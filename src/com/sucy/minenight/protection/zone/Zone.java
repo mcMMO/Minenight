@@ -46,16 +46,16 @@ public class Zone
         MAX_Y   = "ymax",
         WORLD   = "world",
         FLAGS   = "flag",
-        SPAWNS = "prevent";
+        SPAWNS  = "prevent";
 
-    private HashSet<Integer> chunks;
-    private HashSet<ZoneFlag>  flags;
-    private HashSet<String>  spawns;
-    private String           name;
-    private String           world;
-    private int              zIndex;
-    private int              minY;
-    private int              maxY;
+    private HashSet<Integer>  chunks;
+    private HashSet<ZoneFlag> flags;
+    private HashSet<String>   spawns;
+    private String            name;
+    private String            world;
+    private int               zIndex;
+    private int               minY;
+    private int               maxY;
 
     private Point min;
     private Point max;
@@ -120,7 +120,8 @@ public class Zone
             center.x /= points.size();
             center.z /= points.size();
         }
-        if (points.size() == 2) {
+        if (points.size() == 2)
+        {
             points.clear();
             makeBox();
         }
