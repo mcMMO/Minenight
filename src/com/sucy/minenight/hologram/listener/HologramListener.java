@@ -29,23 +29,27 @@ package com.sucy.minenight.hologram.listener;
 import com.sucy.minenight.Minenight;
 import com.sucy.minenight.hologram.Holograms;
 import com.sucy.minenight.hologram.data.InstanceSettings;
+import com.sucy.minenight.hologram.data.NameSettings;
 import com.sucy.minenight.hologram.data.ScoreboardSettings;
 import com.sucy.minenight.hologram.display.Hologram;
 import com.sucy.minenight.nms.PacketInjector;
 import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.text.GlobalFilter;
+import com.sucy.minenight.util.text.TextFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -166,9 +170,15 @@ public class HologramListener implements Listener
             new UpdateTask(player);
             killers.put(player.getUniqueId(), ListenerUtil.getDamager(event));
         }
+        else if (event.getEntity() instanceof LivingEntity)
+        {
+            new NameTask((Damageable) event.getEntity());
+        }
 
         if (event.getEntity() instanceof LivingEntity)
+        {
             instanceValue("hurt", (LivingEntity) event.getEntity(), event.getDamage());
+        }
     }
 
     /**
@@ -187,6 +197,57 @@ public class HologramListener implements Listener
 
         if (event.getEntity() instanceof LivingEntity)
             instanceValue("heal", (LivingEntity) event.getEntity(), event.getAmount());
+    }
+
+    /**
+     * Give monsters their health displays on spawn
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onSpawn(EntitySpawnEvent event)
+    {
+        if (event instanceof LivingEntity && event.getEntity() instanceof Damageable)
+        {
+            updateName((Damageable) event.getEntity());
+        }
+    }
+
+    /**
+     * Updates the health display of a damageable non-player entity
+     *
+     * @param entity entity to update
+     */
+    private void updateName(Damageable entity)
+    {
+        NameSettings settings = holograms.getMonsterNameSettings();
+        settings.define(entity);
+        entity.setCustomName(GlobalFilter.filter(settings.name));
+        entity.setCustomNameVisible(true);
+    }
+
+    /**
+     * Gives dropped items names
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onItemDrop(ItemSpawnEvent event)
+    {
+        nameItem(event.getEntity());
+    }
+
+    /**
+     * Displays the name of a dropped item
+     *
+     * @param item item dropped
+     */
+    private void nameItem(Item item)
+    {
+        ItemStack stack = item.getItemStack();
+        ItemMeta meta = stack.getItemMeta();
+        item.setCustomName(meta.hasDisplayName() ? meta.getDisplayName() : TextFormatter.format(stack.getType().name()));
+        item.setCustomNameVisible(true);
     }
 
     /**
@@ -214,7 +275,7 @@ public class HologramListener implements Listener
      */
     private void instanceValue(String base, LivingEntity entity, double amount)
     {
-        if (amount < 1)
+        if (amount < 1 || entity == null)
             return;
 
         GlobalFilter.define("value", "" + (int) amount);
@@ -229,7 +290,7 @@ public class HologramListener implements Listener
             healHolo.getVisibility().showTo(player);
             holograms.addInstance(healHolo);
 
-            settings = holograms.getInstanceSettings(base + ".players");
+            settings = holograms.getInstanceSettings(base + ".player");
             healHolo = new Hologram(loc, settings.getFormat(), settings.ticks);
             healHolo.getVisibility().exclude(player);
             holograms.addInstance(healHolo);
@@ -259,6 +320,23 @@ public class HologramListener implements Listener
         public void run()
         {
             updateScoreboard(player);
+        }
+    }
+
+    private class NameTask extends BukkitRunnable
+    {
+        private Damageable entity;
+
+        private NameTask(Damageable entity)
+        {
+            this.entity = entity;
+            runTaskLater(Minenight.getPlugin(), 1);
+        }
+
+        @Override
+        public void run()
+        {
+            updateName(entity);
         }
     }
 }

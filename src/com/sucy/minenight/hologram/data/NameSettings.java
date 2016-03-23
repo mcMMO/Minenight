@@ -27,7 +27,6 @@
 package com.sucy.minenight.hologram.data;
 
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.text.GlobalFilter;
 import com.sucy.minenight.util.text.TextFormatter;
 import org.bukkit.entity.Damageable;
@@ -65,8 +64,8 @@ public class NameSettings
         double ratio = entity.getHealth() / entity.getMaxHealth();
         GlobalFilter.define("format", ratio > percent ? above : below);
         if (proportion > 0)
-            GlobalFilter.define("health", "" + (int)(ratio * proportion));
+            GlobalFilter.define("health", "" + (int) (ratio * proportion));
         else
-            GlobalFilter.define("health", "" + (int)entity.getHealth());
+            GlobalFilter.define("health", "" + (int) entity.getHealth());
     }
 }
