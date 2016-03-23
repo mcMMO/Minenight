@@ -167,14 +167,14 @@ public class Holograms
         DataSection config = file.getConfig();
 
         // Load instance settings
-        loadInstanceSettings(config, "hurt");
-        loadInstanceSettings(config, "heal");
-        loadInstanceSettings(config, "death");
+        loadInstanceSettings(config, "hurt", true);
+        loadInstanceSettings(config, "heal", true);
+        loadInstanceSettings(config, "death", false);
 
         // Load scoreboard details
         DataSection identity = config.getSection("identity");
-        playerScoreboardSettings = new ScoreboardSettings(identity.getSection("players"));
-        monsterNameSettings = new NameSettings(identity.getSection("entity"));
+        playerScoreboardSettings = new ScoreboardSettings(identity, "player");
+        monsterNameSettings = new NameSettings(identity, "entity");
 
         // Load permanents
         DataSection perms = config.getSection("holograms");
@@ -187,7 +187,6 @@ public class Holograms
                 if (!permanents.containsKey(hash))
                     permanents.put(hash, new ArrayList<Hologram>());
                 permanents.get(hash).add(perm);
-                //ZoneManager.createDetectionZone("holo:" + key, perm.getLocation(), 25);
             }
             catch (Exception ex)
             {
@@ -197,11 +196,12 @@ public class Holograms
         }
     }
 
-    private void loadInstanceSettings(DataSection config, String section)
+    private void loadInstanceSettings(DataSection config, String section, boolean personal)
     {
-        DataSection data = config.getSection(section);
-        for (String key : data.keys())
-            instanceSettings.put(section + "." + key, new InstanceSettings(data.getSection(key)));
+        instanceSettings.put(section + ".player", new InstanceSettings(config, section, "player"));
+        instanceSettings.put(section + ".entity", new InstanceSettings(config, section, "entity"));
+        if (personal)
+            instanceSettings.put(section + ".personal", new InstanceSettings(config, section, "personal"));
     }
 
     private class TickingTask extends BukkitRunnable

@@ -1,62 +1,45 @@
+ticks:
+  hurt: 20
+  heal: 20
+  death: 1200
 hurt:
-  personal:
-    ticks: 20
-    format:
-    - &e{value}
-  players:
-    ticks: 20
-    format:
-    - &c{value}
+  player:
+  - &c{value}
   entity:
-    ticks: 20
-    format:
-    - &c{value}
+  - &c{value}
+  personal:
+  - &e{value}
 heal:
+  player:
+  - &a{value}
+  entity:
+  - &a{value}
   personal:
-    ticks: 20
-    format:
-    - &a{value}
-  players:
-    ticks: 20
-    format:
-    - &a{value}
-  entity:
-    ticks: 20
-    format:
-    - &a{value}
+  - &a{value}
 death:
-  players:
-    ticks: 1200
-    format:
-    - {skull:killer}
-    - &f☠ &eMurder &f☠
-    - &f{killer}
-    - &f&m{player}
+  player:
+  - {skull:killer}
+  - &f☠ &emurder &f☠
+  - &f{killer}
+  - &f&m{player}
   entity:
-    ticks: 1200
-    format:
-    - {skull:player}
-    - &f☠ &eDeath &f☠
-    - &f{entity}
-    - &f&m{player}
+  - {skull:player}
+  - &f☠ &edeath &f☠
+  - &f{entity}
+  - &f&m{player}
 identity:
-  players:
-    proportional: 100
-    percent: 20
-    colours:
-      below: &c
-      above: &a
-    format:
-    - {colours}{name}
-    - &f{health} {colours}❤
+  percent: 20
+  format:
+    above: &a
+    below: &c
+  proportional:
+    player: 100
+    entity: {healthmax}
+  player:
+  - {format}{name}
+  - &f{health} {format}❤
   entity:
-    proportional: {healthmax}
-    percent: 20
-    colours:
-      below: &c
-      above: &a
-    format:
-    - &f{health} {colours}❤
+  - &f{health} {format}❤
 holograms:
   hologramone:
     world: world
@@ -67,7 +50,6 @@ holograms:
     - {skull:Eniripsa96}
     - &fHologram
   hologramtwo:
-    location:
     world: world
     x: 13
     y: 70

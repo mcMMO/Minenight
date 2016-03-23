@@ -47,10 +47,10 @@ public class InstanceSettings
      *
      * @param data config data to load from
      */
-    public InstanceSettings(DataSection data)
+    public InstanceSettings(DataSection data, String key, String subKey)
     {
-        ticks = data.getInt("ticks");
-        format = TextFormatter.colorStringList(data.getList("format"));
+        ticks = data.getSection("ticks").getInt(key);
+        format = TextFormatter.colorStringList(data.getSection(key).getList(subKey));
     }
 
     /**

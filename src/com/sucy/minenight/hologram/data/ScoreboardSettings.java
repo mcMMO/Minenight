@@ -43,15 +43,15 @@ public class ScoreboardSettings extends NameSettings
      *
      * @param data data to load from
      */
-    public ScoreboardSettings(DataSection data)
+    public ScoreboardSettings(DataSection data, String key)
     {
-        super(data);
+        super(data, key);
 
         int ind = name.indexOf("{name}");
         prefix = TextFormatter.colorString(name.substring(0, ind));
         suffix = TextFormatter.colorString(name.substring(ind + 6));
 
-        String under = data.getList("format").get(1);
+        String under = data.getList(key).get(1);
         int bot = under.indexOf("{health}");
         subText = under.substring(bot + 8);
     }
