@@ -34,12 +34,22 @@ import com.sucy.minenight.world.enums.GlobalSetting;
 import com.sucy.minenight.world.listener.EntityListener;
 import com.sucy.minenight.world.listener.WorldListener;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 
+/**
+ * Management class for world settings. Handles chunk loading/generation and
+ * global settings applied to players and the world alike.
+ */
 public class Worlds
 {
     private static WorldSettings settings;
 
+    /**
+     * Loads settings and sets up for managing worlds
+     *
+     * @param config config data to load from
+     */
     public Worlds(DataSection config)
     {
         settings = new WorldSettings(config);
@@ -47,16 +57,27 @@ public class Worlds
         Minenight.registerListener(new EntityListener());
         Minenight.registerListener(new WorldListener());
 
+        // Unload chunks in empty worlds
+        for (World world : Bukkit.getWorlds())
+            if (world.getPlayers().size() == 0)
+                for (Chunk chunk : world.getLoadedChunks())
+                    chunk.unload();
+
+
+        // Set up chunk generation injections
         if (!settings.isEnabled(GlobalSetting.CHUNK_GENERATION) && NMS.isSupported())
             for (World world : Bukkit.getWorlds())
                 NMS.getManager().stopChunks(world);
     }
 
-    public void cleanup()
-    {
+    /**
+     * Cleans up the worlds manager
+     */
+    public void cleanup() { }
 
-    }
-
+    /**
+     * @return world settings
+     */
     public static WorldSettings getSettings()
     {
         return settings;

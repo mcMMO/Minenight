@@ -34,6 +34,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 /**
@@ -42,13 +43,14 @@ import org.bukkit.event.world.WorldLoadEvent;
 public class WorldListener implements Listener
 {
     /**
-     * Stops chunk generation for newly loaded worlds
+     * Disables keeping spawn points in memory
      *
      * @param event event details
      */
     @EventHandler
-    public void onWorld(WorldLoadEvent event)
+    public void onWorldInit(WorldInitEvent event)
     {
+        event.getWorld().setKeepSpawnInMemory(false);
         if (!Worlds.getSettings().isEnabled(GlobalSetting.CHUNK_GENERATION) && NMS.isSupported())
             NMS.getManager().stopChunks(event.getWorld());
     }
