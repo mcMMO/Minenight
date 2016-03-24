@@ -56,6 +56,8 @@ public class Economy
             currencyTypes.put(key, new CurrencyType(config.getSection(key)));
         for (Player player : VersionManager.getOnlinePlayers())
             init(player.getUniqueId());
+
+        Minenight.registerListener(new EconomyListener(this));
     }
 
     /**

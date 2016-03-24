@@ -49,7 +49,7 @@ public class WorldListener implements Listener
     @EventHandler
     public void onWorld(WorldLoadEvent event)
     {
-        if (!Worlds.getSettings().isEnabled(GlobalSetting.CHUNK_GENERATION))
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.CHUNK_GENERATION) && NMS.isSupported())
             NMS.getManager().stopChunks(event.getWorld());
     }
 

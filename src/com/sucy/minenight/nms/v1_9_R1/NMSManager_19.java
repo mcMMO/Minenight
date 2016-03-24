@@ -36,26 +36,20 @@ public class NMSManager_19
     /**
      * Sets up reflection and entity registration
      */
-    public void setup()
+    public NMSManager_19()
+        throws Exception
     {
-        try
-        {
-            registerCustomEntity(NMSStand.class, "ArmorStand", 30);
-            registerCustomEntity(NMSItem.class, "Item", 1);
+        registerCustomEntity(NMSStand.class, "ArmorStand", 30);
+        registerCustomEntity(NMSItem.class, "Item", 1);
 
-            validate = World.class.getDeclaredMethod("b", Entity.class);
-            validate.setAccessible(true);
+        validate = World.class.getDeclaredMethod("b", Entity.class);
+        validate.setAccessible(true);
 
-            chunkProvider = World.class.getDeclaredField("chunkProvider");
-            chunkProvider.setAccessible(true);
+        chunkProvider = World.class.getDeclaredField("chunkProvider");
+        chunkProvider.setAccessible(true);
 
-            chunkLoader = ChunkProviderServer.class.getDeclaredField("chunkLoader");
-            chunkLoader.setAccessible(true);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        chunkLoader = ChunkProviderServer.class.getDeclaredField("chunkLoader");
+        chunkLoader.setAccessible(true);
     }
 
     /**

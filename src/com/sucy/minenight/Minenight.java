@@ -27,6 +27,7 @@
 package com.sucy.minenight;
 
 import com.sucy.minenight.hologram.Holograms;
+import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
 import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.util.commands.CommandManager;
@@ -122,6 +123,7 @@ public class Minenight extends JavaPlugin
 
         // Set up utilities
         Reflection.initialize();
+        NMS.initialize();
         VersionManager.initialize();
         uuidUtil = new PlayerUUIDs(this);
         Logger.loadLevels(config.getConfig().getSection("logging"));
@@ -130,7 +132,8 @@ public class Minenight extends JavaPlugin
         worlds = new Worlds(config.getConfig());
         permissions = new Permissions();
         protection = new Protection();
-        hologram = new Holograms();
+        if (NMS.isSupported())
+            hologram = new Holograms();
     }
 
     /**

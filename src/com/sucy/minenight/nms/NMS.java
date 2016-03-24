@@ -36,17 +36,37 @@ public class NMS
     private static NMSManager manager;
 
     /**
+     * Initializes the NMS functions
+     */
+    public static void initialize()
+    {
+        try
+        {
+            manager = new NMSManager_19();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Checks whether or not NMS functions are supported
+     *
+     * @return true if supported, false otherwise
+     */
+    public static boolean isSupported()
+    {
+        return manager != null;
+    }
+
+    /**
      * Retrieves the active manager for NMS classes
      *
      * @return NMS manager
      */
     public static NMSManager getManager()
     {
-        if (manager == null)
-        {
-            manager = new NMSManager_19();
-            manager.setup();
-        }
         return manager;
     }
 }

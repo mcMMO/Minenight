@@ -13,11 +13,6 @@ import org.bukkit.inventory.ItemStack;
 public interface NMSManager
 {
     /**
-     * Sets up reflection and entity registration
-     */
-    public void setup();
-
-    /**
      * Stops chunks from generating in a given world
      *
      * @param world world to stop chunks from generating in

@@ -47,7 +47,7 @@ public class Worlds
         Minenight.registerListener(new EntityListener());
         Minenight.registerListener(new WorldListener());
 
-        if (!settings.isEnabled(GlobalSetting.CHUNK_GENERATION))
+        if (!settings.isEnabled(GlobalSetting.CHUNK_GENERATION) && NMS.isSupported())
             for (World world : Bukkit.getWorlds())
                 NMS.getManager().stopChunks(world);
     }
