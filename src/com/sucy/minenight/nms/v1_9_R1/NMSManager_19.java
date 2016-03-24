@@ -69,7 +69,7 @@ public class NMSManager_19
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to set up chunk gen override - " + ex.getMessage());
         }
     }
 

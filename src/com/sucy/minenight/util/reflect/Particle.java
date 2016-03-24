@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.util.reflect;
 
+import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -59,7 +60,7 @@ public class Particle
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to get packet data for particles - " + ex.getMessage());
         }
     }
 

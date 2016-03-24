@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.util.config.parse;
 
+import com.sucy.minenight.util.log.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -121,7 +122,7 @@ public class YAMLParser
         catch (Exception ex)
         {
             // Do nothing
-            ex.printStackTrace();
+            Logger.bug("Failed to parse config data - " + ex.getMessage());
         }
         return new DataSection();
     }

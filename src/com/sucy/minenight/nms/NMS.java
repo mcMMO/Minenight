@@ -27,6 +27,7 @@
 package com.sucy.minenight.nms;
 
 import com.sucy.minenight.nms.v1_9_R1.NMSManager_19;
+import com.sucy.minenight.util.log.Logger;
 
 /**
  * Handles setting up and grabbing the manager for NMS functions
@@ -46,7 +47,7 @@ public class NMS
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to initialize NMS Manager - " + ex.getMessage());
         }
     }
 

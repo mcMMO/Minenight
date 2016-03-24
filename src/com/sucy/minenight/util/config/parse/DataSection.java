@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.util.config.parse;
 
+import com.sucy.minenight.util.log.Logger;
 import com.sun.xml.internal.fastinfoset.Encoder;
 
 import java.io.*;
@@ -779,7 +780,7 @@ public class DataSection
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to save config data to file - " + ex.getMessage());
         }
     }
 

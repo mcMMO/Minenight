@@ -27,6 +27,7 @@
 package com.sucy.minenight.permission;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.entity.Player;
@@ -68,7 +69,7 @@ public class Permissions
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to set up permissions reflection - " + ex.getMessage());
         }
     }
 
@@ -98,7 +99,7 @@ public class Permissions
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to get permission list for attachment - " + ex.getMessage());
             return new LinkedHashMap<String, Boolean>();
         }
     }
@@ -126,7 +127,7 @@ public class Permissions
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to set up permissions manager - " + ex.getMessage());
         }
     }
 

@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.util.reflect;
 
+import com.sucy.minenight.util.log.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -61,7 +62,7 @@ public class Reflection
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to set up reflection utility - " + ex.getMessage());
         }
     }
 
@@ -268,7 +269,7 @@ public class Reflection
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            Logger.bug("Failed to set vale to map via reflection - " + ex.getMessage());
         }
     }
 }
