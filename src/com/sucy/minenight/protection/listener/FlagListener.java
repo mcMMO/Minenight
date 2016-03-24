@@ -364,22 +364,4 @@ public class FlagListener implements Listener
             && ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
             event.setCancelled(true);
     }
-
-    /**
-     * Stop portal creation in protected zones
-     *
-     * @param event event details
-     */
-    @EventHandler
-    public void onPortal(PortalCreateEvent event)
-    {
-        for (Block block : event.getBlocks())
-        {
-            if (ZoneManager.isProhibited(block.getLocation(temp), ZoneFlag.PROTECT))
-            {
-                event.setCancelled(true);
-                return;
-            }
-        }
-    }
 }
