@@ -28,6 +28,7 @@ package com.sucy.minenight;
 
 import com.sucy.minenight.economy.Economy;
 import com.sucy.minenight.hologram.Holograms;
+import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
 import com.sucy.minenight.protection.Protection;
@@ -126,6 +127,7 @@ public class Minenight extends JavaPlugin
         // Set up utilities
         Reflection.initialize();
         NMS.initialize();
+        NBT.initialize();
         VersionManager.initialize();
         uuidUtil = new PlayerUUIDs(this);
         Logger.loadLevels(config.getConfig().getSection("logging"));

@@ -35,7 +35,6 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldInitEvent;
-import org.bukkit.event.world.WorldLoadEvent;
 
 /**
  * Applies general settings to world related events

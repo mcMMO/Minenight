@@ -26,15 +26,18 @@
  */
 package com.sucy.minenight.world.data;
 
+import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.enums.GlobalSetting;
 import com.sucy.minenight.world.enums.TickSetting;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Global settings that affects how worlds behave
@@ -52,6 +55,7 @@ public class WorldSettings
     public final boolean serverMessages;
     public final String  messageMode;
     public final int     stackSize;
+    public final int     hiddenNBT;
 
     /**
      * Loads global settings from config data
@@ -65,12 +69,27 @@ public class WorldSettings
         // Load global settings
         DataSection globalData = data.getSection("global");
         for (String key : globalData.keys())
-        {
             globals.put(key.toUpperCase(), globalData.getBoolean(key));
-        }
+
+        // Load experience options
+        DataSection expData = data.getSection("experience");
+        for (String key : expData.keys())
+            globals.put(key.toUpperCase(), expData.getBoolean(key));
 
         // Stack size
-        stackSize = data.getSection("inventory").getInt("stacksize");
+        DataSection inventory = data.getSection("inventory");
+        stackSize = inventory.getInt("stacksize");
+
+        // NBT values to be hidden
+        DataSection nbt = inventory.getSection("hide");
+        int id = 0;
+        if (nbt.getBoolean("enchantments")) id |= NBT.ENCHANTMENTS;
+        if (nbt.getBoolean("attributes")) id |= NBT.ATTRIBUTES;
+        if (nbt.getBoolean("unbreakable")) id |= NBT.UNBREAKABLE;
+        if (nbt.getBoolean("destroy")) id |= NBT.CAN_DESTROY;
+        if (nbt.getBoolean("place")) id |= NBT.CAN_PLACE_ON;
+        if (nbt.getBoolean("others")) id |= NBT.OTHERS;
+        hiddenNBT = id;
 
         // Load tick settings
         DataSection tickData = data.getSection("ticks");
@@ -86,7 +105,10 @@ public class WorldSettings
         messageMode = messageData.getString("mode");
 
         // Spawn settings
-        spawns = new HashSet<String>(data.getList("spawns"));
+        List<String> entities = data.getList("spawns");
+        spawns = new HashSet<String>();
+        for (String entity : entities)
+            spawns.add(entity.toUpperCase());
 
         // Location settings
         DataSection locData = config.getSection("worlds");
@@ -94,6 +116,18 @@ public class WorldSettings
         {
             locations.put(key, new WorldLocations(key, locData.getSection(key)));
         }
+    }
+
+    /**
+     * Hides the NBT tags of the item according to the settings
+     *
+     * @param item item to hide for
+     */
+    public ItemStack hide(ItemStack item)
+    {
+        if (hiddenNBT > 0)
+            return NBT.hide(item, hiddenNBT);
+        return item;
     }
 
     /**

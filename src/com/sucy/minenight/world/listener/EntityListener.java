@@ -37,10 +37,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -60,13 +64,60 @@ public class EntityListener implements Listener
     }
 
     /**
-     * Handle automatic revives
+     * Hides the NBT data of an item when it is spawned
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent event)
+    {
+        ItemStack result = Worlds.getSettings().hide(event.getEntity().getItemStack());
+        event.getEntity().setItemStack(result);
+    }
+
+    /**
+     * Handles exprience cost for enchantments
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onEnchant(EnchantItemEvent event)
+    {
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.ENCHANTMENTS))
+            event.setExpLevelCost(0);
+    }
+
+    /**
+     * Keep exp level after using the anvil
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onAnvil(InventoryClickEvent event)
+    {
+        if (event.getClickedInventory().getType() == InventoryType.ANVIL
+            && event.getRawSlot() == 2
+            && event.getClickedInventory().getItem(event.getRawSlot()) != null)
+        {
+            Player player = (Player)event.getWhoClicked();
+            new LevelTask(player, player.getLevel()).runTaskLater(Minenight.getPlugin(), 1);
+        }
+    }
+
+    /**
+     * Handle automatic revives and experience on death
      *
      * @param event event details
      */
     @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.DEATH))
+        {
+            event.setKeepLevel(true);
+            event.setDroppedExp(0);
+        }
+
         Point point = MathFunc.getChunk(event.getEntity().getLocation());
         switch (event.getEntity().getWorld().getBiome(point.x, point.z))
         {
@@ -182,6 +233,34 @@ public class EntityListener implements Listener
         public void run()
         {
             player.spigot().respawn();
+        }
+    }
+
+    /**
+     * Task for restoring a player's level after a duration
+     */
+    private class LevelTask extends BukkitRunnable
+    {
+        private Player player;
+        private int level;
+
+        /**
+         * @param player player to restore
+         * @param level  level to restore to
+         */
+        public LevelTask(Player player, int level)
+        {
+            this.player = player;
+            this.level = level;
+        }
+
+        /**
+         * Restores the player's level
+         */
+        @Override
+        public void run()
+        {
+            player.setLevel(level);
         }
     }
 }

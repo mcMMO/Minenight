@@ -60,6 +60,7 @@ public class Permissions
                 .getDeclaredField("perm");
             permBase.setAccessible(true);
             attachments = PermissibleBase.class.getDeclaredField("attachments");
+            attachments.setAccessible(true);
             permissions = PermissionAttachment.class.getDeclaredField("permissions");
 
             for (Player player : VersionManager.getOnlinePlayers())
