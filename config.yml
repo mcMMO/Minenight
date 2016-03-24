@@ -17,7 +17,6 @@ settings:
     automaticrespawn: true
     automaticrespawnvoid: true
     weather: false
-    storm: false
     sleep: false
     signformats: true
     firespread: false
