@@ -26,7 +26,7 @@
  */
 package com.sucy.minenight.util.reflect;
 
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.Location;
 import org.bukkit.Material;

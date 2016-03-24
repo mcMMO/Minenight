@@ -37,24 +37,18 @@ import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.util.commands.CommandManager;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.log.LogType;
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.LogType;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.player.PlayerUUIDs;
 import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
 import com.sucy.minenight.world.Worlds;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
-import java.util.logging.Filter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 /**
  * The central point of the MineNight collective plugin.
@@ -118,6 +112,10 @@ public class Minenight extends JavaPlugin
     private Protection  protection;
     private Holograms   hologram;
 
+    /**
+     * Sets up standalone utilites and logging filter injections
+     * when created (before world loading)
+     */
     public Minenight()
     {
         // Set up standalone utilities
@@ -205,6 +203,12 @@ public class Minenight extends JavaPlugin
         }
     }
 
+    /**
+     * Injects a filter into the logger for the given NMS server class
+     *
+     * @param name NMS server class name
+     * @throws Exception
+     */
     private void addFilter(String name)
         throws Exception
     {

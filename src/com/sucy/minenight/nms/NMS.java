@@ -27,7 +27,7 @@
 package com.sucy.minenight.nms;
 
 import com.sucy.minenight.nms.v1_9_R1.NMSManager_19;
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.Logger;
 
 /**
  * Handles setting up and grabbing the manager for NMS functions

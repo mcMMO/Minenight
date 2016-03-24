@@ -27,7 +27,7 @@
 package com.sucy.minenight.permission;
 
 import com.sucy.minenight.Minenight;
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.entity.Player;

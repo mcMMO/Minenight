@@ -36,7 +36,7 @@ import com.sucy.minenight.hologram.listener.HologramListener;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.Logger;
 import org.bukkit.Chunk;
 import org.bukkit.scheduler.BukkitRunnable;
 

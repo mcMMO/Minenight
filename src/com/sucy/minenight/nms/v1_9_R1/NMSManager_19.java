@@ -6,7 +6,7 @@ import com.sucy.minenight.hologram.display.line.ItemLine;
 import com.sucy.minenight.hologram.display.line.TextLine;
 import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSManager;
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;

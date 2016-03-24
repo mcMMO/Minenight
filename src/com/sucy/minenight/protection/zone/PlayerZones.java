@@ -28,8 +28,8 @@ package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.protection.event.PlayerEnterZoneEvent;
 import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
-import com.sucy.minenight.util.log.LogType;
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.LogType;
+import com.sucy.minenight.log.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

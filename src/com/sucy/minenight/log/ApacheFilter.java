@@ -26,7 +26,6 @@
  */
 package com.sucy.minenight.log;
 
-import com.sucy.minenight.util.log.LogType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.Filter;
@@ -65,7 +64,7 @@ public class ApacheFilter implements Filter
     @Override
     public Result filter(Logger logger, Level level, Marker marker, String s, Object... objects)
     {
-        com.sucy.minenight.util.log.Logger.log("Checking " + s);
+        com.sucy.minenight.log.Logger.log("Checking " + s);
         return getResult(level);
     }
 
@@ -78,7 +77,7 @@ public class ApacheFilter implements Filter
     @Override
     public Result filter(Logger logger, Level level, Marker marker, Message message, Throwable throwable)
     {
-        com.sucy.minenight.util.log.Logger.log("Checking " + message.getFormat());
+        com.sucy.minenight.log.Logger.log("Checking " + message.getFormat());
         return getResult(level);
     }
 
@@ -90,7 +89,7 @@ public class ApacheFilter implements Filter
 
     private Result getResult(Level level)
     {
-        int setting = com.sucy.minenight.util.log.Logger.getLevel(type);
+        int setting = com.sucy.minenight.log.Logger.getLevel(type);
         if (level == Level.FATAL || level == Level.ERROR)
             return Result.ACCEPT;
         else if (level == Level.WARN)

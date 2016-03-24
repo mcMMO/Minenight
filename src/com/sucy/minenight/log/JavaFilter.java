@@ -26,9 +26,6 @@
  */
 package com.sucy.minenight.log;
 
-import com.sucy.minenight.util.log.LogType;
-import com.sucy.minenight.util.log.Logger;
-
 import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

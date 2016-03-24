@@ -26,7 +26,7 @@
  */
 package com.sucy.minenight.nms;
 
-import com.sucy.minenight.util.log.Logger;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.reflect.Reflection;
 import org.bukkit.inventory.ItemStack;
 
