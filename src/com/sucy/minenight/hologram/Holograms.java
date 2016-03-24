@@ -191,7 +191,6 @@ public class Holograms
             catch (Exception ex)
             {
                 Logger.invalid("Invalid permanent hologram: " + key);
-                ex.printStackTrace();
             }
         }
     }

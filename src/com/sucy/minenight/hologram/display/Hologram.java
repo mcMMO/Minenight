@@ -30,6 +30,7 @@ import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.config.LocationData;
 import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.text.TextFormatter;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -70,6 +71,9 @@ public class Hologram
      */
     public Hologram(Location loc, List<String> format)
     {
+        if (loc == null || loc.getWorld() == null)
+            throw new IllegalArgumentException("Invalid World");
+
         this.loc = loc;
         this.chunk = MathFunc.getChunk(loc);
 

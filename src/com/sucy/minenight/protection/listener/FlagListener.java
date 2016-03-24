@@ -44,13 +44,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -105,12 +103,16 @@ public class FlagListener implements Listener
             protection.getHealEffect().getPlayers().add(event.getPlayer());
         if (zone.hasFlag(ZoneFlag.HURT))
             protection.getHurtEffect().getPlayers().add(event.getPlayer());
+        if (zone.hasFlag(ZoneFlag.GOD))
+            event.getPlayer().setFireTicks(0);
         if (zone.hasFlag(ZoneFlag.RESTRICT) && !Protection.hasPermissions(event.getPlayer(), zone, ZoneFlag.RESTRICT))
         {
             Point center = event.getZone().getCenter();
             Vector dir = event.getPlayer().getLocation(temp).subtract(center.x, 0, center.z).toVector();
-            dir.setY(0);
-            event.getPlayer().setVelocity(dir.normalize().multiply(3).setY(0.5));
+            dir.setY(Math.max(dir.getY(), 0));
+            dir.normalize().multiply(3);
+            dir.setY(dir.getY() * 0.2 + 0.5);
+            event.getPlayer().setVelocity(dir);
         }
     }
 
@@ -159,12 +161,12 @@ public class FlagListener implements Listener
     }
 
     /**
-     * Handles PVP and GOD flags, stopping fighting from taking place where blocked
+     * Stop all damage sources to someone in a "God" zone
      *
      * @param event event details
      */
     @EventHandler
-    public void onCombat(EntityDamageByEntityEvent event)
+    public void onDamaged(EntityDamageEvent event)
     {
         if (event.getEntity() instanceof Player)
         {
@@ -175,8 +177,23 @@ public class FlagListener implements Listener
             if (zone != null && zone.hasFlag(ZoneFlag.GOD))
             {
                 event.setCancelled(true);
-                return;
+                if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)
+                    defender.setFireTicks(0);
             }
+        }
+    }
+
+    /**
+     * Handles PVP and GOD flags, stopping fighting from taking place where blocked
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onCombat(EntityDamageByEntityEvent event)
+    {
+        if (event.getEntity() instanceof Player)
+        {
+            Player defender = (Player) event.getEntity();
 
             // Stop PvP
             Player attacker = ListenerUtil.getPlayerDamager(event);
@@ -187,6 +204,7 @@ public class FlagListener implements Listener
                     return;
 
                 // Cancel PvP when prohibited
+                Zone zone = ZoneManager.getZone(defender);
                 Zone zone2 = ZoneManager.getZone(attacker);
                 if ((zone != null && zone.hasFlag(ZoneFlag.PVP))
                     || (zone2 != null && zone2.hasFlag(ZoneFlag.PVP)))
@@ -321,5 +339,23 @@ public class FlagListener implements Listener
         if (event.getEntity().getType() == EntityType.ENDERMAN
             && ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
             event.setCancelled(true);
+    }
+
+    /**
+     * Stop portal creation in protected zones
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onPortal(PortalCreateEvent event)
+    {
+        for (Block block : event.getBlocks())
+        {
+            if (ZoneManager.isProhibited(block.getLocation(temp), ZoneFlag.PROTECT))
+            {
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 }
