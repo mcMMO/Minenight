@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.protection.zone;
 
+import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.Logger;
@@ -94,7 +95,7 @@ public class Zone
         spawns = new HashSet<String>();
         for (String key : list)
         {
-            spawns.add(key.toUpperCase().replace(" ", "_"));
+            spawns.add(key.toUpperCase());
         }
 
         // Load coordinates
@@ -242,7 +243,7 @@ public class Zone
      */
     public boolean canSpawn(Entity entity)
     {
-        return !spawns.contains(entity.getType().name());
+        return !spawns.contains(Conversion.getConfigName(entity));
     }
 
     /**

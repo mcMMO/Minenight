@@ -31,6 +31,9 @@ import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.enums.GlobalSetting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 /**
@@ -48,5 +51,50 @@ public class WorldListener implements Listener
     {
         if (!Worlds.getSettings().isEnabled(GlobalSetting.CHUNK_GENERATION))
             NMS.getManager().stopChunks(event.getWorld());
+    }
+
+    /**
+     * Stops weather based on settings
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onWeather(WeatherChangeEvent event)
+    {
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.WEATHER))
+            event.setCancelled(true);
+    }
+
+    /**
+     * Stop sleeping
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onSleep(PlayerBedEnterEvent event)
+    {
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.SLEEP))
+            event.setCancelled(true);
+    }
+
+    /**
+     * Stop fire spreading
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onSpread(BlockIgniteEvent event)
+    {
+        switch (event.getCause())
+        {
+            case SPREAD:
+                if (!Worlds.getSettings().isEnabled(GlobalSetting.FIRE_SPREAD))
+                    event.setCancelled(true);
+                break;
+            case FIREBALL:
+                if (!Worlds.getSettings().isEnabled(GlobalSetting.FIREBALL_FIRE))
+                    event.setCancelled(true);
+                break;
+        }
     }
 }

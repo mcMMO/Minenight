@@ -30,8 +30,8 @@ import com.sucy.minenight.Minenight;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.world.Worlds;
+import com.sucy.minenight.world.data.WorldLocations;
 import com.sucy.minenight.world.enums.GlobalSetting;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,8 +39,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -57,7 +59,7 @@ public class EntityListener implements Listener
     @EventHandler (priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event)
     {
-        event.getPlayer().getInventory().setMaxStackSize(Worlds.getSettings().stackSize);
+        event.getPlayer().getInventory().setMaxStackSize(StrictMath.min(Worlds.getSettings().stackSize, 127));
     }
 
     /**
@@ -69,13 +71,30 @@ public class EntityListener implements Listener
     public void onDeath(PlayerDeathEvent event)
     {
         Point point = MathFunc.getChunk(event.getEntity().getLocation());
-        if (event.getEntity().getWorld().getBiome(point.x, point.z) == Biome.VOID)
+        switch (event.getEntity().getWorld().getBiome(point.x, point.z))
         {
-            if (Worlds.getSettings().isEnabled(GlobalSetting.AUTOMATIC_RESPAWN_VOID))
-                new RespawnTask(event.getEntity()).runTaskLater(Minenight.getPlugin(), 1);
+            case VOID:
+                if (Worlds.getSettings().isEnabled(GlobalSetting.AUTOMATIC_RESPAWN_VOID))
+                    new RespawnTask(event.getEntity()).runTaskLater(Minenight.getPlugin(), 1);
+                break;
+            default:
+                if (Worlds.getSettings().isEnabled(GlobalSetting.AUTOMATIC_RESPAWN))
+                    new RespawnTask(event.getEntity()).runTaskLater(Minenight.getPlugin(), 1);
+                break;
         }
-        else if (Worlds.getSettings().isEnabled(GlobalSetting.AUTOMATIC_RESPAWN))
-            new RespawnTask(event.getEntity()).runTaskLater(Minenight.getPlugin(), 1);
+    }
+
+    /**
+     * Controls spawn location
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event)
+    {
+        WorldLocations settings = Worlds.getSettings().getWorldLocs(event.getRespawnLocation().getWorld());
+        if (settings != null)
+            event.setRespawnLocation(settings.spawn);
     }
 
     /**
@@ -97,25 +116,24 @@ public class EntityListener implements Listener
     @EventHandler (priority = EventPriority.LOWEST)
     public void onExplode(EntityExplodeEvent event)
     {
-        // TNT
-        if (event.getEntityType() == EntityType.PRIMED_TNT)
+        switch (event.getEntityType())
         {
-            if (!Worlds.getSettings().isEnabled(GlobalSetting.TNT_DESTROY))
-                event.blockList().clear();
-        }
-
-        // Creepers
-        else if (event.getEntityType() == EntityType.CREEPER)
-        {
-            if (!Worlds.getSettings().isEnabled(GlobalSetting.CREEPER_DESTROY))
-                event.blockList().clear();
-        }
-
-        // Ghast fireballs
-        else if (event.getEntityType() == EntityType.FIREBALL)
-        {
-            if (!Worlds.getSettings().isEnabled(GlobalSetting.FIREBALL_DESTROY))
-                event.blockList().clear();
+            case PRIMED_TNT:
+                if (!Worlds.getSettings().isEnabled(GlobalSetting.TNT_DESTROY))
+                    event.blockList().clear();
+                break;
+            case CREEPER:
+                if (!Worlds.getSettings().isEnabled(GlobalSetting.CREEPER_DESTROY))
+                    event.blockList().clear();
+                break;
+            case FIREBALL:
+                if (!Worlds.getSettings().isEnabled(GlobalSetting.FIREBALL_DESTROY))
+                    event.blockList().clear();
+                break;
+            case WITHER_SKULL:
+                if (!Worlds.getSettings().isEnabled(GlobalSetting.WITHER_DESTROY))
+                    event.blockList().clear();
+                break;
         }
     }
 
@@ -129,6 +147,18 @@ public class EntityListener implements Listener
     {
         event.setCancelled(event.getEntity().getType() == EntityType.ENDERMAN
             && !Worlds.getSettings().isEnabled(GlobalSetting.ENDERMAN_DESTROY));
+    }
+
+    /**
+     * Controls what can spawn
+     *
+     * @param event event details
+     */
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onSpawn(EntitySpawnEvent event)
+    {
+        if (!Worlds.getSettings().canSpawn(event.getEntity()))
+            event.setCancelled(true);
     }
 
     /**

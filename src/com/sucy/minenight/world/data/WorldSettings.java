@@ -26,12 +26,13 @@
  */
 package com.sucy.minenight.world.data;
 
+import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.world.enums.GlobalSetting;
 import com.sucy.minenight.world.enums.TickSetting;
 import org.bukkit.World;
-import sun.rmi.runtime.Log;
+import org.bukkit.entity.Entity;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -119,6 +120,17 @@ public class WorldSettings
         Logger.log("Key: " + setting.key());
         Logger.log("Has: " + globals.containsKey(setting.key()));
         return globals.get(setting.key());
+    }
+
+    /**
+     * Checks if an entity is allowed to spawn
+     *
+     * @param entity entity type
+     * @return true if can spawn
+     */
+    public boolean canSpawn(Entity entity)
+    {
+        return spawns.contains(Conversion.getConfigName(entity));
     }
 
     /**

@@ -16,8 +16,7 @@ settings:
     chunkgeneration: false
     automaticrespawn: true
     automaticrespawnvoid: true
-    rain: false
-    snow: false
+    weather: false
     storm: false
     sleep: false
     signformats: true
