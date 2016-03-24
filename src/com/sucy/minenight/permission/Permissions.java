@@ -57,8 +57,8 @@ public class Permissions
             permBase = Class.forName(craft + "entity.CraftHumanEntity")
                 .getDeclaredField("perm");
             permBase.setAccessible(true);
-            attachments = PermissibleBase.class.getField("permissions");
-            permissions = PermissionAttachment.class.getField("permissions");
+            attachments = PermissibleBase.class.getDeclaredField("attachments");
+            permissions = PermissionAttachment.class.getDeclaredField("permissions");
 
             for (Player player : VersionManager.getOnlinePlayers())
                 manage(player);

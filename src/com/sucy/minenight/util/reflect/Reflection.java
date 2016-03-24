@@ -40,20 +40,36 @@ import java.util.Map;
  */
 public class Reflection
 {
-
     private static String CRAFT;
     private static String NMS;
-    private static Class<?> packetClass = getNMSClass("Packet");
+    private static Class<?> packetClass;
+    private static Method getHandle;
+    private static Method sendPacket;
+    private static Field connection;
+
+    public static void initialize()
+    {
+        NMS = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().substring(23) + '.';
+        CRAFT = "org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getPackage().getName().substring(23) + '.';
+        try
+        {
+            getHandle = Class.forName(CRAFT + "entity.CraftPlayer").getMethod("getHandle");
+
+            packetClass = Class.forName(NMS + "Packet");
+            connection = Class.forName(NMS + "EntityPlayer").getDeclaredField("playerConnection");
+            sendPacket = Class.forName(NMS + "PlayerConnection").getMethod("sendPacket", packetClass);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
 
     /**
      * @return package name for NMS classes
      */
     public static String getNMSPackage()
     {
-        if (NMS == null)
-        {
-            NMS = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().substring(23) + '.';
-        }
         return NMS;
     }
 
@@ -62,11 +78,13 @@ public class Reflection
      */
     public static String getCraftPackage()
     {
-        if (CRAFT == null)
-        {
-            CRAFT = "org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getPackage().getName().substring(23) + '.';
-        }
         return CRAFT;
+    }
+
+    public static Object getConnection(Player player)
+        throws Exception
+    {
+        return connection.get(getHandle.invoke(player));
     }
 
     /**
@@ -225,17 +243,9 @@ public class Reflection
      * @param packet packet to send
      */
     public static void sendPacket(Player player, Object packet)
+        throws Exception
     {
-        try
-        {
-            Object handle = player.getClass().getMethod("getHandle").invoke(player);
-            Object connection = handle.getClass().getField("playerConnection").get(handle);
-            connection.getClass().getMethod("sendPacket", packetClass).invoke(connection, packet);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        sendPacket.invoke(getConnection(player), packet);
     }
 
     /**

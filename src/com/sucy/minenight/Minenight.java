@@ -34,7 +34,9 @@ import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.player.PlayerUUIDs;
+import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
+import com.sucy.minenight.world.Worlds;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -95,6 +97,7 @@ public class Minenight extends JavaPlugin
     private PlayerUUIDs uuidUtil;
 
     // Segments
+    private Worlds      worlds;
     private Permissions permissions;
     private Protection  protection;
     private Holograms   hologram;
@@ -118,11 +121,13 @@ public class Minenight extends JavaPlugin
         config.save();
 
         // Set up utilities
+        Reflection.initialize();
         VersionManager.initialize();
         uuidUtil = new PlayerUUIDs(this);
         Logger.loadLevels(config.getConfig().getSection("logging"));
 
         // Create segments
+        worlds = new Worlds(config.getConfig());
         permissions = new Permissions();
         protection = new Protection();
         hologram = new Holograms();
@@ -143,6 +148,7 @@ public class Minenight extends JavaPlugin
         hologram.cleanup();
         protection.cleanup();
         permissions.cleanup();
+        worlds.cleanup();
 
         // Clean up utilities
         uuidUtil.save();

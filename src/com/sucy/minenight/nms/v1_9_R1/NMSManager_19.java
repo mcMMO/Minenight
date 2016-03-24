@@ -6,13 +6,17 @@ import com.sucy.minenight.hologram.display.line.ItemLine;
 import com.sucy.minenight.hologram.display.line.TextLine;
 import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSManager;
+import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.World;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -26,6 +30,9 @@ public class NMSManager_19
 
     private Method validate;
 
+    private Field chunkProvider;
+    private Field chunkLoader;
+
     /**
      * Sets up reflection and entity registration
      */
@@ -36,8 +43,37 @@ public class NMSManager_19
             registerCustomEntity(NMSStand.class, "ArmorStand", 30);
             registerCustomEntity(NMSItem.class, "Item", 1);
 
-            this.validate = World.class.getDeclaredMethod("b", Entity.class);
-            this.validate.setAccessible(true);
+            validate = World.class.getDeclaredMethod("b", Entity.class);
+            validate.setAccessible(true);
+
+            chunkProvider = World.class.getDeclaredField("chunkProvider");
+            chunkProvider.setAccessible(true);
+
+            chunkLoader = ChunkProviderServer.class.getDeclaredField("chunkLoader");
+            chunkLoader.setAccessible(true);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Stops chunks from generating in a given world
+     *
+     * @param world world to stop chunks from generating in
+     */
+    public void stopChunks(org.bukkit.World world)
+    {
+        try
+        {
+            WorldServer nmsWorld = ((CraftWorld) world).getHandle();
+            ChunkProviderServer provider = nmsWorld.getChunkProviderServer();
+
+            NoChunkProvider wrapper = new NoChunkProvider(nmsWorld, (IChunkLoader)chunkLoader.get(provider), provider.chunkGenerator);
+            chunkProvider.set(nmsWorld, wrapper);
+
+            Logger.log("Disabled chunks for " + world.getName());
         }
         catch (Exception ex)
         {

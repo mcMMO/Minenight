@@ -31,6 +31,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 /**
@@ -40,8 +41,8 @@ import java.util.HashMap;
 public class Particle
 {
 
-    private static Class<?> packetClass;
-    private static Class<?> particleEnum;
+    private static Constructor<?> packetConst;
+    private static Class<?>       particleEnum;
     private static boolean initialized = false;
 
     private static void initialize()
@@ -49,13 +50,16 @@ public class Particle
         initialized = true;
 
         // Try to get the packet instance for 1.6.4 and earlier
-        particleEnum = Reflection.getNMSClass("EnumParticle");
-        packetClass = Reflection.getNMSClass("Packet63WorldParticles");
-
-        // Otherwise get the instance for 1.7.2 and later
-        if (packetClass == null)
+        try
         {
-            packetClass = Reflection.getNMSClass("PacketPlayOutWorldParticles");
+            String nms = Reflection.getNMSPackage();
+            particleEnum = Class.forName(nms + "EnumParticle");
+            packetConst = Class.forName(nms + "PacketPlayOutWorldParticles")
+                .getConstructor(particleEnum, Boolean.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Integer.TYPE, int[].class);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 
@@ -70,7 +74,7 @@ public class Particle
         {
             initialize();
         }
-        return packetClass != null;
+        return packetConst != null;
     }
 
     /**
@@ -327,66 +331,41 @@ public class Particle
         {
             initialize();
         }
-        if (packetClass == null)
+        if (packetConst == null)
         {
             return;
         }
-        if (VersionManager.isVersionAtLeast(VersionManager.V1_8_0))
+        if (CONVERSION.containsKey(particle))
         {
-            if (CONVERSION.containsKey(particle))
+            particle = CONVERSION.get(particle);
+        }
+        else particle = particle.toUpperCase().replace(" ", "_");
+        Object[] values = particleEnum.getEnumConstants();
+        Object enumValue = null;
+        for (Object value : values)
+        {
+            if (value.toString().equals(particle))
             {
-                particle = CONVERSION.get(particle);
-            }
-            else particle = particle.toUpperCase().replace(" ", "_");
-            Object[] values = particleEnum.getEnumConstants();
-            Object enumValue = null;
-            for (Object value : values)
-            {
-                if (value.toString().equals(particle))
-                {
-                    enumValue = value;
-                }
-            }
-            if (enumValue != null)
-            {
-                try
-                {
-                    Object packet = packetClass.getConstructor(particleEnum, Boolean.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Float.TYPE, Integer.TYPE, int[].class)
-                        .newInstance(enumValue, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), dx, dy, dz, speed, count, extra);
-
-                    for (Player player : VersionManager.getOnlinePlayers())
-                    {
-                        if (player.getWorld() == loc.getWorld() && player.getLocation().distanceSquared(loc) < radius * radius)
-                        {
-                            Reflection.sendPacket(player, packet);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Do nothing
-                }
+                enumValue = value;
             }
         }
-        else
+        if (enumValue != null)
         {
-            Object packet = Reflection.getInstance(packetClass);
-
-            Reflection.setValue(packet, "a", particle);
-            Reflection.setValue(packet, "b", (float) loc.getX());
-            Reflection.setValue(packet, "c", (float) loc.getY());
-            Reflection.setValue(packet, "d", (float) loc.getZ());
-            Reflection.setValue(packet, "e", dx);
-            Reflection.setValue(packet, "f", dy);
-            Reflection.setValue(packet, "g", dz);
-            Reflection.setValue(packet, "h", speed);
-            Reflection.setValue(packet, "i", count);
-            for (Player player : VersionManager.getOnlinePlayers())
+            try
             {
-                if (player.getWorld() == loc.getWorld() && player.getLocation().distanceSquared(loc) < radius * radius)
+                Object packet = packetConst.newInstance(enumValue, true, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), dx, dy, dz, speed, count, extra);
+
+                for (Player player : VersionManager.getOnlinePlayers())
                 {
-                    Reflection.sendPacket(player, packet);
+                    if (player.getWorld() == loc.getWorld() && player.getLocation().distanceSquared(loc) < radius * radius)
+                    {
+                        Reflection.sendPacket(player, packet);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Do nothing
             }
         }
     }

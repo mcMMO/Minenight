@@ -1,15 +1,96 @@
-# Logging levels for various mechanics
+# Logging levels for various mechanics.
 # Levels are generally 1, 2, or 3 where:
-#   1 is sparse logging
-#   2 is verbose logging
-#   3 is excessive logging
+#   0 to disable logging,
+#   1 is sparse logging,
+#   2 is verbose logging,
+#   3 is excessive logging.
 logging:
-  #
-  # Messages during initialization
+  # Messages during initialization.
   setup: 0
-  #
-  # Messages for Zone management
+  # Messages for zone management under protection.
   zone: 0
-  #
-  # Messages for Hologram management
+  # Messages for hologram management.
   hologram: 0
+settings:
+  global:
+    chunkgeneration: false
+    automaticrespawn: true
+    automaticrespawnvoid: true
+    rain: false
+    snow: false
+    storm: false
+    sleep: false
+    signformats: true
+    firespread: false
+    fireballfire: false
+    fireballdestroy: false
+    witherdestroy: false
+    enderdragondestroy: false
+    tntdestroy: false
+    creeperdestroy: false
+    endermandestroy: false
+    portalcreation: false
+  inventory:
+    stacksize: 100
+  ticks:
+    commands: 20
+    chat: 10
+    menu: 5
+    teleportcooldown: 160
+    teleportdelay: 40
+    teleportgod: 40
+    logingod: 40
+  messages:
+    vanilla: false
+    server: false
+    mode: error
+  economy:
+    moneyone:
+      symbol: ✪
+      initial: 0.00
+      minimum: 0.00
+      maximum: 100.00
+    moneytwo:
+      symbol: ❖
+      initial: 0.00
+      minimum: 0.00
+      maximum: 100.00
+  spawns:
+  - zombie
+  - zombiebaby
+  - zombievillager
+  - zombievillagerbaby
+  - zombiepigman
+  - zombiepigmanbaby
+  - skeleton
+  - skeletonwither
+  - spider
+  - spidercave
+worlds:
+  worldone:
+    spawn:
+      x: 0
+      z: 0
+      y: 0
+      yaw: 0
+      pitch: 0
+    teleports:
+      teleportone:
+        x: 0.5
+        z: 0
+        y: 0.5
+        yaw: 0
+        pitch: 0
+      teleporttwo:
+        x: 0.5
+        z: 0
+        y: 0.5
+        yaw: 0
+        pitch: 0
+  worldtwo:
+    spawn:
+      x: 0
+      z: 0
+      y: 0
+      yaw: 0
+      pitch: 0

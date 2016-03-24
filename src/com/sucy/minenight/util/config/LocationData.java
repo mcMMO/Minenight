@@ -40,7 +40,7 @@ import java.util.List;
 public class LocationData
 {
     /**
-     * Parses a location from a full section
+     * Parses a location from config data
      *
      * @param data section to parse
      *
@@ -48,11 +48,25 @@ public class LocationData
      */
     public static Location parse(DataSection data)
     {
+        return parse(data.getString("world"), data);
+    }
+
+    /**
+     * Parse from config data with an already provided world name
+     *
+     * @param world world name
+     * @param data  data to parse from
+     * @return parsed location
+     */
+    public static Location parse(String world, DataSection data)
+    {
         return new Location(
-            Bukkit.getWorld(data.getString("world")),
+            Bukkit.getWorld(world),
             data.getDouble("x", 0),
             data.getDouble("y", 0),
-            data.getDouble("z", 0)
+            data.getDouble("z", 0),
+            data.getFloat("yaw", 0),
+            data.getFloat("pitch", 0)
         );
     }
 

@@ -3,8 +3,6 @@ package com.sucy.minenight.nms;
 import com.sucy.minenight.hologram.display.LineData;
 import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.hologram.display.line.ItemLine;
-import com.sucy.minenight.nms.v1_9_R1.NMSItem;
-import com.sucy.minenight.nms.v1_9_R1.NMSStand;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,12 +10,19 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Handles tapping into the NMS framework for setting up and using custom entities
  */
-public abstract interface NMSManager
+public interface NMSManager
 {
     /**
      * Sets up reflection and entity registration
      */
-    public abstract void setup();
+    public void setup();
+
+    /**
+     * Stops chunks from generating in a given world
+     *
+     * @param world world to stop chunks from generating in
+     */
+    public void stopChunks(World world);
 
     /**
      * Retrieves a custom spawned entity by ID
@@ -26,12 +31,12 @@ public abstract interface NMSManager
      *
      * @return custom spawned entity
      */
-    public abstract NMSEntityBase getEntity(int id);
+    public NMSEntityBase getEntity(int id);
 
     /**
      * Removes the stored reference for the entity with the given ID
      */
-    public abstract void remove(int id);
+    public void remove(int id);
 
     /**
      * Spawns a custom armor stand entity
@@ -44,7 +49,7 @@ public abstract interface NMSManager
      *
      * @return created entity
      */
-    public abstract NMSStand spawnNMSArmorStand(World world, double x, double y, double z, HologramLine line);
+    public NMSNameable spawnNMSArmorStand(World world, double x, double y, double z, HologramLine line);
 
     /**
      * Spawns a custom item entity
@@ -58,7 +63,7 @@ public abstract interface NMSManager
      *
      * @return created entity
      */
-    public abstract NMSItem spawnNMSItem(World world, double x, double y, double z, ItemLine line, ItemStack item);
+    public NMSIcon spawnNMSItem(World world, double x, double y, double z, ItemLine line, ItemStack item);
 
     /**
      * Sends a destroy packet to the player for the hologram's entities
@@ -66,7 +71,7 @@ public abstract interface NMSManager
      * @param player   player to send to
      * @param hologram hologram to send for
      */
-    public abstract void sendDestroyEntitiesPacket(Player player, LineData hologram);
+    public void sendDestroyEntitiesPacket(Player player, LineData hologram);
 
     /**
      * Sends creation packets to the player for each of the hologram's entities
@@ -74,5 +79,5 @@ public abstract interface NMSManager
      * @param player   player to send to
      * @param hologram hologram to send for
      */
-    public abstract void sendCreateEntitiesPacket(Player player, LineData hologram);
+    public void sendCreateEntitiesPacket(Player player, LineData hologram);
 }

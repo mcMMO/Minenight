@@ -45,6 +45,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
@@ -79,7 +80,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onSpawn(EntitySpawnEvent event)
     {
         // Handle blocking spawns
@@ -141,7 +142,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDrop(PlayerDropItemEvent event)
     {
         if (ZoneManager.isProhibited(ZoneFlag.DROP, event.getPlayer()))
@@ -155,7 +156,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onModify(InventoryClickEvent event)
     {
         if (ZoneManager.isProhibited(ZoneFlag.MODIFY, (Player) event.getWhoClicked()))
@@ -169,7 +170,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDamaged(EntityDamageEvent event)
     {
         if (event.getEntity() instanceof Player)
@@ -202,7 +203,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onCombat(EntityDamageByEntityEvent event)
     {
         if (event.getEntity() instanceof Player)
@@ -234,7 +235,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBreakEntity(EntityDamageByEntityEvent event)
     {
         if (!(event.getEntity() instanceof LivingEntity))
@@ -250,7 +251,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBreakBlock(BlockBreakEvent event)
     {
         if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
@@ -262,7 +263,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlaceBlock(BlockPlaceEvent event)
     {
         if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
@@ -274,14 +275,19 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onMelt(BlockFadeEvent event)
     {
         if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
             event.setCancelled(true);
     }
 
-    @EventHandler
+    /**
+     * Stops freezing in protected zones
+     *
+     * @param event event details
+     */
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onFreeze(BlockFormEvent event)
     {
         if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
@@ -293,7 +299,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event)
     {
         Block up = event.getClickedBlock().getRelative(BlockFace.UP);
@@ -317,7 +323,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onIgnite(BlockIgniteEvent event)
     {
         Location loc = event.getBlock().getLocation(temp);
@@ -341,7 +347,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onExplode(EntityExplodeEvent event)
     {
         List<Block> list = event.blockList();
@@ -357,7 +363,7 @@ public class FlagListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEnderman(EntityChangeBlockEvent event)
     {
         if (event.getEntity().getType() == EntityType.ENDERMAN
