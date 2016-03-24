@@ -63,7 +63,7 @@ public class Holograms
     /**
      * Sets up listeners and loads config data
      */
-    public void setup()
+    public Holograms()
     {
         load();
 

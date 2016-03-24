@@ -76,25 +76,9 @@ public class Protection
     }
 
     /**
-     * @return flag effect for hurting players
-     */
-    public EffectTimer getHurtEffect()
-    {
-        return hurtEffect;
-    }
-
-    /**
-     * @return flag effect for healing players
-     */
-    public EffectTimer getHealEffect()
-    {
-        return healEffect;
-    }
-
-    /**
      * Sets up the plugin, loading config data and setting up listeners
      */
-    public void setup()
+    public Protection()
     {
         CommentedConfig file = Minenight.getConfig("protection");
         file.saveDefaultConfig();
@@ -119,6 +103,22 @@ public class Protection
         flagTask.cancel();
 
         ZoneManager.cleanup();
+    }
+
+    /**
+     * @return flag effect for hurting players
+     */
+    public EffectTimer getHurtEffect()
+    {
+        return hurtEffect;
+    }
+
+    /**
+     * @return flag effect for healing players
+     */
+    public EffectTimer getHealEffect()
+    {
+        return healEffect;
     }
 
     /**
