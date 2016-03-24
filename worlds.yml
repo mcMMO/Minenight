@@ -1,0 +1,27 @@
+worldone:
+  spawn:
+    x: 0
+    z: 0
+    y: 0
+    yaw: 0
+    pitch: 0
+  teleports:
+    teleportone:
+      x: 0.5
+      z: 0
+      y: 0.5
+      yaw: 0
+      pitch: 0
+    teleporttwo:
+      x: {number:10;20}
+      z: 0
+      y: 0.5
+      yaw: 0
+      pitch: 0
+worldtwo:
+  spawn:
+    x: {number:100;200}
+    z: 0
+    y: {number:50;100}
+    yaw: 0
+    pitch: 0

@@ -1,0 +1,10 @@
+moneyone:
+  symbol: ✪
+  initial: 0.00
+  minimum: 0.00
+  maximum: 100.00
+moneytwo:
+  symbol: ❖
+  initial: 0.00
+  minimum: 0.00
+  maximum: 100.00

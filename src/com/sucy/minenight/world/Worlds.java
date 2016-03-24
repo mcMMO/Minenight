@@ -28,6 +28,7 @@ package com.sucy.minenight.world;
 
 import com.sucy.minenight.Minenight;
 import com.sucy.minenight.nms.NMS;
+import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.data.WorldSettings;
 import com.sucy.minenight.world.enums.GlobalSetting;
@@ -54,6 +55,12 @@ public class Worlds
     {
         settings = new WorldSettings(config);
 
+        // Load location data
+        CommentedConfig locConfig = Minenight.getConfig("worlds");
+        locConfig.saveDefaultConfig();
+        settings.loadLocSettings(locConfig.getConfig());
+
+        // Set up listeners
         Minenight.registerListener(new EntityListener());
         Minenight.registerListener(new WorldListener());
 

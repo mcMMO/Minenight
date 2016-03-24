@@ -1,0 +1,98 @@
+# These settings utilize various mechanics.
+#   nbt tags       http://minecraft.gamepedia.com/tutorials/command_nbt_tags
+#   attributes     http://minecraft.gamepedia.com/attribute
+#   enchantments   http://minecraft.gamepedia.com/enchanting
+#   status effects http://minecraft.gamepedia.com/status_effect
+settings:
+  client:
+    automaticrespawn: true
+    automaticrespawnvoid: true
+    armorstanddrops: true
+    protectdrops: true
+    treefalling: true
+    mapupdates: true
+    torchlight: true
+    signformats: true
+    portalcreation: false
+    sleep: false
+  server:
+    weather: false
+    firespread: false
+    firenatural: false
+    explodedestroy: false
+    entitydestroy: false
+    chunckgeneration: false
+    chunckmemory: false
+inventory:
+  stacksize: 100
+  hide:
+    enchantments: true
+    attributes: true
+    unbreakable: true
+    destroy: true
+    place: true
+    others: true
+experience:
+  enchantments: false
+  anvils: false
+  death: false
+delay:
+  players:
+    commands: 20
+    chat: 10
+    menu: 5
+  teleport:
+    cooldown: 160
+    delay: 40
+  god:
+    teleport: 40
+    login: 40
+  attributes:
+    status: 1
+    damage: 1
+    potions: 1
+  pets:
+    respawn: 1200
+  drops:
+    players: 40
+    entity: 1200
+pets:
+  protect: true
+  respawn: true
+  follow: true
+  teleport: true
+  limits:
+    wolf: 2
+    ocelot: 1
+    horse: 1
+spawn:
+  entity:
+  - experienceorb
+  - zombie
+  - zombiebaby
+  - zombievillager
+  - zombievillagerbaby
+  - zombiepigman
+  - zombiepigmanbaby
+  - giant
+  - skeleton
+  - skeletonwither
+  - spider
+  - spidercave
+  - silverfish
+  - endermite
+  - witch
+  - enderdragon
+  - wither
+  - rabbit
+  - rabbitkiller
+  - bat
+  - wolf
+  - ocelot
+  - horse
+  - horseskeleton
+  - horsezombie
+  - cow
+  - mooshroom
+  - villager
+  - irongolem

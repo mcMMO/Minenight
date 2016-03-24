@@ -30,7 +30,6 @@ import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.enums.GlobalSetting;
-import com.sucy.minenight.world.enums.TickSetting;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -47,13 +46,9 @@ public class WorldSettings
     private final HashMap<String, WorldLocations> locations = new HashMap<String, WorldLocations>();
 
     private final HashMap<String, Boolean> globals = new HashMap<String, Boolean>();
-    private final HashMap<String, Integer> ticks   = new HashMap<String, Integer>();
 
     private final HashSet<String> spawns;
 
-    public final boolean vanillaMessages;
-    public final boolean serverMessages;
-    public final String  messageMode;
     public final int     stackSize;
     public final int     hiddenNBT;
 
@@ -67,17 +62,20 @@ public class WorldSettings
         DataSection data = config.getSection("settings");
 
         // Load global settings
-        DataSection globalData = data.getSection("global");
+        DataSection globalData = data.getSection("client");
+        for (String key : globalData.keys())
+            globals.put(key.toUpperCase(), globalData.getBoolean(key));
+        globalData = data.getSection("server");
         for (String key : globalData.keys())
             globals.put(key.toUpperCase(), globalData.getBoolean(key));
 
         // Load experience options
-        DataSection expData = data.getSection("experience");
+        DataSection expData = config.getSection("experience");
         for (String key : expData.keys())
             globals.put(key.toUpperCase(), expData.getBoolean(key));
 
         // Stack size
-        DataSection inventory = data.getSection("inventory");
+        DataSection inventory = config.getSection("inventory");
         stackSize = inventory.getInt("stacksize");
 
         // NBT values to be hidden
@@ -92,26 +90,22 @@ public class WorldSettings
         hiddenNBT = id;
 
         // Load tick settings
-        DataSection tickData = data.getSection("ticks");
-        for (String key : tickData.keys())
-        {
-            ticks.put(key.toUpperCase(), tickData.getInt(key));
-        }
-
-        // Message settings
-        DataSection messageData = data.getSection("messages");
-        vanillaMessages = messageData.getBoolean("vanilla");
-        serverMessages = messageData.getBoolean("server");
-        messageMode = messageData.getString("mode");
 
         // Spawn settings
-        List<String> entities = data.getList("spawns");
+        DataSection spawnData = config.getSection("spawn");
+        List<String> entities = spawnData.getList("entity");
         spawns = new HashSet<String>();
         for (String entity : entities)
             spawns.add(entity.toUpperCase());
+    }
 
-        // Location settings
-        DataSection locData = config.getSection("worlds");
+    /**
+     * Loads location data from the config data
+     *
+     * @param locData config data to load from
+     */
+    public void loadLocSettings(DataSection locData)
+    {
         for (String key : locData.keys())
         {
             locations.put(key, new WorldLocations(key, locData.getSection(key)));
@@ -128,18 +122,6 @@ public class WorldSettings
         if (hiddenNBT > 0)
             return NBT.hide(item, hiddenNBT);
         return item;
-    }
-
-    /**
-     * Checks the amount of ticks a setting is set to
-     *
-     * @param setting setting to get for
-     *
-     * @return number of ticks
-     */
-    public int getTicks(TickSetting setting)
-    {
-        return ticks.get(setting.key());
     }
 
     /**

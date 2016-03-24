@@ -38,6 +38,18 @@ public class Logger
 {
     private static final HashMap<String, Integer> LEVELS = new HashMap<String, Integer>();
 
+    private static java.util.logging.Logger logger;
+
+    /**
+     * Initializes the logger utility to use the given logger
+     *
+     * @param pluginLogger plugin logger to use
+     */
+    public static void initialize(java.util.logging.Logger pluginLogger)
+    {
+        logger = pluginLogger;
+    }
+
     /**
      * Loads all logging level settings from the config data
      *
@@ -85,7 +97,7 @@ public class Logger
     {
         if (LEVELS.containsKey(key) && LEVELS.get(key) >= level)
         {
-            Bukkit.getLogger().info(message);
+            logger.info(message);
         }
     }
 
@@ -109,7 +121,7 @@ public class Logger
      */
     public static void invalid(String message)
     {
-        Bukkit.getLogger().severe(message);
+        logger.severe(message);
     }
 
     /**
@@ -119,7 +131,7 @@ public class Logger
      */
     public static void bug(String message)
     {
-        Bukkit.getLogger().severe(message);
+        logger.severe(message);
     }
 
     /**
@@ -129,6 +141,6 @@ public class Logger
      */
     public static void log(String message)
     {
-        Bukkit.getLogger().info(message);
+        logger.info(message);
     }
 }

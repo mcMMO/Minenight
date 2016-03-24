@@ -119,6 +119,7 @@ public class Minenight extends JavaPlugin
     public Minenight()
     {
         // Set up standalone utilities
+        Logger.initialize(getLogger());
         Reflection.initialize();
         NMS.initialize();
         NBT.initialize();
@@ -145,15 +146,19 @@ public class Minenight extends JavaPlugin
         config.checkDefaults();
         config.trim();
         config.save();
+        CommentedConfig mechanics = getConfig("mechanics");
+        mechanics.checkDefaults();
+        mechanics.trim();
+        mechanics.save();
 
         // Load utilities related to Bukkit API
         uuidUtil = new PlayerUUIDs(this);
         Logger.loadLevels(config.getConfig().getSection("logging"));
 
         // Create segments
-        worlds = new Worlds(config.getConfig());
+        worlds = new Worlds(mechanics.getConfig());
         permissions = new Permissions();
-        economy = new Economy(config.getConfig().getSection("settings").getSection("economy"));
+        economy = new Economy();
         protection = new Protection();
         if (NMS.isSupported())
             hologram = new Holograms();

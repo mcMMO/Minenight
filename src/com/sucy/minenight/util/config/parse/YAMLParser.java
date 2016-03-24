@@ -78,7 +78,7 @@ public class YAMLParser
         catch (Exception ex)
         {
             // Do nothing
-            Bukkit.getLogger().info("Failed to parse resource (" + path + ") - " + ex.getMessage());
+            Logger.invalid("Failed to parse resource (" + path + ") - " + ex.getMessage());
         }
         return new DataSection();
     }

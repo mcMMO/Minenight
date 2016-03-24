@@ -47,11 +47,13 @@ public class Economy
 
     /**
      * Initializes necessary data on creation
-     *
-     * @param config config data to load settings from
      */
-    public Economy(DataSection config)
+    public Economy()
     {
+        CommentedConfig file = Minenight.getConfig("economy");
+        file.saveDefaultConfig();
+        DataSection config = file.getConfig();
+
         for (String key : config.keys())
             currencyTypes.put(key, new CurrencyType(config.getSection(key)));
         for (Player player : VersionManager.getOnlinePlayers())
