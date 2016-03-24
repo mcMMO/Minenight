@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.protection.listener;
 
+import com.sucy.minenight.Minenight;
 import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.protection.event.PlayerEnterZoneEvent;
 import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
@@ -38,6 +39,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -49,6 +52,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -180,6 +184,16 @@ public class FlagListener implements Listener
                 if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)
                     defender.setFireTicks(0);
             }
+
+            // PvP potions
+            else if (zone != null && zone.hasFlag(ZoneFlag.PVP))
+            {
+                if (event.getCause() == EntityDamageEvent.DamageCause.POISON
+                    || event.getCause() == EntityDamageEvent.DamageCause.MAGIC)
+                {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
@@ -263,10 +277,8 @@ public class FlagListener implements Listener
     @EventHandler
     public void onMelt(BlockFadeEvent event)
     {
-        Material type = event.getBlock().getType();
-        if (type == Material.ICE || type == Material.SNOW || type == Material.SNOW_BLOCK)
-            if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
-                event.setCancelled(true);
+        if (ZoneManager.isProhibited(event.getBlock().getLocation(temp), ZoneFlag.PROTECT))
+            event.setCancelled(true);
     }
 
     @EventHandler
@@ -284,6 +296,18 @@ public class FlagListener implements Listener
     @EventHandler
     public void onInteract(PlayerInteractEvent event)
     {
+        Block up = event.getClickedBlock().getRelative(BlockFace.UP);
+        if (up.getType() == Material.FIRE && ZoneManager.isProhibited(up.getLocation(temp), ZoneFlag.PROTECT, event.getPlayer())) {
+            final BlockState fire = up.getState();
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    fire.update(true, false);
+                }
+            }.runTaskLater(Minenight.getPlugin(), 1);
+        }
         if (event.getClickedBlock() != null && ZoneManager.isProhibited(event.getClickedBlock().getLocation(temp), ZoneFlag.PROTECT, event.getPlayer()))
             event.setCancelled(true);
     }
