@@ -55,7 +55,7 @@ public class EconomyListener implements Listener
     @EventHandler (priority = EventPriority.MONITOR)
     public void onJoin(AsyncPlayerPreLoginEvent event)
     {
-        economy.init(event.getUniqueId());
+        economy.initialize(event.getUniqueId());
     }
 
     /**

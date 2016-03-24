@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight;
 
+import com.sucy.minenight.economy.Economy;
 import com.sucy.minenight.hologram.Holograms;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
@@ -100,6 +101,7 @@ public class Minenight extends JavaPlugin
     // Segments
     private Worlds      worlds;
     private Permissions permissions;
+    private Economy     economy;
     private Protection  protection;
     private Holograms   hologram;
 
@@ -131,6 +133,7 @@ public class Minenight extends JavaPlugin
         // Create segments
         worlds = new Worlds(config.getConfig());
         permissions = new Permissions();
+        economy = new Economy(config.getConfig().getSection("settings").getSection("economy"));
         protection = new Protection();
         if (NMS.isSupported())
             hologram = new Holograms();
@@ -150,6 +153,7 @@ public class Minenight extends JavaPlugin
         // Clean up segments
         hologram.cleanup();
         protection.cleanup();
+        economy.cleanup();
         permissions.cleanup();
         worlds.cleanup();
 

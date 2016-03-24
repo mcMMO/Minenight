@@ -28,7 +28,6 @@ package com.sucy.minenight.world.data;
 
 import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.world.enums.GlobalSetting;
 import com.sucy.minenight.world.enums.TickSetting;
 import org.bukkit.World;
@@ -116,9 +115,6 @@ public class WorldSettings
      */
     public boolean isEnabled(GlobalSetting setting)
     {
-        Logger.log("Setting" + setting);
-        Logger.log("Key: " + setting.key());
-        Logger.log("Has: " + globals.containsKey(setting.key()));
         return globals.get(setting.key());
     }
 

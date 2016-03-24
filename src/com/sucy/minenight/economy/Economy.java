@@ -55,7 +55,7 @@ public class Economy
         for (String key : config.keys())
             currencyTypes.put(key, new CurrencyType(config.getSection(key)));
         for (Player player : VersionManager.getOnlinePlayers())
-            init(player.getUniqueId());
+            initialize(player.getUniqueId());
 
         Minenight.registerListener(new EconomyListener(this));
     }
@@ -76,7 +76,7 @@ public class Economy
      *
      * @param id UUID of player to initialize
      */
-    public void init(UUID id)
+    public void initialize(UUID id)
     {
         if (playerCurrency.containsKey(id))
             return;
