@@ -112,8 +112,8 @@ public class LineData
         this.x = x;
         this.y = y;
         this.z = z;
-        this.chunkX = ((int) Math.floor(x) >> 4);
-        this.chunkZ = ((int) Math.floor(z) >> 4);
+        this.chunkX = ((int) StrictMath.floor(x) >> 4);
+        this.chunkZ = ((int) StrictMath.floor(z) >> 4);
     }
 
     /**

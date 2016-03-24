@@ -113,7 +113,7 @@ public class FlagListener implements Listener
         {
             Point center = event.getZone().getCenter();
             Vector dir = event.getPlayer().getLocation(temp).subtract(center.x, 0, center.z).toVector();
-            dir.setY(Math.max(dir.getY(), 0));
+            dir.setY(StrictMath.max(dir.getY(), 0));
             dir.normalize().multiply(3);
             dir.setY(dir.getY() * 0.2 + 0.5);
             event.getPlayer().setVelocity(dir);

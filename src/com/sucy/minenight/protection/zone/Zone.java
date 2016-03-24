@@ -107,10 +107,10 @@ public class Zone
         {
             DataSection pointData = data.getSection("" + i);
             Point point = new Point(pointData.getInt("x"), pointData.getInt("z"));
-            min.x = Math.min(min.x, point.x);
-            min.z = Math.min(min.z, point.z);
-            max.x = Math.max(max.x, point.x);
-            max.z = Math.max(max.z, point.z);
+            min.x = StrictMath.min(min.x, point.x);
+            min.z = StrictMath.min(min.z, point.z);
+            max.x = StrictMath.max(max.x, point.x);
+            max.z = StrictMath.max(max.z, point.z);
             center.x += point.x;
             center.z += point.z;
             points.add(point);

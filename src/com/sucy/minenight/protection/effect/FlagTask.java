@@ -58,7 +58,7 @@ public class FlagTask extends BukkitRunnable
         EffectTimer effect = protection.getHealEffect();
         if (effect.tick())
             for (Player player : effect.getPlayers())
-                player.setHealth(Math.min(player.getHealth() + effect.getAmount(), player.getMaxHealth()));
+                player.setHealth(StrictMath.min(player.getHealth() + effect.getAmount(), player.getMaxHealth()));
 
         // Hurt effect
         effect = protection.getHurtEffect();

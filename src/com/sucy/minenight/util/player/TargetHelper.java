@@ -156,7 +156,7 @@ public class TargetHelper
         // Initialize values
         Vector dir = source.getLocation().getDirection();
         dir.setY(0);
-        double cos = Math.cos(arc * Math.PI / 180);
+        double cos = StrictMath.cos(arc * Math.PI / 180);
         double cosSq = cos * cos;
         double dirSq = dir.lengthSquared();
 
@@ -222,7 +222,7 @@ public class TargetHelper
         if (angle >= 360) return true;
 
         // Get the necessary data
-        double dotTarget = Math.cos(angle);
+        double dotTarget = StrictMath.cos(angle);
         Vector facing = entity.getLocation().getDirection();
         Vector relative = target.getLocation().subtract(entity.getLocation()).toVector().normalize();
 
@@ -258,7 +258,7 @@ public class TargetHelper
         if (angle >= 360) return true;
 
         // Get the necessary data
-        double dotTarget = Math.cos(angle);
+        double dotTarget = StrictMath.cos(angle);
         Vector facing = entity.getLocation().getDirection();
         Vector relative = entity.getLocation().subtract(target.getLocation()).toVector().normalize();
 
