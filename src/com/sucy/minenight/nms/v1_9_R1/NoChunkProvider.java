@@ -31,8 +31,6 @@ import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_9_R1.util.LongHash;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import java.io.IOException;
-
 /**
  * A modified chunk provider that prevents the generation of chunks
  */
@@ -51,18 +49,25 @@ public class NoChunkProvider
         super(worldserver, ichunkloader, chunkgenerator);
     }
 
+    /**
+     * Changes the normal chunk loading to just grab a "NoChunk" object if
+     * a new chunk needed to be generated
+     *
+     * @param i chunk X pos
+     * @param j chunk Y pos
+     * @return loaded chunk
+     */
     @Override
     public Chunk originalGetChunkAt(int i, int j)
     {
         Chunk chunk = getOrLoadChunkAt(i, j);
-        boolean newChunk = false;
 
         if (chunk == null)
         {
             this.world.timings.syncChunkLoadTimer.startTiming();
-            long k = ChunkCoordIntPair.a(i, j);
 
             chunk = loadChunk(i, j);
+            boolean newChunk = false;
             if (chunk == null)
             {
                 chunk = new NoChunk(world, i, j);
