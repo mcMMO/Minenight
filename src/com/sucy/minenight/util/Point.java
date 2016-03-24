@@ -45,4 +45,10 @@ public class Point
         this.x = x;
         this.z = z;
     }
+
+    @Override
+    public String toString()
+    {
+        return "(" + x + ", " + z + ")";
+    }
 }

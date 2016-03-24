@@ -28,6 +28,7 @@ package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.log.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
@@ -106,10 +107,10 @@ public class Zone
         {
             DataSection pointData = data.getSection("" + i);
             Point point = new Point(pointData.getInt("x"), pointData.getInt("z"));
-            min.x = Math.min(min.x, point.x >> 4);
-            min.z = Math.min(min.z, point.z >> 4);
-            max.x = Math.max(max.x, point.x >> 4);
-            max.z = Math.max(max.z, point.z >> 4);
+            min.x = Math.min(min.x, point.x);
+            min.z = Math.min(min.z, point.z);
+            max.x = Math.max(max.x, point.x);
+            max.z = Math.max(max.z, point.z);
             center.x += point.x;
             center.z += point.z;
             points.add(point);
@@ -125,6 +126,10 @@ public class Zone
             points.clear();
             makeBox();
         }
+        min.x >>= 4;
+        min.z >>= 4;
+        max.x >>= 4;
+        max.z >>= 4;
 
         compute();
     }
