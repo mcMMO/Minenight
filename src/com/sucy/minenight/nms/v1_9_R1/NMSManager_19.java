@@ -9,8 +9,6 @@ import com.sucy.minenight.nms.NMSManager;
 import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
-import net.minecraft.server.v1_9_R1.World;
-import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -64,7 +62,7 @@ public class NMSManager_19
             WorldServer nmsWorld = ((CraftWorld) world).getHandle();
             ChunkProviderServer provider = nmsWorld.getChunkProviderServer();
 
-            NoChunkProvider wrapper = new NoChunkProvider(nmsWorld, (IChunkLoader)chunkLoader.get(provider), provider.chunkGenerator);
+            NoChunkProvider wrapper = new NoChunkProvider(nmsWorld, (IChunkLoader) chunkLoader.get(provider), provider.chunkGenerator);
             chunkProvider.set(nmsWorld, wrapper);
 
             Logger.log("Disabled chunks for " + world.getName());

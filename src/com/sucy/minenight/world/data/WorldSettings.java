@@ -100,6 +100,7 @@ public class WorldSettings
      * Checks the amount of ticks a setting is set to
      *
      * @param setting setting to get for
+     *
      * @return number of ticks
      */
     public int getTicks(TickSetting setting)
@@ -111,6 +112,7 @@ public class WorldSettings
      * Checks whether or not the global setting is enabled
      *
      * @param setting setting to check
+     *
      * @return true if enabled, false otherwise
      */
     public boolean isEnabled(GlobalSetting setting)
@@ -122,6 +124,7 @@ public class WorldSettings
      * Checks if an entity is allowed to spawn
      *
      * @param entity entity type
+     *
      * @return true if can spawn
      */
     public boolean canSpawn(Entity entity)
@@ -133,6 +136,7 @@ public class WorldSettings
      * Retrieves location settings for a given world
      *
      * @param world world to get for
+     *
      * @return location settings
      */
     public WorldLocations getWorldLocs(World world)

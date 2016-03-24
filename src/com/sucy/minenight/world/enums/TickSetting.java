@@ -37,9 +37,7 @@ public enum TickSetting
     TELEPORT_COOLDOWN,
     TELEPORT_DELAY,
     TELEPORT_GOD,
-    LOGIN_GOD
-
-    ;
+    LOGIN_GOD;
 
     /**
      * @return key used in the global settings

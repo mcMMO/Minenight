@@ -56,6 +56,7 @@ public class LocationData
      *
      * @param world world name
      * @param data  data to parse from
+     *
      * @return parsed location
      */
     public static Location parse(String world, DataSection data)

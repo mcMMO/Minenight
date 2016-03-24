@@ -33,7 +33,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * An extension of the PermissionAttachment class that allows
@@ -42,7 +41,7 @@ import java.util.Map;
 public class PermAttachment extends PermissionAttachment
 {
     private final LinkedHashMap<String, Boolean> permList;
-    private Player player;
+    private       Player                         player;
     private boolean dirty = false;
 
     /**

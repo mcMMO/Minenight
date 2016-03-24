@@ -32,16 +32,18 @@ import java.util.HashMap;
 
 public class Conversion
 {
-    private static HashMap<EntityType, String> ENTITY_NAMES = new HashMap<EntityType, String>() {{
-        put(EntityType.PIG_ZOMBIE, "zombiepigman");
-        put(EntityType.SNOWMAN, "snowgolem");
-        put(EntityType.MUSHROOM_COW, "mooshroom");
-    }};
+    private static HashMap<EntityType, String> ENTITY_NAMES = new HashMap<EntityType, String>()
+    {{
+            put(EntityType.PIG_ZOMBIE, "zombiepigman");
+            put(EntityType.SNOWMAN, "snowgolem");
+            put(EntityType.MUSHROOM_COW, "mooshroom");
+        }};
 
     /**
      * Gets the config name for an entity
      *
      * @param entity entity to get config name for
+     *
      * @return config name
      */
     public static String getConfigName(Entity entity)

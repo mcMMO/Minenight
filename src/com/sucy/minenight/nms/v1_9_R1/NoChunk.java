@@ -26,7 +26,10 @@
  */
 package com.sucy.minenight.nms.v1_9_R1;
 
-import net.minecraft.server.v1_9_R1.*;
+import net.minecraft.server.v1_9_R1.BlockPosition;
+import net.minecraft.server.v1_9_R1.Blocks;
+import net.minecraft.server.v1_9_R1.IBlockData;
+import net.minecraft.server.v1_9_R1.World;
 
 /**
  * Represents a chunk that wasn't generated and won't be saved
@@ -51,6 +54,7 @@ public class NoChunk extends net.minecraft.server.v1_9_R1.Chunk
      * @param i block X pos
      * @param j block Y pos
      * @param k block Z pos
+     *
      * @return AIR
      */
     @Override
@@ -64,6 +68,7 @@ public class NoChunk extends net.minecraft.server.v1_9_R1.Chunk
      *
      * @param blockposition block position
      * @param iblockdata    block data
+     *
      * @return null
      */
     @Override

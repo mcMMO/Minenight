@@ -86,6 +86,7 @@ public class Permissions
      * Fetches the permissions list of a permissions attachment
      *
      * @param attachment attachment to fetch for
+     *
      * @return permissions list
      */
     @SuppressWarnings("unchecked")
@@ -93,7 +94,7 @@ public class Permissions
     {
         try
         {
-            return (LinkedHashMap<String, Boolean>)permissions.get(attachment);
+            return (LinkedHashMap<String, Boolean>) permissions.get(attachment);
         }
         catch (Exception ex)
         {

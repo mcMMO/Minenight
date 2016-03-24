@@ -56,7 +56,7 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event)
     {
         event.getPlayer().getInventory().setMaxStackSize(StrictMath.min(Worlds.getSettings().stackSize, 127));
@@ -102,8 +102,8 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.LOWEST)
-    public void onPortal (PortalCreateEvent event)
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPortal(PortalCreateEvent event)
     {
         event.setCancelled(!Worlds.getSettings().isEnabled(GlobalSetting.PORTAL_CREATION));
     }
@@ -113,7 +113,7 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onExplode(EntityExplodeEvent event)
     {
         switch (event.getEntityType())
@@ -142,11 +142,13 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEnderman(EntityChangeBlockEvent event)
     {
-        event.setCancelled(event.getEntity().getType() == EntityType.ENDERMAN
-            && !Worlds.getSettings().isEnabled(GlobalSetting.ENDERMAN_DESTROY));
+        event.setCancelled(
+            event.getEntity().getType() == EntityType.ENDERMAN
+            && !Worlds.getSettings().isEnabled(GlobalSetting.ENDERMAN_DESTROY)
+        );
     }
 
     /**
@@ -154,7 +156,7 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSpawn(EntitySpawnEvent event)
     {
         if (!Worlds.getSettings().canSpawn(event.getEntity()))

@@ -45,9 +45,7 @@ public enum GlobalSetting
     TNT_DESTROY,
     CREEPER_DESTROY,
     ENDERMAN_DESTROY,
-    PORTAL_CREATION
-
-    ;
+    PORTAL_CREATION;
 
     /**
      * @return key used in the global settings

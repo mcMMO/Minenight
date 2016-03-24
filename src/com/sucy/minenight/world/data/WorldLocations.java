@@ -67,6 +67,7 @@ public class WorldLocations
      * Gets a warp point by key
      *
      * @param key warp point key
+     *
      * @return warp point
      */
     public Location getWarp(String key)

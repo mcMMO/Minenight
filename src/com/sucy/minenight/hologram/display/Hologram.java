@@ -30,7 +30,6 @@ import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.config.LocationData;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.text.TextFormatter;
 import org.bukkit.Chunk;
 import org.bukkit.Location;

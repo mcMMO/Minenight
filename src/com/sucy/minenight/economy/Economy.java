@@ -104,6 +104,7 @@ public class Economy
      * Retrieves the funds data for a player
      *
      * @param player player to get the data for
+     *
      * @return player's funds data
      */
     public static PlayerFunds getCurrency(Player player)
@@ -113,8 +114,9 @@ public class Economy
 
     /**
      * Checks whether or not the type is a valid type of currency
-     * 
+     *
      * @param type currency type
+     *
      * @return true if valid
      */
     public static boolean isCurrencyType(String type)
@@ -124,8 +126,9 @@ public class Economy
 
     /**
      * Gets the settings for the given type of currency
-     * 
+     *
      * @param type type of currency
+     *
      * @return currency settings
      */
     public static CurrencyType getCurrencyType(String type)
@@ -152,16 +155,19 @@ public class Economy
     /**
      * Task for saving player funds data asynchronously
      */
-    private class SaveTask extends BukkitRunnable {
-        private UUID id;
+    private class SaveTask extends BukkitRunnable
+    {
+        private UUID        id;
         private PlayerFunds currency;
+
         public SaveTask(UUID id, PlayerFunds currency)
-        {   
+        {
             this.id = id;
             this.currency = currency;
         }
+
         @Override
-        public void run() 
+        public void run()
         {
             save(id, currency);
         }

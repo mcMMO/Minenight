@@ -39,6 +39,7 @@ public class PlayerFunds
      * Gets the current balance for the player
      *
      * @param type type of currency
+     *
      * @return current balance
      */
     public double getFunds(String type)
@@ -53,11 +54,12 @@ public class PlayerFunds
      * the currency's symbol.
      *
      * @param type type of currency
+     *
      * @return formatted current balance
      */
     public String getFormattedFunds(String type)
     {
-        return (int)getFunds(type) + Economy.getCurrencyType(type).symbol;
+        return (int) getFunds(type) + Economy.getCurrencyType(type).symbol;
     }
 
     /**
@@ -65,6 +67,7 @@ public class PlayerFunds
      *
      * @param type   type of currency
      * @param amount amount to add
+     *
      * @return remaining balance
      */
     public double addFunds(String type, double amount)
@@ -79,6 +82,7 @@ public class PlayerFunds
      *
      * @param type   type of currency
      * @param amount amount to subtract
+     *
      * @return remaining balance
      */
     public double subtractFunds(String type, double amount)
@@ -91,6 +95,7 @@ public class PlayerFunds
      *
      * @param type   type of currency
      * @param amount amount of funds required
+     *
      * @return true if has enough
      */
     public boolean hasFunds(String type, double amount)
@@ -104,6 +109,7 @@ public class PlayerFunds
      *
      * @param type   type of currency
      * @param amount amount looking to spend
+     *
      * @return true if can spend
      */
     public boolean canSpend(String type, double amount)
@@ -116,6 +122,7 @@ public class PlayerFunds
      *
      * @param type   currency type
      * @param amount amount of funds needed
+     *
      * @return true if has enough
      */
     private double check(String type, double amount)

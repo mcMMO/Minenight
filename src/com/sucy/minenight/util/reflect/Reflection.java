@@ -40,12 +40,12 @@ import java.util.Map;
  */
 public class Reflection
 {
-    private static String CRAFT;
-    private static String NMS;
+    private static String   CRAFT;
+    private static String   NMS;
     private static Class<?> packetClass;
-    private static Method getHandle;
-    private static Method sendPacket;
-    private static Field connection;
+    private static Method   getHandle;
+    private static Method   sendPacket;
+    private static Field    connection;
 
     public static void initialize()
     {

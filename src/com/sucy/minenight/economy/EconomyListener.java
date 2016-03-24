@@ -52,7 +52,7 @@ public class EconomyListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler (priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(AsyncPlayerPreLoginEvent event)
     {
         economy.initialize(event.getUniqueId());

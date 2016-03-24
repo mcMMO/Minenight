@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class AttachmentManager
 {
-    private Player player;
+    private Player                     player;
     private List<PermissionAttachment> attachmentStore;
 
     /**

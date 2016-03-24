@@ -29,7 +29,6 @@ package com.sucy.minenight.protection.zone;
 import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.log.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
