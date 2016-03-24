@@ -28,6 +28,8 @@ package com.sucy.minenight;
 
 import com.sucy.minenight.economy.Economy;
 import com.sucy.minenight.hologram.Holograms;
+import com.sucy.minenight.log.ApacheFilter;
+import com.sucy.minenight.log.JavaFilter;
 import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
@@ -35,14 +37,24 @@ import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.util.commands.CommandManager;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.log.LogType;
 import com.sucy.minenight.util.log.Logger;
 import com.sucy.minenight.util.player.PlayerUUIDs;
 import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
 import com.sucy.minenight.world.Worlds;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.message.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.Field;
+import java.util.logging.Filter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * The central point of the MineNight collective plugin.
@@ -106,6 +118,18 @@ public class Minenight extends JavaPlugin
     private Protection  protection;
     private Holograms   hologram;
 
+    public Minenight()
+    {
+        // Set up standalone utilities
+        Reflection.initialize();
+        NMS.initialize();
+        NBT.initialize();
+        VersionManager.initialize();
+
+        // Restrict server logging
+        stopLogging();
+    }
+
     /**
      * Loads up all plugin segments and utility classes
      */
@@ -124,11 +148,7 @@ public class Minenight extends JavaPlugin
         config.trim();
         config.save();
 
-        // Set up utilities
-        Reflection.initialize();
-        NMS.initialize();
-        NBT.initialize();
-        VersionManager.initialize();
+        // Load utilities related to Bukkit API
         uuidUtil = new PlayerUUIDs(this);
         Logger.loadLevels(config.getConfig().getSection("logging"));
 
@@ -165,5 +185,34 @@ public class Minenight extends JavaPlugin
 
         HandlerList.unregisterAll(this);
         singleton = null;
+    }
+
+    /**
+     * Stops server logging based on log settings
+     */
+    private void stopLogging()
+    {
+        Bukkit.getLogger().setFilter(new JavaFilter(LogType.SERVER));
+
+        try
+        {
+            Field staticLogger;
+            org.apache.logging.log4j.core.Logger logger;
+            staticLogger = Class.forName(Reflection.getNMSPackage() + "MinecraftServer")
+                .getField("LOGGER");
+            staticLogger.setAccessible(true);
+            logger = (org.apache.logging.log4j.core.Logger)staticLogger.get(null);
+            logger.addFilter(new ApacheFilter(LogType.MINECRAFT));
+
+            staticLogger = Class.forName(Reflection.getNMSPackage() + "DedicatedServer")
+                .getField("LOGGER");
+            staticLogger.setAccessible(true);
+            logger = (org.apache.logging.log4j.core.Logger)staticLogger.get(null);
+            logger.addFilter(new ApacheFilter(LogType.MINECRAFT));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 }

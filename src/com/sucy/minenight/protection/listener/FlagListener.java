@@ -52,6 +52,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -71,7 +72,19 @@ public class FlagListener implements Listener
     public FlagListener(Protection protection)
     {
         this.protection = protection;
-        temp = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+    }
+
+    /**
+     * Grab spawn locaation of first loaded world as a
+     * utility location holder
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onWorld(WorldInitEvent event)
+    {
+        if (temp == null)
+            temp = event.getWorld().getSpawnLocation();
     }
 
     /**

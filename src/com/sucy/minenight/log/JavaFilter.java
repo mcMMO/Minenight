@@ -1,10 +1,10 @@
 /**
- * SkillAPI
- * com.sucy.skill.log.LogType
+ * MineNight
+ * com.sucy.minenight.log.JavaFilter
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Steven Sucy
+ * Copyright (c) 2016 Steven Sucy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,26 +24,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.util.log;
+package com.sucy.minenight.log;
+
+import com.sucy.minenight.util.log.LogType;
+import com.sucy.minenight.util.log.Logger;
+
+import java.util.logging.Filter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
- * Different categories of logging
+ * Utility class for filtering log messages from the server
  */
-public enum LogType
+public class JavaFilter implements Filter
 {
-    SETUP,
-    ZONE,
-    HOLOGRAM,
-    SERVER,
-    MINECRAFT;
+    private LogType type;
 
     /**
-     * The key for the logging type matching the config.yml vale
-     *
-     * @return key name
+     * @param type type of log being watched
      */
-    public String key()
+    public JavaFilter(LogType type)
     {
-        return name().toLowerCase().replace("_", "-");
+        this.type = type;
+    }
+
+    /**
+     * Filters log results based on settings
+     *
+     * @param record record to filter
+     *
+     * @return true if allowed, false otherwise
+     */
+    @Override
+    public boolean isLoggable(LogRecord record)
+    {
+        if (record.getLevel() == Level.SEVERE)
+            return true;
+        else if (record.getLevel() == Level.WARNING)
+            return Logger.getLevel(type) > 0;
+        else
+            return Logger.getLevel(type) > 1;
     }
 }

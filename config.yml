@@ -11,6 +11,10 @@ logging:
   zone: 0
   # Messages for hologram management.
   hologram: 0
+  # Messages from the server.
+  server: 0
+  # Messages from vanilla minecraft.
+  minecraft: 0
 settings:
   global:
     chunkgeneration: false

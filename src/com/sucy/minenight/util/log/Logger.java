@@ -47,8 +47,19 @@ public class Logger
     {
         for (String key : config.keys())
         {
-            setLevel(key, config.getInt(key));
+            LEVELS.put(key, config.getInt(key));
         }
+    }
+
+    /**
+     * Retrieves the logging level of the given type
+     *
+     * @param key log type
+     * @return logging level
+     */
+    public static int getLevel(LogType key)
+    {
+        return LEVELS.containsKey(key.key()) ? LEVELS.get(key.key()) : 0;
     }
 
     /**
@@ -57,9 +68,9 @@ public class Logger
      * @param key   category
      * @param level logging level
      */
-    public static void setLevel(String key, int level)
+    public static void setLevel(LogType key, int level)
     {
-        LEVELS.put(key, level);
+        LEVELS.put(key.key(), level);
     }
 
     /**
