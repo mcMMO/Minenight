@@ -196,23 +196,24 @@ public class Minenight extends JavaPlugin
 
         try
         {
-            Field staticLogger;
-            org.apache.logging.log4j.core.Logger logger;
-            staticLogger = Class.forName(Reflection.getNMSPackage() + "MinecraftServer")
-                .getField("LOGGER");
-            staticLogger.setAccessible(true);
-            logger = (org.apache.logging.log4j.core.Logger)staticLogger.get(null);
-            logger.addFilter(new ApacheFilter(LogType.MINECRAFT));
-
-            staticLogger = Class.forName(Reflection.getNMSPackage() + "DedicatedServer")
-                .getField("LOGGER");
-            staticLogger.setAccessible(true);
-            logger = (org.apache.logging.log4j.core.Logger)staticLogger.get(null);
-            logger.addFilter(new ApacheFilter(LogType.MINECRAFT));
+            addFilter("MinecraftServer");
+            addFilter("DedicatedServer");
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
+    }
+
+    private void addFilter(String name)
+        throws Exception
+    {
+        Field staticLogger;
+        org.apache.logging.log4j.core.Logger logger;
+        staticLogger = Class.forName(Reflection.getNMSPackage() + name)
+            .getField("LOGGER");
+        staticLogger.setAccessible(true);
+        logger = (org.apache.logging.log4j.core.Logger)staticLogger.get(null);
+        logger.addFilter(new ApacheFilter(LogType.MINECRAFT));
     }
 }
