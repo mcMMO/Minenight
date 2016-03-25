@@ -64,7 +64,7 @@ public class ApacheFilter implements Filter
     @Override
     public Result filter(Logger logger, Level level, Marker marker, String s, Object... objects)
     {
-        com.sucy.minenight.log.Logger.log("Checking " + s);
+        com.sucy.minenight.log.Logger.debug("Checking " + s);
         return getResult(level);
     }
 
@@ -77,7 +77,7 @@ public class ApacheFilter implements Filter
     @Override
     public Result filter(Logger logger, Level level, Marker marker, Message message, Throwable throwable)
     {
-        com.sucy.minenight.log.Logger.log("Checking " + message.getFormat());
+        com.sucy.minenight.log.Logger.debug("Checking " + message.getFormat());
         return getResult(level);
     }
 

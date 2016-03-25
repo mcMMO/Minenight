@@ -26,16 +26,69 @@
  */
 package com.sucy.minenight.util;
 
+import com.sucy.minenight.Minenight;
+import com.sucy.minenight.log.Logger;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.plugin.IllegalPluginAccessException;
+import org.bukkit.plugin.RegisteredListener;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Helper class for listeners
  */
 public class ListenerUtil
 {
+    /**
+     * Registers events, ignoring plugin enabled requirements
+     *
+     * @param listener listener to register
+     */
+    @SuppressWarnings("unchecked")
+    public static void register(Listener listener)
+    {
+        Minenight plugin = Minenight.getPlugin();
+        try
+        {
+            for (Map.Entry entry : plugin.getPluginLoader().createRegisteredListeners(listener, plugin).entrySet())
+                getEventListeners(getRegistrationClass((Class)entry.getKey())).registerAll((Collection)entry.getValue());
+        }
+        catch (Exception ex)
+        {
+            Logger.bug("Failed to register listener " + listener.getClass().getName());
+            ex.printStackTrace();
+        }
+    }
+
+    private static HandlerList getEventListeners(Class<? extends Event> type)
+        throws Exception
+    {
+        Method method = getRegistrationClass(type).getDeclaredMethod("getHandlerList");
+        method.setAccessible(true);
+        return (HandlerList)method.invoke(null);
+    }
+
+    private static Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz) {
+        try {
+            clazz.getDeclaredMethod("getHandlerList");
+            return clazz;
+        } catch (NoSuchMethodException localNoSuchMethodException) {
+            if ((clazz.getSuperclass() != null) &&
+                (!clazz.getSuperclass().equals(Event.class)) &&
+                (Event.class.isAssignableFrom(clazz.getSuperclass())))
+                return getRegistrationClass(clazz.getSuperclass().asSubclass(Event.class));
+        }
+        return null;
+    }
+
     /**
      * Retrieves a damager from an entity damage event which will get the
      * shooter of projectiles if it was a projectile hitting them or

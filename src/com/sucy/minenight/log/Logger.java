@@ -27,7 +27,6 @@
 package com.sucy.minenight.log;
 
 import com.sucy.minenight.util.config.parse.DataSection;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 
@@ -37,18 +36,6 @@ import java.util.HashMap;
 public class Logger
 {
     private static final HashMap<String, Integer> LEVELS = new HashMap<String, Integer>();
-
-    private static java.util.logging.Logger logger;
-
-    /**
-     * Initializes the logger utility to use the given logger
-     *
-     * @param pluginLogger plugin logger to use
-     */
-    public static void initialize(java.util.logging.Logger pluginLogger)
-    {
-        logger = pluginLogger;
-    }
 
     /**
      * Loads all logging level settings from the config data
@@ -97,7 +84,7 @@ public class Logger
     {
         if (LEVELS.containsKey(key) && LEVELS.get(key) >= level)
         {
-            logger.info(message);
+            System.out.println("[INFO] " + message);
         }
     }
 
@@ -121,7 +108,7 @@ public class Logger
      */
     public static void invalid(String message)
     {
-        logger.severe(message);
+        System.out.println("[WARNING] " + message);
     }
 
     /**
@@ -131,7 +118,7 @@ public class Logger
      */
     public static void bug(String message)
     {
-        logger.severe(message);
+        System.out.println("[ERROR] " + message);
     }
 
     /**
@@ -139,8 +126,8 @@ public class Logger
      *
      * @param message message to log
      */
-    public static void log(String message)
+    public static void debug(String message)
     {
-        logger.info(message);
+        System.out.println("[DEBUG] " + message);
     }
 }

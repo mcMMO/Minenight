@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.log.JavaFilter
+ * com.sucy.minenight.log.LogHandler
  *
  * The MIT License (MIT)
  *
@@ -26,40 +26,53 @@
  */
 package com.sucy.minenight.log;
 
-import java.util.logging.Filter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
- * Utility class for filtering log messages from the server
+ * Handles outputting messages to the console
  */
-public class JavaFilter implements Filter
+public class LogHandler extends Handler
 {
-    private LogType type;
-
     /**
-     * @param type type of log being watched
+     * Publishes a message to the console
+     *
+     * @param record message data
      */
-    public JavaFilter(LogType type)
+    @Override
+    public void publish(LogRecord record)
     {
-        this.type = type;
+        if (check(record))
+            System.out.println(record.getMessage());
     }
 
     /**
-     * Filters log results based on settings
-     *
-     * @param record record to filter
-     *
-     * @return true if allowed, false otherwise
+     * Doesn't do anything
      */
     @Override
-    public boolean isLoggable(LogRecord record)
+    public void flush() { }
+
+    /**
+     * Doesn't do anything
+     * @throws SecurityException
+     */
+    @Override
+    public void close() throws SecurityException { }
+
+    /**
+     * Checks whether or not the log message should be output
+     *
+     * @param record record to check
+     * @return true if should be shown
+     */
+    private boolean check(LogRecord record)
     {
         if (record.getLevel() == Level.SEVERE)
             return true;
         else if (record.getLevel() == Level.WARNING)
-            return Logger.getLevel(type) > 0;
+            return Logger.getLevel(LogType.SERVER) > 0;
         else
-            return Logger.getLevel(type) > 1;
+            return Logger.getLevel(LogType.SERVER) > 1;
     }
 }

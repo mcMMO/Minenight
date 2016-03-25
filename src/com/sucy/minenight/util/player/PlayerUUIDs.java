@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.util.player;
 
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.Bukkit;
@@ -68,7 +69,7 @@ public class PlayerUUIDs implements Listener
      */
     public PlayerUUIDs(JavaPlugin plugin)
     {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        ListenerUtil.register(this);
         config = new CommentedConfig(plugin, "uuid");
 
         // Load previous data

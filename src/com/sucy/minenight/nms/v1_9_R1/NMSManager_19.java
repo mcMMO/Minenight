@@ -65,7 +65,7 @@ public class NMSManager_19
             NoChunkProvider wrapper = new NoChunkProvider(nmsWorld, (IChunkLoader) chunkLoader.get(provider), provider.chunkGenerator);
             chunkProvider.set(nmsWorld, wrapper);
 
-            Logger.log("Disabled chunks for " + world.getName());
+            Logger.debug("Disabled chunks for " + world.getName());
         }
         catch (Exception ex)
         {
