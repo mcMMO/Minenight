@@ -35,6 +35,7 @@ import com.sucy.minenight.util.text.TextFormatter;
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.data.WorldLocations;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -52,20 +53,25 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.UUID;
 
 /**
  * Listener handling global settings related to entities
  */
 public class EntityListener implements Listener
 {
+    private HashMap<UUID, Location> deathLoc = new HashMap<UUID, Location>();
+
     /**
      * Sets player stack size on join
      *
@@ -75,6 +81,17 @@ public class EntityListener implements Listener
     public void onJoin(PlayerJoinEvent event)
     {
         event.getPlayer().getInventory().setMaxStackSize(StrictMath.min(Worlds.getSettings().stackSize, 127));
+    }
+
+    /**
+     * Remove players from death map on quit
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event)
+    {
+        deathLoc.remove(event.getPlayer().getUniqueId());
     }
 
     /**
@@ -113,7 +130,7 @@ public class EntityListener implements Listener
             && event.getRawSlot() == 2
             && event.getClickedInventory().getItem(event.getRawSlot()) != null)
         {
-            Player player = (Player)event.getWhoClicked();
+            Player player = (Player) event.getWhoClicked();
             new LevelTask(player, player.getLevel()).runTaskLater(Minenight.getPlugin(), 1);
         }
     }
@@ -126,6 +143,8 @@ public class EntityListener implements Listener
     @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
+        deathLoc.put(event.getEntity().getUniqueId(), event.getEntity().getLocation());
+
         if (!Worlds.getSettings().isEnabled(GlobalSetting.DEATH))
         {
             event.setKeepLevel(true);
@@ -154,7 +173,12 @@ public class EntityListener implements Listener
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event)
     {
-        WorldLocations settings = Worlds.getSettings().getWorldLocs(event.getRespawnLocation().getWorld());
+        Location loc;
+        if (deathLoc.containsKey(event.getPlayer().getUniqueId()))
+            loc = deathLoc.remove(event.getPlayer().getUniqueId());
+        else
+            loc = event.getRespawnLocation();
+        WorldLocations settings = Worlds.getSettings().getWorldLocs(loc.getWorld());
         if (settings != null)
             event.setRespawnLocation(settings.spawn);
     }
