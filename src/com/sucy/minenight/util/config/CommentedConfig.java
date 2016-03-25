@@ -59,7 +59,7 @@ public class CommentedConfig
         this.fileName = name + ".yml";
 
         // Setup the path
-        this.configFile = new File(plugin.getDataFolder().getAbsolutePath() + "/" + fileName);
+        this.configFile = new File("plugins" + File.separator + plugin.getName() + File.separator + fileName);
         try
         {
             String path = configFile.getAbsolutePath();
@@ -154,10 +154,6 @@ public class CommentedConfig
      */
     public void saveDefaultConfig()
     {
-        if (configFile == null)
-        {
-            configFile = new File(plugin.getDataFolder().getAbsolutePath() + "/" + fileName);
-        }
         if (!configFile.exists())
         {
             if (defaults == null) defaults = YAMLParser.parseResource(plugin, fileName);
