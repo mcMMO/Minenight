@@ -72,19 +72,8 @@ public class FlagListener implements Listener
     public FlagListener(Protection protection)
     {
         this.protection = protection;
-    }
 
-    /**
-     * Grab spawn locaation of first loaded world as a
-     * utility location holder
-     *
-     * @param event event details
-     */
-    @EventHandler
-    public void onWorld(WorldInitEvent event)
-    {
-        if (temp == null)
-            temp = event.getWorld().getSpawnLocation();
+        temp = Bukkit.getWorlds().get(0).getSpawnLocation();
     }
 
     /**

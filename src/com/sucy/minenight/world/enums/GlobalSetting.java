@@ -31,24 +31,27 @@ package com.sucy.minenight.world.enums;
  */
 public enum GlobalSetting
 {
-    CHUNK_GENERATION,
+    ANVILS,
+    ARMOR_STAND_DROPS,
     AUTOMATIC_RESPAWN,
     AUTOMATIC_RESPAWN_VOID,
-    WEATHER,
-    SLEEP,
-    SIGN_FORMATS,
+    CHUNK_GENERATION,
+    CREEPER_DESTROY,
+    DEATH,
+    ENCHANTMENTS,
+    ENDERDRAGON_DESTROY,
+    ENDERMAN_DESTROY,
     FIRE_SPREAD,
     FIREBALL_FIRE,
     FIREBALL_DESTROY,
-    WITHER_DESTROY,
-    ENDERDRAGON_DESTROY,
-    TNT_DESTROY,
-    CREEPER_DESTROY,
-    ENDERMAN_DESTROY,
     PORTAL_CREATION,
-    ENCHANTMENTS,
-    ANVILS,
-    DEATH;
+    PROTECT_DROPS,
+    SIGN_FORMATS,
+    SLEEP,
+    TNT_DESTROY,
+    TREE_FALLING,
+    WEATHER,
+    WITHER_DESTROY;
 
     /**
      * @return key used in the global settings

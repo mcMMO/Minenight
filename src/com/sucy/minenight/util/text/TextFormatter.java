@@ -43,7 +43,7 @@ public class TextFormatter
      * Regex string for finding color patterns
      */
     private static final String  COLOR_REGEX   = "([0-9a-fl-orA-FL-OR])";
-    private static final Pattern COLOR_PATTERN = Pattern.compile(COLOR_REGEX);
+    private static final Pattern COLOR_PATTERN = Pattern.compile('&' + COLOR_REGEX);
 
     /**
      * Formats text into individual words
@@ -133,7 +133,8 @@ public class TextFormatter
      */
     public static String colorString(String string)
     {
-        return colorString(string, '&');
+        if (string == null) return null;
+        return COLOR_PATTERN.matcher(string).replaceAll(ChatColor.COLOR_CHAR + "$1");
     }
 
     /**

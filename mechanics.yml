@@ -21,7 +21,7 @@ settings:
     firenatural: false
     explodedestroy: false
     entitydestroy: false
-    chunckgeneration: false
+    chunkgeneration: false
     chunckmemory: false
 inventory:
   stacksize: 100

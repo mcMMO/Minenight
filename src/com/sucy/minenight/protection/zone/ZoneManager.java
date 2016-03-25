@@ -115,7 +115,7 @@ public class ZoneManager
      */
     public static Zone getZone(Location loc, ZoneFlag flag)
     {
-        if (!activeByFlag.containsKey(loc.getWorld().getName()))
+        if (loc == null || !activeByFlag.containsKey(loc.getWorld().getName()))
             return null;
         return getZone(loc, activeByFlag.get(loc.getWorld().getName()).get(flag));
     }

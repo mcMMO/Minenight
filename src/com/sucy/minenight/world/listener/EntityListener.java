@@ -26,17 +26,27 @@
  */
 package com.sucy.minenight.world.listener;
 
+import com.mysql.jdbc.log.Log;
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.Point;
+import com.sucy.minenight.util.text.TextFormatter;
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.data.WorldLocations;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -46,6 +56,10 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * Listener handling global settings related to entities
@@ -209,6 +223,86 @@ public class EntityListener implements Listener
     {
         if (!Worlds.getSettings().canSpawn(event.getEntity()))
             event.setCancelled(true);
+    }
+
+    /**
+     * Handles breaking down trees when applicable
+     *
+     * @param event event details
+     */
+    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+    public void eventBreakBlock(BlockBreakEvent event) {
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.TREE_FALLING))
+            return;
+
+        Block startingPoint = event.getBlock().getRelative(BlockFace.UP);
+        if ((startingPoint.getType() != Material.LOG)
+            && (startingPoint.getType() != Material.LOG_2)
+            && (startingPoint.getType() != Material.LEAVES)
+            && (startingPoint.getType() != Material.LEAVES_2))
+            return;
+
+        HashSet<Block> treeBlocks = new HashSet<Block>();
+        HashSet<Block> blocksToSearch = new HashSet<Block>();
+        HashSet<Block> searched = new HashSet<Block>();
+        blocksToSearch.add(startingPoint);
+        searched.add(event.getBlock());
+        Block temp;
+
+        int i;
+        for (i = 0; i < 100; i++) {
+            if (blocksToSearch.isEmpty())
+            {
+                break;
+            }
+            Block block = blocksToSearch.iterator().next();
+            blocksToSearch.remove(block);
+            searched.add(block);
+
+            if ((block.getType() == Material.LOG)
+                || (block.getType() == Material.LOG_2)
+                || (block.getType() == Material.LEAVES)
+                || (block.getType() == Material.LEAVES_2)) {
+
+                treeBlocks.add(block);
+
+                if (!searched.contains(temp = block.getRelative(BlockFace.UP)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.DOWN)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.WEST)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.EAST)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.NORTH)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.SOUTH)))
+                    blocksToSearch.add(temp);
+            }
+            else if (!block.getType().isTransparent()) {
+                return;
+            }
+        }
+
+        if (i < 100) {
+            for (Block block : treeBlocks) {
+                FallingBlock sand = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
+                sand.setVelocity(new Vector(0.15 + (block.getY() - startingPoint.getY()) * 0.05, (block.getX() - startingPoint.getX()) * 0.1, 0));
+                block.setType(Material.AIR);
+            }
+        }
+    }
+
+    /**
+     * Adds colors to signs when players use the & symbol
+     *
+     * @param event event details
+     */
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onSignChange(SignChangeEvent event) {
+        if (Worlds.getSettings().isEnabled(GlobalSetting.SIGN_FORMATS))
+            for (int i = 0; i <= 3; i++)
+                event.setLine(i, TextFormatter.colorString(event.getLine(i)));
     }
 
     /**
