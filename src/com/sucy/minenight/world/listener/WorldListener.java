@@ -29,12 +29,22 @@ package com.sucy.minenight.world.listener;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.util.Vector;
+
+import java.util.HashSet;
 
 /**
  * Applies general settings to world related events
@@ -62,8 +72,7 @@ public class WorldListener implements Listener
     @EventHandler
     public void onWeather(WeatherChangeEvent event)
     {
-        if (!Worlds.getSettings().isEnabled(GlobalSetting.WEATHER))
-            event.setCancelled(true);
+        check(event, GlobalSetting.WEATHER);
     }
 
     /**
@@ -74,8 +83,7 @@ public class WorldListener implements Listener
     @EventHandler
     public void onSleep(PlayerBedEnterEvent event)
     {
-        if (!Worlds.getSettings().isEnabled(GlobalSetting.SLEEP))
-            event.setCancelled(true);
+        check(event, GlobalSetting.SLEEP);
     }
 
     /**
@@ -83,19 +91,98 @@ public class WorldListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onSpread(BlockIgniteEvent event)
     {
-        switch (event.getCause())
+        if (event.getCause() == BlockIgniteEvent.IgniteCause.SPREAD)
+            check(event, GlobalSetting.FIRE_SPREAD);
+        else if (event.getCause() != BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL)
+            check(event, GlobalSetting.FIRE_NATURAL);
+    }
+
+    /**
+     * Handles breaking down trees when applicable
+     *
+     * @param event event details
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void eventBreakBlock(BlockBreakEvent event)
+    {
+        if (!Worlds.getSettings().isEnabled(GlobalSetting.TREE_FALLING))
+            return;
+
+        Block startingPoint = event.getBlock().getRelative(BlockFace.UP);
+        if ((startingPoint.getType() != Material.LOG)
+            && (startingPoint.getType() != Material.LOG_2)
+            && (startingPoint.getType() != Material.LEAVES)
+            && (startingPoint.getType() != Material.LEAVES_2))
+            return;
+
+        HashSet<Block> treeBlocks = new HashSet<Block>();
+        HashSet<Block> blocksToSearch = new HashSet<Block>();
+        HashSet<Block> searched = new HashSet<Block>();
+        blocksToSearch.add(startingPoint);
+        searched.add(event.getBlock());
+        Block temp;
+
+        int i;
+        for (i = 0; i < 100; i++)
         {
-            case SPREAD:
-                if (!Worlds.getSettings().isEnabled(GlobalSetting.FIRE_SPREAD))
-                    event.setCancelled(true);
+            if (blocksToSearch.isEmpty())
+            {
                 break;
-            case FIREBALL:
-                if (!Worlds.getSettings().isEnabled(GlobalSetting.FIREBALL_FIRE))
-                    event.setCancelled(true);
-                break;
+            }
+            Block block = blocksToSearch.iterator().next();
+            blocksToSearch.remove(block);
+            searched.add(block);
+
+            if ((block.getType() == Material.LOG)
+                || (block.getType() == Material.LOG_2)
+                || (block.getType() == Material.LEAVES)
+                || (block.getType() == Material.LEAVES_2))
+            {
+
+                treeBlocks.add(block);
+
+                if (!searched.contains(temp = block.getRelative(BlockFace.UP)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.DOWN)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.WEST)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.EAST)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.NORTH)))
+                    blocksToSearch.add(temp);
+                if (!searched.contains(temp = block.getRelative(BlockFace.SOUTH)))
+                    blocksToSearch.add(temp);
+            }
+            else if (!block.getType().isTransparent())
+            {
+                return;
+            }
         }
+
+        if (i < 100)
+        {
+            for (Block block : treeBlocks)
+            {
+                FallingBlock sand = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
+                sand.setVelocity(new Vector(0.15 + (block.getY() - startingPoint.getY()) * 0.05, (block.getX() - startingPoint.getX()) * 0.1, 0));
+                block.setType(Material.AIR);
+            }
+        }
+    }
+
+    /**
+     * Checks whether or not a setting is active and applies
+     * it to the cancellable event
+     *
+     * @param event   event details
+     * @param setting setting to check
+     */
+    private void check(Cancellable event, GlobalSetting setting)
+    {
+        event.setCancelled(!Worlds.getSettings().isEnabled(setting));
     }
 }

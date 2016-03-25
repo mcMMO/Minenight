@@ -28,6 +28,7 @@ package com.sucy.minenight.protection.zone;
 
 import com.sucy.minenight.log.LogType;
 import com.sucy.minenight.log.Logger;
+import com.sucy.minenight.protection.event.PlayerChangeBlockEvent;
 import com.sucy.minenight.protection.event.PlayerEnterZoneEvent;
 import com.sucy.minenight.protection.event.PlayerLeaveZoneEvent;
 import org.bukkit.Location;
@@ -86,6 +87,9 @@ public class PlayerZones
             && (int) tempLoc.getY() == (int) lastLoc.getY()
             && (int) tempLoc.getZ() == (int) lastLoc.getZ())
             return;
+
+        // Change block event
+        PlayerChangeBlockEvent.invoke(player, lastLoc, tempLoc);
 
         // Grab new zones
         top = ZoneManager.getZones(temp, player.getLocation(tempLoc));

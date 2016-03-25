@@ -3,6 +3,7 @@ package com.sucy.minenight.nms;
 import com.sucy.minenight.hologram.display.LineData;
 import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.hologram.display.line.ItemLine;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,30 @@ public interface NMSManager
      * @param world world to stop chunks from generating in
      */
     public void stopChunks(World world);
+
+    /**
+     * Deletes a light at a location
+     *
+     * @param loc location to delete the light from
+     */
+    public void deleteLight(Location loc);
+
+    /**
+     * Makes a light at a location
+     *
+     * @param loc   location to make the light at
+     * @param level light level
+     */
+    public void makeLight(Location loc, int level);
+
+    /**
+     * Updates a light at a location
+     *
+     * @param from  old location
+     * @param to    new location
+     * @param level light level
+     */
+    public void updateLight(Location from, Location to, int level);
 
     /**
      * Retrieves a custom spawned entity by ID

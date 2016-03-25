@@ -9,6 +9,7 @@ import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSManager;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -30,6 +31,7 @@ public class NMSManager_19
 
     private Field chunkProvider;
     private Field chunkLoader;
+    private Field modified;
 
     /**
      * Sets up reflection and entity registration
@@ -48,6 +50,9 @@ public class NMSManager_19
 
         chunkLoader = ChunkProviderServer.class.getDeclaredField("chunkLoader");
         chunkLoader.setAccessible(true);
+
+        modified = Chunk.class.getDeclaredField("r");
+        modified.setAccessible(true);
     }
 
     /**
@@ -70,6 +75,92 @@ public class NMSManager_19
         catch (Exception ex)
         {
             Logger.bug("Failed to set up chunk gen override - " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Makes a light at a location
+     *
+     * @param loc   location to make the light at
+     * @param level light level
+     */
+    public void makeLight(Location loc, int level)
+    {
+        try
+        {
+            WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
+            BlockPosition pos = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            world.a(EnumSkyBlock.BLOCK, pos, level);
+            chunks(world, pos);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Deletes a light at a location
+     *
+     * @param loc location to delete the light from
+     */
+    public void deleteLight(Location loc)
+    {
+        try
+        {
+            WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
+            BlockPosition pos = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            world.c(EnumSkyBlock.BLOCK, pos);
+            chunks(world, pos);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates a light at a location
+     *
+     * @param from  old location
+     * @param to    new location
+     * @param level light level
+     */
+    public void updateLight(Location from, Location to, int level)
+    {
+        try
+        {
+            WorldServer world = ((CraftWorld) from.getWorld()).getHandle();
+            BlockPosition pos = new BlockPosition(from.getBlockX(), from.getBlockY(), from.getBlockZ());
+            world.c(EnumSkyBlock.BLOCK, pos);
+            pos = new BlockPosition(to.getBlockX(), to.getBlockY(), to.getBlockZ());
+            world.a(EnumSkyBlock.BLOCK, pos, level);
+            chunks(world, pos);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates chunk lighting
+     *
+     * @param world world containing the chunks
+     * @param pos   position of the light to base it around
+     * @throws Exception
+     */
+    private void chunks(WorldServer world, BlockPosition pos)
+        throws Exception
+    {
+        for (int dX = -1; dX <= 1; dX++)
+        {
+            for (int dZ = -1; dZ <= 1; dZ++)
+            {
+                Chunk chunk = world.getChunkIfLoaded(pos.getX() + dX, pos.getZ() + dZ);
+                if (chunk != null && modified.getBoolean(chunk))
+                    chunk.f(false);
+            }
         }
     }
 

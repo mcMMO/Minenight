@@ -22,7 +22,7 @@ settings:
     explodedestroy: false
     entitydestroy: false
     chunkgeneration: false
-    chunckmemory: false
+    chunkmemory: false
 inventory:
   stacksize: 100
   hide:
