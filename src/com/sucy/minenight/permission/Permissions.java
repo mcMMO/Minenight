@@ -26,8 +26,8 @@
  */
 package com.sucy.minenight.permission;
 
-import com.sucy.minenight.Minenight;
 import com.sucy.minenight.log.Logger;
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.entity.Player;
@@ -66,7 +66,7 @@ public class Permissions
             for (Player player : VersionManager.getOnlinePlayers())
                 manage(player);
 
-            Minenight.registerListener(new PermissionListener(this));
+            ListenerUtil.register(new PermissionListener(this));
         }
         catch (Exception ex)
         {

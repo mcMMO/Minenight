@@ -28,13 +28,14 @@ package com.sucy.minenight;
 
 import com.sucy.minenight.economy.Economy;
 import com.sucy.minenight.hologram.Holograms;
-import com.sucy.minenight.log.*;
+import com.sucy.minenight.log.ApacheFilter;
+import com.sucy.minenight.log.LogHandler;
+import com.sucy.minenight.log.LogType;
 import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
 import com.sucy.minenight.protection.Protection;
-import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.commands.CommandManager;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
@@ -43,11 +44,10 @@ import com.sucy.minenight.util.reflect.Reflection;
 import com.sucy.minenight.util.version.VersionManager;
 import com.sucy.minenight.world.Worlds;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
-import java.util.logging.*;
+import java.util.logging.Handler;
 
 /**
  * The central point of the MineNight collective plugin.
@@ -86,19 +86,6 @@ public class Minenight extends JavaPlugin
     public static DataSection getConfigData(String name)
     {
         return getConfig(name).getConfig();
-    }
-
-    /**
-     * Registers a listener with the plugin
-     *
-     * @param listener listener to register
-     */
-    public static void registerListener(Listener listener)
-    {
-        if (singleton == null)
-            return;
-
-        ListenerUtil.register(listener);
     }
 
     // Utilities
@@ -236,6 +223,7 @@ public class Minenight extends JavaPlugin
      * Injects a filter into the logger for the given NMS server class
      *
      * @param name NMS server class name
+     *
      * @throws Exception
      */
     private void addFilter(String name)
@@ -246,7 +234,7 @@ public class Minenight extends JavaPlugin
         staticLogger = Class.forName(Reflection.getNMSPackage() + name)
             .getField("LOGGER");
         staticLogger.setAccessible(true);
-        logger = (org.apache.logging.log4j.core.Logger)staticLogger.get(null);
+        logger = (org.apache.logging.log4j.core.Logger) staticLogger.get(null);
         logger.addFilter(new ApacheFilter(LogType.MINECRAFT));
     }
 }

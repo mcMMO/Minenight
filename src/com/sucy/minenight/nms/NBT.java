@@ -99,7 +99,7 @@ public class NBT
 
             setInt.invoke(nbt, "HideFlags", id);
 
-            return (ItemStack)asCraft.invoke(null, nms);
+            return (ItemStack) asCraft.invoke(null, nms);
         }
         catch (Exception ex)
         {
@@ -118,7 +118,7 @@ public class NBT
 
             setBool.invoke(nbt, "Unbreakable", true);
 
-            return (ItemStack)asCraft.invoke(null, nms);
+            return (ItemStack) asCraft.invoke(null, nms);
         }
         catch (Exception ex)
         {

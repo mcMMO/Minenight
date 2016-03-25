@@ -54,6 +54,7 @@ public class Logger
      * Retrieves the logging level of the given type
      *
      * @param key log type
+     *
      * @return logging level
      */
     public static int getLevel(LogType key)

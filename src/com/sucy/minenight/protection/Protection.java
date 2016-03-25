@@ -35,6 +35,7 @@ import com.sucy.minenight.protection.listener.MovementListener;
 import com.sucy.minenight.protection.zone.Zone;
 import com.sucy.minenight.protection.zone.ZoneFlag;
 import com.sucy.minenight.protection.zone.ZoneManager;
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.entity.Player;
@@ -89,9 +90,9 @@ public class Protection
 
         flagTask = new FlagTask(this);
 
-        Minenight.registerListener(new FlagListener(this));
-        Minenight.registerListener(new ChunkListener());
-        Minenight.registerListener(new MovementListener());
+        ListenerUtil.register(new FlagListener(this));
+        ListenerUtil.register(new ChunkListener());
+        ListenerUtil.register(new MovementListener());
     }
 
     /**

@@ -26,11 +26,11 @@
  */
 package com.sucy.minenight.protection.zone;
 
+import com.sucy.minenight.log.LogType;
+import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.protection.Protection;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.log.LogType;
-import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

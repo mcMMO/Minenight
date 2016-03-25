@@ -49,8 +49,8 @@ public class WorldSettings
 
     private final HashSet<String> spawns;
 
-    public final int     stackSize;
-    public final int     hiddenNBT;
+    public final int stackSize;
+    public final int hiddenNBT;
 
     /**
      * Loads global settings from config data

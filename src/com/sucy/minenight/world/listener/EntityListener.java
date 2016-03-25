@@ -26,9 +26,7 @@
  */
 package com.sucy.minenight.world.listener;
 
-import com.mysql.jdbc.log.Log;
 import com.sucy.minenight.Minenight;
-import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.util.text.TextFormatter;
@@ -39,7 +37,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -62,7 +59,6 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.UUID;
 
 /**
@@ -254,8 +250,9 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
-    public void eventBreakBlock(BlockBreakEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void eventBreakBlock(BlockBreakEvent event)
+    {
         if (!Worlds.getSettings().isEnabled(GlobalSetting.TREE_FALLING))
             return;
 
@@ -274,7 +271,8 @@ public class EntityListener implements Listener
         Block temp;
 
         int i;
-        for (i = 0; i < 100; i++) {
+        for (i = 0; i < 100; i++)
+        {
             if (blocksToSearch.isEmpty())
             {
                 break;
@@ -286,7 +284,8 @@ public class EntityListener implements Listener
             if ((block.getType() == Material.LOG)
                 || (block.getType() == Material.LOG_2)
                 || (block.getType() == Material.LEAVES)
-                || (block.getType() == Material.LEAVES_2)) {
+                || (block.getType() == Material.LEAVES_2))
+            {
 
                 treeBlocks.add(block);
 
@@ -303,13 +302,16 @@ public class EntityListener implements Listener
                 if (!searched.contains(temp = block.getRelative(BlockFace.SOUTH)))
                     blocksToSearch.add(temp);
             }
-            else if (!block.getType().isTransparent()) {
+            else if (!block.getType().isTransparent())
+            {
                 return;
             }
         }
 
-        if (i < 100) {
-            for (Block block : treeBlocks) {
+        if (i < 100)
+        {
+            for (Block block : treeBlocks)
+            {
                 FallingBlock sand = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
                 sand.setVelocity(new Vector(0.15 + (block.getY() - startingPoint.getY()) * 0.05, (block.getX() - startingPoint.getX()) * 0.1, 0));
                 block.setType(Material.AIR);
@@ -322,8 +324,9 @@ public class EntityListener implements Listener
      *
      * @param event event details
      */
-    @EventHandler(priority=EventPriority.HIGHEST)
-    public void onSignChange(SignChangeEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSignChange(SignChangeEvent event)
+    {
         if (Worlds.getSettings().isEnabled(GlobalSetting.SIGN_FORMATS))
             for (int i = 0; i <= 3; i++)
                 event.setLine(i, TextFormatter.colorString(event.getLine(i)));
@@ -360,7 +363,7 @@ public class EntityListener implements Listener
     private class LevelTask extends BukkitRunnable
     {
         private Player player;
-        private int level;
+        private int    level;
 
         /**
          * @param player player to restore

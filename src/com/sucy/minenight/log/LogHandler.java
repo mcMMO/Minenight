@@ -55,6 +55,7 @@ public class LogHandler extends Handler
 
     /**
      * Doesn't do anything
+     *
      * @throws SecurityException
      */
     @Override
@@ -64,6 +65,7 @@ public class LogHandler extends Handler
      * Checks whether or not the log message should be output
      *
      * @param record record to check
+     *
      * @return true if should be shown
      */
     private boolean check(LogRecord record)

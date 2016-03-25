@@ -27,6 +27,7 @@
 package com.sucy.minenight.economy;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.version.VersionManager;
@@ -59,7 +60,7 @@ public class Economy
         for (Player player : VersionManager.getOnlinePlayers())
             initialize(player.getUniqueId());
 
-        Minenight.registerListener(new EconomyListener(this));
+        ListenerUtil.register(new EconomyListener(this));
     }
 
     /**

@@ -33,10 +33,11 @@ import com.sucy.minenight.hologram.data.ScoreboardSettings;
 import com.sucy.minenight.hologram.display.Hologram;
 import com.sucy.minenight.hologram.listener.ChunkListener;
 import com.sucy.minenight.hologram.listener.HologramListener;
+import com.sucy.minenight.log.Logger;
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.log.Logger;
 import org.bukkit.Chunk;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -71,8 +72,8 @@ public class Holograms
         task.runTaskTimer(Minenight.getPlugin(), 1, 1);
 
         //Minenight.registerListener(new ZoneListener(this));
-        Minenight.registerListener(new HologramListener(this));
-        Minenight.registerListener(new ChunkListener(this));
+        ListenerUtil.register(new HologramListener(this));
+        ListenerUtil.register(new ChunkListener(this));
     }
 
     /**

@@ -35,8 +35,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.plugin.RegisteredListener;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -59,7 +57,7 @@ public class ListenerUtil
         try
         {
             for (Map.Entry entry : plugin.getPluginLoader().createRegisteredListeners(listener, plugin).entrySet())
-                getEventListeners(getRegistrationClass((Class)entry.getKey())).registerAll((Collection)entry.getValue());
+                getEventListeners(getRegistrationClass((Class) entry.getKey())).registerAll((Collection) entry.getValue());
         }
         catch (Exception ex)
         {
@@ -73,14 +71,18 @@ public class ListenerUtil
     {
         Method method = getRegistrationClass(type).getDeclaredMethod("getHandlerList");
         method.setAccessible(true);
-        return (HandlerList)method.invoke(null);
+        return (HandlerList) method.invoke(null);
     }
 
-    private static Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz) {
-        try {
+    private static Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz)
+    {
+        try
+        {
             clazz.getDeclaredMethod("getHandlerList");
             return clazz;
-        } catch (NoSuchMethodException localNoSuchMethodException) {
+        }
+        catch (NoSuchMethodException localNoSuchMethodException)
+        {
             if ((clazz.getSuperclass() != null) &&
                 (!clazz.getSuperclass().equals(Event.class)) &&
                 (Event.class.isAssignableFrom(clazz.getSuperclass())))

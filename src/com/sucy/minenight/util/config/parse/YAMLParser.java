@@ -27,7 +27,6 @@
 package com.sucy.minenight.util.config.parse;
 
 import com.sucy.minenight.log.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;

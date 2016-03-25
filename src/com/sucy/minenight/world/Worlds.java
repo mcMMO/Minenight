@@ -28,6 +28,7 @@ package com.sucy.minenight.world;
 
 import com.sucy.minenight.Minenight;
 import com.sucy.minenight.nms.NMS;
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.data.WorldSettings;
@@ -61,8 +62,8 @@ public class Worlds
         settings.loadLocSettings(locConfig.getConfig());
 
         // Set up listeners
-        Minenight.registerListener(new EntityListener());
-        Minenight.registerListener(new WorldListener());
+        ListenerUtil.register(new EntityListener());
+        ListenerUtil.register(new WorldListener());
 
         // Unload chunks in empty worlds
         for (World world : Bukkit.getWorlds())
