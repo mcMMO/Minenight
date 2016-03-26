@@ -26,14 +26,13 @@
  */
 package com.sucy.minenight.world.listener;
 
-import com.sucy.minenight.util.text.TextFormatter;
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import com.sucy.minenight.world.enums.ValueSetting;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -54,8 +53,6 @@ public class EntityListener implements Listener
         ItemStack result = Worlds.getSettings().hide(event.getEntity().getItemStack());
         event.getEntity().setItemStack(result);
     }
-
-
 
     /**
      * Stops portal creation
@@ -104,16 +101,59 @@ public class EntityListener implements Listener
     }
 
     /**
-     * Adds colors to signs when players use the & symbol
+     * Modifies damage dealt by environmental sources
      *
      * @param event event details
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onSignChange(SignChangeEvent event)
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onDamage(EntityDamageEvent event)
     {
-        if (Worlds.getSettings().isEnabled(GlobalSetting.SIGN_FORMATS))
-            for (int i = 0; i <= 3; i++)
-                event.setLine(i, TextFormatter.colorString(event.getLine(i)));
+        switch (event.getCause())
+        {
+            case FALLING_BLOCK:
+                set(event, ValueSetting.ANVIL);
+                break;
+            case CONTACT:
+                set(event, ValueSetting.CONTACT);
+                break;
+            case DROWNING:
+                set(event, ValueSetting.DROWN);
+                break;
+            case FALL:
+                set(event, ValueSetting.FALL);
+                break;
+            case FIRE:
+                set(event, ValueSetting.FIRE);
+                break;
+            case LAVA:
+                set(event, ValueSetting.LAVA);
+                break;
+            case LIGHTNING:
+                set(event, ValueSetting.LIGHTNING);
+                break;
+            case STARVATION:
+                set(event, ValueSetting.STARVATION);
+                break;
+            case SUFFOCATION:
+                set(event, ValueSetting.SUFFOCATE);
+                break;
+            case VOID:
+                set(event, ValueSetting.VOID);
+                break;
+        }
+    }
+
+    /**
+     * Sets the amount of damage for an event
+     *
+     * @param event   event to set for
+     * @param setting type of setting to apply
+     */
+    private void set(EntityDamageEvent event, ValueSetting setting)
+    {
+        event.setDamage(event.getDamage() * Worlds.getSettings().getValue(setting));
+        if (event.getDamage() == 0)
+            event.setCancelled(true);
     }
 
     /**

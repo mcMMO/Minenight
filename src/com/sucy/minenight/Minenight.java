@@ -79,13 +79,23 @@ public class Minenight extends JavaPlugin
     /**
      * Retrieves the data from a config by name
      *
-     * @param name name of the config
+     * @param name        name of the config
+     * @param setDefaults whether or not to check default values for the file
      *
      * @return config data
      */
-    public static DataSection getConfigData(String name)
+    public static DataSection getConfigData(String name, boolean setDefaults, boolean trim)
     {
-        return getConfig(name).getConfig();
+        CommentedConfig config = getConfig(name);
+        if (setDefaults)
+            config.checkDefaults();
+        if (trim)
+            config.trim();
+        if (setDefaults || trim)
+            config.save();
+        else
+            config.saveDefaultConfig();
+        return config.getConfig();
     }
 
     // Utilities
@@ -109,11 +119,7 @@ public class Minenight extends JavaPlugin
         singleton = this;
 
         // Initialize logging config data
-        CommentedConfig config = getConfig("config");
-        config.checkDefaults();
-        config.trim();
-        config.save();
-        Logger.loadLevels(config.getConfig().getSection("logging"));
+        Logger.loadLevels(getConfigData("config", true, true).getSection("logging"));
 
         // Set up standalone utilities
         Reflection.initialize();
@@ -124,17 +130,11 @@ public class Minenight extends JavaPlugin
         // Restrict server logging
         stopLogging();
 
-        // Load config data
-        CommentedConfig mechanics = getConfig("mechanics");
-        mechanics.checkDefaults();
-        mechanics.trim();
-        mechanics.save();
-
         // Load utilities related to Bukkit API
         uuidUtil = new PlayerUUIDs(this);
 
         // Create segments
-        worlds = new Worlds(mechanics.getConfig());
+        worlds = new Worlds(getConfigData("mechanics", true, true));
         permissions = new Permissions();
         economy = new Economy();
     }

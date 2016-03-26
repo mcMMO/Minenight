@@ -26,10 +26,13 @@
  */
 package com.sucy.minenight.world.data;
 
+import com.sucy.minenight.Minenight;
 import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.util.Conversion;
+import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import com.sucy.minenight.world.enums.ValueSetting;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -45,9 +48,15 @@ public class WorldSettings
 {
     private final HashMap<String, WorldLocations> locations = new HashMap<String, WorldLocations>();
 
+    private final HashMap<String, Float> numbers = new HashMap<String, Float>();
+
     private final HashMap<String, Boolean> globals = new HashMap<String, Boolean>();
 
     private final HashSet<String> spawns;
+
+    private final List<String> loginMessage;
+    private final List<String> welcomeMessage;
+    private final List<String> respawnMessage;
 
     public final int stackSize;
     public final int hiddenNBT;
@@ -59,20 +68,21 @@ public class WorldSettings
      */
     public WorldSettings(DataSection config)
     {
-        DataSection data = config.getSection("settings");
-
         // Load global settings
-        DataSection globalData = data.getSection("client");
+        DataSection globalData = config.getSection("players");
         for (String key : globalData.keys())
             globals.put(key.toUpperCase(), globalData.getBoolean(key));
-        globalData = data.getSection("server");
+        globalData = config.getSection("server");
         for (String key : globalData.keys())
             globals.put(key.toUpperCase(), globalData.getBoolean(key));
+        DataSection respawn = config.getSection("respawn");
+        globals.put(GlobalSetting.AUTOMATIC_RESPAWN.key(), respawn.getBoolean(GlobalSetting.AUTOMATIC_RESPAWN.key()));
+        globals.put(GlobalSetting.AUTOMATIC_RESPAWN_VOID.key(), respawn.getBoolean(GlobalSetting.AUTOMATIC_RESPAWN_VOID.key()));
 
-        // Load experience options
-        DataSection expData = config.getSection("experience");
-        for (String key : expData.keys())
-            globals.put(key.toUpperCase(), expData.getBoolean(key));
+        // Messages
+        loginMessage = config.getSection("login").getList("messages");
+        welcomeMessage = config.getSection("welcome").getList("broadcast");
+        respawnMessage = respawn.getList("messages");
 
         // Stack size
         DataSection inventory = config.getSection("inventory");
@@ -91,12 +101,35 @@ public class WorldSettings
 
         // Load tick settings
 
+        // Exp settings
+        DataSection expFile = Minenight.getConfigData("experience", true, false);
+        globals.put(GlobalSetting.ENCHANTMENTS.key(), expFile.getBoolean(GlobalSetting.ENCHANTMENTS.key()));
+        globals.put(GlobalSetting.ANVILS.key(), expFile.getBoolean(GlobalSetting.ANVILS.key()));
+        globals.put(GlobalSetting.DEATH.key(), expFile.getBoolean(GlobalSetting.DEATH.key()));
+
         // Spawn settings
-        DataSection spawnData = config.getSection("spawn");
-        List<String> entities = spawnData.getList("entity");
+        DataSection spawnFile = Minenight.getConfigData("entity", true, false);
+        DataSection spawnData = spawnFile.getSection("whitelist");
         spawns = new HashSet<String>();
+        List<String> entities = spawnData.getList("entity");
         for (String entity : entities)
             spawns.add(entity.toUpperCase());
+        entities = spawnData.getList("creatures");
+        for (String entity : entities)
+            spawns.add(entity.toUpperCase());
+        entities = spawnData.getList("objects");
+        for (String entity : entities)
+            spawns.add(entity.toUpperCase());
+
+        // Mob spawner settings
+        DataSection spawner = spawnFile.getSection("spawner");
+        for (String key : spawner.keys())
+            numbers.put(key, spawner.getFloat(key));
+
+        // Entity property settings
+        DataSection props = spawnFile.getSection("attributes");
+        for (String key : props.keys())
+            numbers.put(key, spawner.getFloat(key));
     }
 
     /**
@@ -134,6 +167,17 @@ public class WorldSettings
     public boolean isEnabled(GlobalSetting setting)
     {
         return globals.get(setting.key());
+    }
+
+    /**
+     * Retrieves a numerical setting
+     *
+     * @param setting setting type
+     * @return set value
+     */
+    public float getValue(ValueSetting setting)
+    {
+        return numbers.get(setting.key());
     }
 
     /**

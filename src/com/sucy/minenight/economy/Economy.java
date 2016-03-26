@@ -51,9 +51,7 @@ public class Economy
      */
     public Economy()
     {
-        CommentedConfig file = Minenight.getConfig("economy");
-        file.saveDefaultConfig();
-        DataSection config = file.getConfig();
+        DataSection config = Minenight.getConfigData("economy", false, false);
 
         for (String key : config.keys())
             currencyTypes.put(key, new CurrencyType(config.getSection(key)));
@@ -85,7 +83,7 @@ public class Economy
             return;
 
         PlayerFunds currency = new PlayerFunds();
-        DataSection data = Minenight.getConfigData("data/economy/" + id);
+        DataSection data = Minenight.getConfigData("data/economy/" + id, false, false);
         for (String key : currencyTypes.keySet())
         {
             currency.addFunds(key, data.getDouble(key, currencyTypes.get(key).initial));

@@ -1,98 +1,119 @@
-# These settings utilize various mechanics.
-#   nbt tags       http://minecraft.gamepedia.com/tutorials/command_nbt_tags
-#   attributes     http://minecraft.gamepedia.com/attribute
-#   enchantments   http://minecraft.gamepedia.com/enchanting
-#   status effects http://minecraft.gamepedia.com/status_effect
-settings:
-  client:
-    automaticrespawn: true
-    automaticrespawnvoid: true
-    armorstanddrops: true
-    protectdrops: true
-    treefalling: true
-    mapupdates: true
-    torchlight: true
-    signformats: true
-    portalcreation: false
-    sleep: false
-  server:
-    weather: false
-    firespread: false
-    firenatural: false
-    explodedestroy: false
-    entitydestroy: false
-    chunkgeneration: false
-    chunkmemory: false
-inventory:
-  stacksize: 100
-  hide:
-    enchantments: true
-    attributes: true
-    unbreakable: true
-    destroy: true
-    place: true
-    others: true
-experience:
-  enchantments: false
-  anvils: false
-  death: false
-delay:
-  players:
-    commands: 20
-    chat: 10
-    menu: 5
-  teleport:
-    cooldown: 160
-    delay: 40
-  god:
-    teleport: 40
-    login: 40
-  attributes:
-    status: 1
-    damage: 1
-    potions: 1
-  pets:
-    respawn: 1200
-  drops:
-    players: 40
-    entity: 1200
-pets:
+players:
+  treefalling: true
+  mapupdates: true
+  torchlight: true
+  signformats: true
+server:
+  portalcreation: false
+  sleep: false
+  weather: false
+  firespread: false
+  firenatural: false
+  explodedestroy: false
+  entitydestroy: false
+  chunkgeneration: false
+  chunkmemory: false
+login:
+  messages:
+  - "" 
+  - "" 
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  - ""
+  - "                    &f★ &e&lwelcome to minenight &f★"
+  - "                          &fⓗ ⓐ ⓥ ⓔ    ⓕ ⓤ ⓝ"
+  - "                    &flv{level} &e{player}"
+  - "                    &fnow online &e{online}"
+  - "                    &fnew players &e{unique}"
+  - "                    &fworld &e{world}"
+  - "                    &fwebsite &ehttp://minenight.com"
+  - "                    &faddress &eplay.minenight.com"
+  - ""
+welcome:
+  databaseclone: player
+  broadcast:
+  - ""
+  - "                    &f\u2605 &e&lhello from minenight &f\u2605"
+  - "                               &fⓝ   ⓔ   ⓦ "
+  - "                    &flv1 &e{username}"
+  - "                    &fidentification &e{unique}"
+  - "                    &ftime joined &e{time}"
+  - "                    &fdate joined &e{date}"
+  - "                    &fwebsite &ehttp://minenight.com"
+  - "                    &faddress &eplay.minenight.com"
+  - ""
+respawn:
+  automaticrespawn: true
+  automaticrespawnvoid: true
+  messages:
+  - ""
+  - ""
+tamed:
   protect: true
-  respawn: true
   follow: true
   teleport: true
+  respawn: 1200
   limits:
     wolf: 2
     ocelot: 1
     horse: 1
-spawn:
-  entity:
-  - experienceorb
-  - zombie
-  - zombiebaby
-  - zombievillager
-  - zombievillagerbaby
-  - zombiepigman
-  - zombiepigmanbaby
-  - giant
-  - skeleton
-  - skeletonwither
-  - spider
-  - spidercave
-  - silverfish
-  - endermite
-  - witch
-  - enderdragon
-  - wither
-  - rabbit
-  - rabbitkiller
-  - bat
-  - wolf
-  - ocelot
-  - horse
-  - horseskeleton
-  - horsezombie
-  - cow
-  - mooshroom
-  - villager
-  - irongolem
+delay:
+  commands: 20
+  chat: 10
+  menu: 5
+  damage: 1
+  potions: 1
+  stamina: 1
+  teleportcooldown: 160
+  teleportdelay: 40
+god:
+  teleport: 40
+  login: 40
+  respawn: 40
+generic:
+  movementspeed: 0.7
+  sprintingspeedboost: 0.2
+  knockbackresistance: 1
+  attackdamage: 0
+  attackspeed: 1
+  luck: 0
+damage:
+  fall: 0
+  drown: 0
+  suffocate: 0
+  starvation: 0
+  contact: 0
+  fire: 0.025
+  lava: 0
+  lightning: 0
+  anvil: 0
+  void: 1
+potions:
+  heal: 1
+  regeneration: 0.25
+  healthboost: 1
+  absorption: 1
+  saturation: 0.5
+  hunger: 0.025
+  exhaustion: 0.25
+  damageresistance: 1
+  harm: 1
+  poison: 0.5
+  wither: 0.25
+  movespeed: 0.1
+  moveslowdown: 0.1
+  drinkspeed: -0.1
+  fastdigging: 1
+  slowdigging: 1
+  damageboost: 1.1
+  weakness: -0.1
+  jump: 1
+  levitation: 0.5
+  luck: 1
+  unluck: 1

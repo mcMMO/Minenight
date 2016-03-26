@@ -1,0 +1,109 @@
+attributes:
+  babyspeedboost: 0
+  horsejumpstrength: 2
+  horseweight: 600
+spawner:
+  despawnrange: 80
+  spawncount: 1
+  spawnrange: 8
+  requiredplayerrange: 16
+  delay: 20
+  minspawndelay: 20
+  maxspawndelay: 1200
+  maxnearbyentities: 4
+  spawnreinforcements: 1
+  spawnreinforcementscaller: -0.25
+  spawnreinforcementscallee: -0.25
+whitelist:
+  players:
+  - player
+  creatures:
+  - zombie
+  - zombiebaby
+  - zombievillager
+  - zombievillagerbaby
+  - zombiepigman
+  - zombiepigmanbaby
+  - giant
+  - skeleton
+  - skeletonwither
+  - spider
+  - spidercave
+  - silverfish
+  - endermite
+  - witch
+  - enderdragon
+  - wither
+  - rabbit
+  - rabbitkiller
+  - bat
+  - wolf
+  - ocelot
+  - horse
+  - horseskeleton
+  - horsezombie
+  - cow
+  - mooshroom
+  - villager
+  - irongolem
+  objects:
+  - experienceorb
+  - armorstand
+  - areaeffectcloud
+  - arrow
+  - boat
+  - dragonfireball
+  - droppeditem
+  - endercrystal
+  - enderpearl
+  - endersignal
+  - fallingblock
+  - fireball
+  - firework
+  - fishinghook
+  - itemframe
+  - leashhitch
+  - lightning
+  - lingeringpotion
+  - minecart
+  - minecartchest
+  - minecartcommand
+  - minecartfurnace
+  - minecarthopper
+  - minecartmobspawner
+  - minecarttnt
+  - painting
+  - primedtnt
+  - shulkerbullet
+  - smallfireball
+  - snowball
+  - spectralarrow
+  - splashpotion
+  - thrownexpbottle
+  - tippedarrow
+  - witherskull
+worldone:
+  level: 1
+  damage: 1
+  health: 2
+  armor: 0
+  weight: 100
+  experience: 1
+  increase:
+    blocks:
+      16:
+        level: 1
+        health: 1
+        experience: 1
+      80:
+        damage: 1
+        armor: 0.5
+        weight: -0.5
+  zombie:
+    equip:
+      hand:
+      - {set:name}
+  zomibevillagerbaby:
+    equip:
+      hand:
+      - {set:name}

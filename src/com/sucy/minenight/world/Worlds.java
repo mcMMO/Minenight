@@ -34,6 +34,7 @@ import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.data.WorldSettings;
 import com.sucy.minenight.world.enums.GlobalSetting;
 import com.sucy.minenight.world.listener.EntityListener;
+import com.sucy.minenight.world.listener.PlayerListener;
 import com.sucy.minenight.world.listener.WorldListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -57,13 +58,12 @@ public class Worlds
         settings = new WorldSettings(config);
 
         // Load location data
-        CommentedConfig locConfig = Minenight.getConfig("worlds");
-        locConfig.saveDefaultConfig();
-        settings.loadLocSettings(locConfig.getConfig());
+        settings.loadLocSettings(Minenight.getConfigData("worlds", false, false));
 
         // Set up listeners
         ListenerUtil.register(new EntityListener());
         ListenerUtil.register(new WorldListener());
+        ListenerUtil.register(new PlayerListener());
 
         // Unload chunks in empty worlds
         for (World world : Bukkit.getWorlds())

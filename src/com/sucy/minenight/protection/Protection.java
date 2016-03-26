@@ -81,9 +81,7 @@ public class Protection
      */
     public Protection()
     {
-        CommentedConfig file = Minenight.getConfig("protection");
-        file.saveDefaultConfig();
-        DataSection config = file.getConfig();
+        DataSection config = Minenight.getConfigData("protection", false, false);
 
         loadFlagSettings(config.getSection(FLAGS));
         ZoneManager.init(config.getSection(ZONES));

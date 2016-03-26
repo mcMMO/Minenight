@@ -32,10 +32,12 @@ import com.sucy.minenight.util.Point;
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.data.WorldLocations;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import com.sucy.minenight.world.enums.ValueSetting;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -43,6 +45,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -51,7 +54,7 @@ import java.util.UUID;
 /**
  * Listener for player-specific global settings
  */
-public class PlayerListener
+public class PlayerListener implements Listener
 {
     private HashMap<UUID, Location> deathLoc = new HashMap<UUID, Location>();
 
@@ -64,6 +67,22 @@ public class PlayerListener
     public void onJoin(PlayerJoinEvent event)
     {
         event.getPlayer().getInventory().setMaxStackSize(StrictMath.min(Worlds.getSettings().stackSize, 127));
+        event.getPlayer().setWalkSpeed(Worlds.getSettings().getValue(ValueSetting.MOVEMENT_SPEED));
+    }
+
+    /**
+     * Changes player speed to get the right sprint/walk speeds
+     *
+     * @param event event details
+     */
+    @EventHandler
+    public void onSprint(PlayerToggleSprintEvent event)
+    {
+        float speed = Worlds.getSettings().getValue(ValueSetting.MOVEMENT_SPEED);
+        if (event.isSprinting())
+            event.getPlayer().setWalkSpeed((speed + Worlds.getSettings().getValue(ValueSetting.SPRINTING_SPEED_BOOST)) / 1.3f);
+        else
+            event.getPlayer().setWalkSpeed(speed);
     }
 
     /**

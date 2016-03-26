@@ -27,6 +27,7 @@
 package com.sucy.minenight.world.listener;
 
 import com.sucy.minenight.nms.NMS;
+import com.sucy.minenight.util.text.TextFormatter;
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.enums.GlobalSetting;
 import org.bukkit.Material;
@@ -39,6 +40,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldInitEvent;
@@ -98,6 +100,19 @@ public class WorldListener implements Listener
             check(event, GlobalSetting.FIRE_SPREAD);
         else if (event.getCause() != BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL)
             check(event, GlobalSetting.FIRE_NATURAL);
+    }
+
+    /**
+     * Adds colors to signs when players use the & symbol
+     *
+     * @param event event details
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSignChange(SignChangeEvent event)
+    {
+        if (Worlds.getSettings().isEnabled(GlobalSetting.SIGN_FORMATS))
+            for (int i = 0; i <= 3; i++)
+                event.setLine(i, TextFormatter.colorString(event.getLine(i)));
     }
 
     /**

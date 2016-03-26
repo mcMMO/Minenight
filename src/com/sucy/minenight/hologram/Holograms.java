@@ -162,10 +162,7 @@ public class Holograms
      */
     private void load()
     {
-        CommentedConfig file = Minenight.getConfig("holograms");
-        file.saveDefaultConfig();
-
-        DataSection config = file.getConfig();
+        DataSection config = Minenight.getConfigData("holograms", false, false);
 
         // Load instance settings
         loadInstanceSettings(config, "hurt", true);

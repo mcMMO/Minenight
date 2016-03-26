@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.enums.GlobalSetting
+ * com.sucy.minenight.world.enums.ValueSetting
  *
  * The MIT License (MIT)
  *
@@ -27,42 +27,53 @@
 package com.sucy.minenight.world.enums;
 
 /**
- * Available settings in the global category
+ * Available settings using numbers as their values
  */
-public enum GlobalSetting
+public enum ValueSetting
 {
-    // experience
-    ANVILS,
-    DEATH,
-    ENCHANTMENTS,
+    //entity.attributes
+    BABY_SPEED_BOOST,
+    HORSE_JUMP_STRENGTH,
+    HORSE_WEIGHT,
 
-    // mechanics.players
-    MAP_UPDATES,
-    SIGN_FORMATS,
-    TORCH_LIGHT,
-    TREE_FALLING,
+    // entity.spawner
+    DELAY,
+    DESPAWN_RANGE,
+    MAX_NEARBY_ENTITIES,
+    MAX_SPAWN_DELAY,
+    MIN_SPAWN_DELAY,
+    REQUIRED_PLAYER_RANGE,
+    SPAWN_COUNT,
+    SPAWN_RANGE,
+    SPAWN_REINFORCEMENTS,
+    SPAWN_REFINFOREMENTS_CALLER,
+    SPAWN_REINFORCEMENTS_CALLEE,
 
-    // mechanics.respawn
-    AUTOMATIC_RESPAWN,
-    AUTOMATIC_RESPAWN_VOID,
+    // mechanics.generic
+    ATTACK_DAMAGE,
+    ATTACK_SPEED,
+    KNOCKBACK_RESISTANCE,
+    LUCK,
+    MOVEMENT_SPEED,
+    SPRINTING_SPEED_BOOST,
 
-    // mechanics.server
-    ARMOR_STAND_DROPS,
-    CHUNK_GENERATION,
-    CHUNK_MEMORY,
-    ENTITY_DESTROY,
-    EXPLODE_DESTROY,
-    FIRE_NATURAL,
-    FIRE_SPREAD,
-    PORTAL_CREATION,
-    SLEEP,
-    WEATHER;
+    // mechanics.damage
+    ANVIL,
+    CONTACT,
+    DROWN,
+    FALL,
+    FIRE,
+    LAVA,
+    LIGHTNING,
+    STARVATION,
+    SUFFOCATE,
+    VOID;
 
     /**
      * @return key used in the global settings
      */
     public String key()
-    {
-        return name().replace("_", "");
-    }
+{
+    return name().replace("_", "");
+}
 }
