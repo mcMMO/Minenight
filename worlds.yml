@@ -1,27 +1,56 @@
-worldone:
+Adventure:
+  gamemode: adventure
   spawn:
-    x: 0
-    z: 0
-    y: 0
+    x: 84.5
+    z: 88.0
+    y: 91.5
     yaw: 0
     pitch: 0
   teleports:
-    teleportone:
-      x: 0.5
-      z: 0
-      y: 0.5
+    Starting:
+      x: 86.5
+      z: 84.0
+      y: 49.5
       yaw: 0
       pitch: 0
-    teleporttwo:
-      x: {number:10;20}
-      z: 0
-      y: 0.5
+    Portal:
+      x: 84.5
+      z: 88.0
+      y: 91.5
       yaw: 0
       pitch: 0
-worldtwo:
+Survival:
+  gamemode: survival
   spawn:
-    x: {number:100;200}
-    z: 0
-    y: {number:50;100}
-    yaw: 0
+    x: 2047.5
+    z: 35.0
+    y: 2047.5
+    yaw: -90
+    pitch: 0
+  teleports:
+    Encampment:
+      x: 2047.5
+      z: 35.0
+      y: 2047.5
+      yaw: -90
+      pitch: 0
+    Fortress:
+      x: 386.5
+      z: 29.0
+      y: 2050.5
+      yaw: -90
+      pitch: 0
+    Wilderness:
+      x: {number:0;4095}
+      z: 256.0
+      y: {number:0;4095}
+      yaw: {number:0;180};{number:0;-180}
+      pitch: 90
+Fight:
+  gamemode: adventure
+  spawn:
+    x: 42.5
+    z: 57.0
+    y: 59.5
+    yaw: 180
     pitch: 0

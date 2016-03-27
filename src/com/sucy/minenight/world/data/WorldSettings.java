@@ -199,7 +199,7 @@ public class WorldSettings
      */
     public boolean isEnabled(GlobalSetting setting)
     {
-        return globals.get(setting.key());
+        return setting != null && globals.get(setting.key());
     }
 
     /**
@@ -210,6 +210,8 @@ public class WorldSettings
      */
     public float getValue(ValueSetting setting)
     {
+        if (setting == null || !numbers.containsKey(setting.key()))
+            return 0;
         return numbers.get(setting.key());
     }
 
@@ -221,6 +223,8 @@ public class WorldSettings
      */
     public int getTicks(TickSetting setting)
     {
+        if (setting == null || !ticks.containsKey(setting.key()))
+            return 0;
         return ticks.get(setting.key());
     }
 
@@ -233,7 +237,7 @@ public class WorldSettings
      */
     public boolean canSpawn(Entity entity)
     {
-        return spawns.contains(Conversion.getConfigName(entity));
+        return entity != null && spawns.contains(Conversion.getConfigName(entity));
     }
 
     /**
@@ -245,6 +249,8 @@ public class WorldSettings
      */
     public WorldLocations getWorldLocs(World world)
     {
+        if (world == null || !locations.containsKey(world.getName()))
+            return null;
         return locations.get(world.getName());
     }
 
@@ -256,6 +262,8 @@ public class WorldSettings
      */
     public TameSettings getTameSettings(String type)
     {
+        if (type == null || !tame.containsKey(type))
+            return null;
         return tame.get(type);
     }
 }

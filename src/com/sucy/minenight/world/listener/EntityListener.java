@@ -167,6 +167,4 @@ public class EntityListener implements Listener
     {
         event.setCancelled(!Worlds.getSettings().isEnabled(setting));
     }
-
-
 }
