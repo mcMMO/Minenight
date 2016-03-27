@@ -139,6 +139,8 @@ public class Minenight extends JavaPlugin
         worlds = new Worlds(getConfigData("mechanics", true, true));
         permissions = new Permissions();
         economy = new Economy();
+
+        NMS.getManager().overridePotions();
     }
 
     /**

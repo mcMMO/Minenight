@@ -7,6 +7,7 @@ import com.sucy.minenight.hologram.display.line.TextLine;
 import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSManager;
+import com.sucy.minenight.nms.v1_9_R1.potion.PotionInjector;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
@@ -56,6 +57,14 @@ public class NMSManager_19
 
         modified = Chunk.class.getDeclaredField("r");
         modified.setAccessible(true);
+    }
+
+    /**
+     * Overrides potion effects
+     */
+    public void overridePotions()
+    {
+        PotionInjector.inject();
     }
 
     /**

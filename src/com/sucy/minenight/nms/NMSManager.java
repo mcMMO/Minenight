@@ -17,6 +17,11 @@ import java.util.UUID;
 public interface NMSManager
 {
     /**
+     * Overrides potion effects
+     */
+    public void overridePotions();
+
+    /**
      * Gets the stats file for a given player using their ID
      *
      * @param playerId player UUID
