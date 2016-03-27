@@ -1,8 +1,3 @@
-players:
-  treefalling: true
-  mapupdates: true
-  torchlight: true
-  signformats: true
 server:
   portalcreation: false
   sleep: false
@@ -13,107 +8,136 @@ server:
   entitydestroy: false
   chunkgeneration: false
   chunkmemory: false
-login:
-  messages:
-  - "" 
-  - "" 
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  - ""
-  - "                    &f★ &e&lwelcome to minenight &f★"
-  - "                          &fⓗ ⓐ ⓥ ⓔ    ⓕ ⓤ ⓝ"
-  - "                    &flv{level} &e{player}"
-  - "                    &fnow online &e{online}"
-  - "                    &fnew players &e{unique}"
-  - "                    &fworld &e{world}"
-  - "                    &fwebsite &ehttp://minenight.com"
-  - "                    &faddress &eplay.minenight.com"
-  - ""
-welcome:
-  databaseclone: player
-  broadcast:
-  - ""
-  - "                    &f\u2605 &e&lhello from minenight &f\u2605"
-  - "                               &fⓝ   ⓔ   ⓦ "
-  - "                    &flv1 &e{username}"
-  - "                    &fidentification &e{unique}"
-  - "                    &ftime joined &e{time}"
-  - "                    &fdate joined &e{date}"
-  - "                    &fwebsite &ehttp://minenight.com"
-  - "                    &faddress &eplay.minenight.com"
-  - ""
-respawn:
-  automaticrespawn: true
-  automaticrespawnvoid: true
-  messages:
-  - ""
-  - ""
+gameplay:
+  treefalling: true
+  mapupdates: true
+  torchlight: true
+  signformats: true
+experience:
+  enchantments: false
+  anvils: false
+  death: false
 tamed:
-  protect: true
-  follow: true
-  teleport: true
-  respawn: 1200
-  limits:
-    wolf: 2
-    ocelot: 1
-    horse: 1
+  horse:
+    limit: 1
+    respawn: 1200
+    follow: true
+    teleport: true
+    protect: true
+  villager:
+    limit: 1
+    move: false
+    follow: false
+    teleport: false
+    protect: true
+    god: true
+  wolf:
+    limit: 2
+    follow: true
+    teleport: true
+  ocelot:
+    limit: 2
+    follow: true
+    teleport: true
+  irongolem:
+    limit: 2
+    follow: true
+    teleport: true
 delay:
-  commands: 20
-  chat: 10
-  menu: 5
-  damage: 1
-  potions: 1
-  stamina: 1
-  teleportcooldown: 160
-  teleportdelay: 40
-god:
-  teleport: 40
-  login: 40
-  respawn: 40
+  actions:
+    commands: 20
+    chat: 10
+    menu: 5
+  teleport:
+    cooldown: 160
+    delay: 40
+    god: 40
+  spawn:
+    god: 40
+items:
+  armorstanddrops: true
+  stacksize: 100
+  protectdrops:
+    players: 40
+    entity: 1200
+  hide:
+    enchantments: true
+    attributes: true
+    unbreakable: true
+    destroy: true
+    place: true
+    others: true
+  lores:
+    health: "Health %value%"
+    strength: "Strength %value%"
+    dexterity: "Dexterity %value%"
+    criticaldamage: "Critical Damage %value%"
+    criticalchance: "Critical Chance %value%"
+    level: "Level %value%"
+    permission: "%value% Required"
 generic:
-  movementspeed: 0.7
-  sprintingspeedboost: 0.2
-  knockbackresistance: 1
-  attackdamage: 0
-  attackspeed: 1
-  luck: 0
+  amount:
+    movementspeed: 0.7
+    sprintingspeedboost: 0.2
+    knockbackresistance: 1
+    attackdamage: 0
+    attackspeed: 2
+    luck: 0
+stamina:
+  ticks:
+    health: 1
+    saturation: 1
+    exhaustion: 1
+    suffocation: 1
+    block: 1
 damage:
-  fall: 0
-  drown: 0
-  suffocate: 0
-  starvation: 0
-  contact: 0
-  fire: 0.025
-  lava: 0
-  lightning: 0
-  anvil: 0
-  void: 1
+  amount:
+    fall: 0
+    drown: 0
+    suffocate: 0
+    starvation: 0
+    contact: 0
+    fire: 0.025
+    lava: 0
+    lightning: 0
+    anvil: 0
+    void: 1
+  ticks:
+    drown: 1
+    suffocate: 1
+    starvation: 1
+    contact: 1
+    fire: 1
+    lava: 1
+    void: 1
 potions:
-  heal: 1
-  regeneration: 0.25
-  healthboost: 1
-  absorption: 1
-  saturation: 0.5
-  hunger: 0.025
-  exhaustion: 0.25
-  damageresistance: 1
-  harm: 1
-  poison: 0.5
-  wither: 0.25
-  movespeed: 0.1
-  moveslowdown: 0.1
-  drinkspeed: -0.1
-  fastdigging: 1
-  slowdigging: 1
-  damageboost: 1.1
-  weakness: -0.1
-  jump: 1
-  levitation: 0.5
-  luck: 1
-  unluck: 1
+  amount:
+    heal: 1
+    regeneration: 0.25
+    healthboost: 1
+    absorption: 1
+    saturation: 0.5
+    hunger: 0.025
+    exhaustion: 0.25
+    damageresistance: 1
+    harm: 1
+    poison: 0.5
+    wither: 0.25
+    movespeed: 0.1
+    moveslowdown: 0.1
+    drinkspeed: -0.1
+    fastdigging: 1
+    slowdigging: 1
+    damageboost: 1.1
+    weakness: -0.1
+    jump: 1
+    levitation: 0.5
+    luck: 1
+    unluck: 1
+  ticks:
+    regeneration: 1
+    saturation: 1
+    hunger: 1
+    exhaustion: 1
+    poison: 1
+    wither: 1

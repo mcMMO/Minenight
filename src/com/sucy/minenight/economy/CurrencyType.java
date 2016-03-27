@@ -34,9 +34,9 @@ import com.sucy.minenight.util.config.parse.DataSection;
 public class CurrencyType
 {
     public final String symbol;
-    public final double initial;
-    public final double minimum;
-    public final double maximum;
+    public final float initial;
+    public final float minimum;
+    public final float maximum;
 
     /**
      * Loads the definition from config data
@@ -46,8 +46,8 @@ public class CurrencyType
     public CurrencyType(DataSection data)
     {
         symbol = data.getString("symbol");
-        initial = data.getDouble("initial");
-        minimum = data.getDouble("minimum");
-        maximum = data.getDouble("maximum");
+        initial = data.getFloat("initial");
+        minimum = data.getFloat("minimum");
+        maximum = data.getFloat("maximum");
     }
 }

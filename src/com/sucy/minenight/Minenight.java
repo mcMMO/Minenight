@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight;
 
+import com.sucy.minenight.data.DataListener;
 import com.sucy.minenight.economy.Economy;
 import com.sucy.minenight.hologram.Holograms;
 import com.sucy.minenight.log.ApacheFilter;
@@ -36,8 +37,9 @@ import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
 import com.sucy.minenight.protection.Protection;
+import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.commands.CommandManager;
-import com.sucy.minenight.util.config.CommentedConfig;
+import com.sucy.minenight.util.config.Config;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.player.PlayerUUIDs;
 import com.sucy.minenight.util.reflect.Reflection;
@@ -71,9 +73,9 @@ public class Minenight extends JavaPlugin
      *
      * @return config data
      */
-    public static CommentedConfig getConfig(String name)
+    public static Config getConfig(String name)
     {
-        return new CommentedConfig(singleton, name);
+        return new Config(singleton, name);
     }
 
     /**
@@ -86,7 +88,7 @@ public class Minenight extends JavaPlugin
      */
     public static DataSection getConfigData(String name, boolean setDefaults, boolean trim)
     {
-        CommentedConfig config = getConfig(name);
+        Config config = getConfig(name);
         if (setDefaults)
             config.checkDefaults();
         if (trim)
@@ -128,7 +130,7 @@ public class Minenight extends JavaPlugin
         VersionManager.initialize();
 
         // Restrict server logging
-        stopLogging();
+        //stopLogging();
 
         // Load utilities related to Bukkit API
         uuidUtil = new PlayerUUIDs(this);
@@ -155,6 +157,8 @@ public class Minenight extends JavaPlugin
         protection = new Protection();
         if (NMS.isSupported())
             hologram = new Holograms();
+
+        ListenerUtil.register(new DataListener());
     }
 
     /**

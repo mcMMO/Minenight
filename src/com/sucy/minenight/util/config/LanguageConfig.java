@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
  * instantiate this class.</p>
  * <p>This config supports comments and UTF-8 encoding for Strings.</p>
  */
-public class CommentedLanguageConfig extends CommentedConfig
+public class LanguageConfig extends Config
 {
 
     private static final String  EXPAND_FONT_REGEX = "\\{expandFront\\(([^,]+),([0-9]+),([0-9]+)\\)\\}";
@@ -68,7 +68,7 @@ public class CommentedLanguageConfig extends CommentedConfig
      * @param plugin plugin reference
      * @param file   path to the language file
      */
-    public CommentedLanguageConfig(JavaPlugin plugin, String file)
+    public LanguageConfig(JavaPlugin plugin, String file)
     {
         super(plugin, file);
 

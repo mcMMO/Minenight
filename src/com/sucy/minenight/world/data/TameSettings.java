@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.permission.PermissionListener
+ * com.sucy.minenight.world.data.TameSettings
  *
  * The MIT License (MIT)
  *
@@ -24,48 +24,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.economy;
+package com.sucy.minenight.world.data;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import com.sucy.minenight.util.config.parse.DataSection;
 
-/**
- * Handles notifying the economy segment when players join/leave the server
- */
-public class EconomyListener implements Listener
+public class TameSettings
 {
-    private Economy economy;
+    public final int limit;
+    public final int respawn;
+    public final boolean follow;
+    public final boolean teleport;
+    public final boolean protect;
 
-    /**
-     * @param economy management class reference
-     */
-    public EconomyListener(Economy economy)
+    public TameSettings(DataSection data)
     {
-        this.economy = economy;
-    }
-
-    /**
-     * Loads player on login
-     *
-     * @param event event details
-     */
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onJoin(AsyncPlayerPreLoginEvent event)
-    {
-        economy.initialize(event.getUniqueId());
-    }
-
-    /**
-     * Clears managers for leaving players
-     *
-     * @param event event details
-     */
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event)
-    {
-        economy.unload(event.getPlayer());
+        limit = data.getInt("limit");
+        respawn = data.getInt("respawn");
+        follow = data.getBoolean("follow");
+        teleport = data.getBoolean("teleport");
+        protect = data.getBoolean("protect");
     }
 }

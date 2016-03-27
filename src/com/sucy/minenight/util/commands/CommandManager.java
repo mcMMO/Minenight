@@ -26,7 +26,7 @@
  */
 package com.sucy.minenight.util.commands;
 
-import com.sucy.minenight.util.config.CommentedConfig;
+import com.sucy.minenight.util.config.Config;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.text.TextFormatter;
 import com.sucy.minenight.util.text.TextSizer;
@@ -59,7 +59,7 @@ public class CommandManager
 
     private static final HashMap<String, ConfigurableCommand> commands = new HashMap<String, ConfigurableCommand>();
     private static final HashMap<Plugin, List<String>>        plugins  = new HashMap<Plugin, List<String>>();
-    private static final HashMap<Plugin, CommentedConfig>     configs  = new HashMap<Plugin, CommentedConfig>();
+    private static final HashMap<Plugin, Config>              configs  = new HashMap<Plugin, Config>();
 
     // Configuration keys for the usage settings
     private static final String
@@ -177,7 +177,7 @@ public class CommandManager
         if (!plugins.containsKey(command.getPlugin()))
         {
             plugins.put(command.getPlugin(), new ArrayList<String>());
-            configs.put(command.getPlugin(), new CommentedConfig(command.getPlugin(), "commands"));
+            configs.put(command.getPlugin(), new Config(command.getPlugin(), "commands"));
         }
         plugins.get(command.getPlugin()).add(command.getName());
 
@@ -278,11 +278,11 @@ public class CommandManager
      *
      * @return command configuration
      */
-    public static CommentedConfig getConfig(JavaPlugin plugin)
+    public static Config getConfig(JavaPlugin plugin)
     {
         if (!configs.containsKey(plugin))
         {
-            configs.put(plugin, new CommentedConfig(plugin, "commands"));
+            configs.put(plugin, new Config(plugin, "commands"));
         }
         return configs.get(plugin);
     }

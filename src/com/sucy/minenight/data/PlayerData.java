@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.enums.TickSetting
+ * com.sucy.minenight.data.PlayerData
  *
  * The MIT License (MIT)
  *
@@ -24,48 +24,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.world.enums;
+package com.sucy.minenight.data;
 
-/**
- * Available settings in the tick category
- */
-public enum TickSetting
+import com.sucy.minenight.util.config.parse.JSONObject;
+import com.sucy.minenight.util.player.PlayerUUIDs;
+
+import java.util.HashMap;
+import java.util.UUID;
+
+public class PlayerData
 {
-    ACTIONS_COMMANDS,
-    ACTIONS_CHAT,
-    ACTIONS_MENU,
+    public final HashMap<String, Integer> vanilla = new HashMap<String, Integer>();
 
-    DAMAGE_DROWN,
-    DAMAGE_SUFFOCATE,
-    DAMAGE_STARVATION,
-    DAMAGE_CONTACT,
-    DAMAGE_FIRE,
-    DAMAGE_LAVA,
-    DAMAGE_VOID,
+    public final PlayerItems items = new PlayerItems();
 
-    POTION_REGENERATION,
-    POTION_SATURATION,
-    POTION_HUNGER,
-    POTION_EXHAUSTION,
-    POTION_POISON,
-    POTION_WITHER,
+    public final UUID id;
+    public final long login;
 
-    STAMINA_BLOCK,
-    STAMINA_HEALTH,
-    STAMINA_EXHAUSTION,
-    STAMINA_SATURATION,
-    STAMINA_SUFFOCATION,
-
-    TELEPORT_COOLDOWN,
-    TELEPORT_DELAY,
-    TELEPORT_GOD,
-    SPAWN_GOD;
+    public long time;
 
     /**
-     * @return key used in the global settings
+     * Initializes player data, loading available data from disk
+     *
+     * @param id player to initialize for
      */
-    public String key()
+    public PlayerData(UUID id, JSONObject json)
     {
-        return name().replace("_", "");
+        this.id = id;
+        login = System.currentTimeMillis();
+
+        if (json == null) return;
+
+        time = json.getLong("t");
+
+        JSONObject map = json.getObject("v");
+        for (String key : map.keys())
+        {
+            vanilla.put(key, map.getInt(key));
+        }
+    }
+
+    public JSONObject asJSON()
+    {
+        JSONObject json = new JSONObject();
+        json.set("n", PlayerUUIDs.getName(id));
+        json.set("t", time + (System.currentTimeMillis() - login));
+        json.setMap("v", vanilla);
+        return json;
     }
 }

@@ -26,14 +26,32 @@
  */
 package com.sucy.minenight.economy;
 
+import com.sucy.minenight.util.config.parse.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Manages the funds of a single player for each type of currency
  */
 public class PlayerFunds
 {
-    private HashMap<String, Double> funds = new HashMap<String, Double>();
+    private HashMap<String, Float> funds = new HashMap<String, Float>();
+
+    /**
+     * Sets up the funds data with initial amounts
+     */
+    public PlayerFunds(JSONObject json)
+    {
+        for (String type : Economy.getTypes())
+            funds.put(type, Economy.getCurrencyType(type).initial);
+
+        if (json == null) return;
+
+        for (String key : json.keys())
+            if (funds.containsKey(key))
+                funds.put(key, json.getFloat(key));
+    }
 
     /**
      * Gets the current balance for the player
@@ -42,7 +60,7 @@ public class PlayerFunds
      *
      * @return current balance
      */
-    public double getFunds(String type)
+    public float getFunds(String type)
     {
         if (!funds.containsKey(type))
             return 0;
@@ -70,9 +88,9 @@ public class PlayerFunds
      *
      * @return remaining balance
      */
-    public double addFunds(String type, double amount)
+    public float addFunds(String type, float amount)
     {
-        double balance = check(type, getFunds(type) + amount);
+        float balance = check(type, getFunds(type) + amount);
         funds.put(type, balance);
         return balance;
     }
@@ -85,9 +103,20 @@ public class PlayerFunds
      *
      * @return remaining balance
      */
-    public double subtractFunds(String type, double amount)
+    public float subtractFunds(String type, float amount)
     {
         return addFunds(type, -amount);
+    }
+
+    /**
+     * Sets the amount of funds a player has for a given type
+     *
+     * @param type   currency type
+     * @param amount amount to set to
+     */
+    public void setFunds(String type, float amount)
+    {
+        funds.put(type, amount);
     }
 
     /**
@@ -98,7 +127,7 @@ public class PlayerFunds
      *
      * @return true if has enough
      */
-    public boolean hasFunds(String type, double amount)
+    public boolean hasFunds(String type, float amount)
     {
         return getFunds(type) >= amount;
     }
@@ -112,7 +141,7 @@ public class PlayerFunds
      *
      * @return true if can spend
      */
-    public boolean canSpend(String type, double amount)
+    public boolean canSpend(String type, float amount)
     {
         return getFunds(type) >= amount + Economy.getCurrencyType(type).minimum;
     }
@@ -125,9 +154,19 @@ public class PlayerFunds
      *
      * @return true if has enough
      */
-    private double check(String type, double amount)
+    private float check(String type, float amount)
     {
         CurrencyType settings = Economy.getCurrencyType(type);
         return StrictMath.max(settings.minimum, StrictMath.max(settings.maximum, amount));
+    }
+
+    public JSONObject asJSON()
+    {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<String, Float> entry : funds.entrySet())
+        {
+            json.set(entry.getKey(), entry.getValue());
+        }
+        return json;
     }
 }

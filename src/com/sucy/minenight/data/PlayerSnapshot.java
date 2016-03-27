@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.LocationData
+ * com.sucy.minenight.data.PlayerSnapshot
  *
  * The MIT License (MIT)
  *
@@ -24,61 +24,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.world.data;
+package com.sucy.minenight.data;
 
 import com.sucy.minenight.util.config.LocationData;
-import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.config.parse.JSONObject;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
-/**
- * Set of locations defined for a given world
- */
-public class WorldLocations
+public class PlayerSnapshot
 {
-    private final HashMap<String, Location> warps = new HashMap<String, Location>();
+    public GameMode gameMode;
+    public Location
+        position;
+    public String
+        ip;
+    public double
+        health;
+    public boolean
+        fly, op, banned;
 
-    /**
-     * The spawn point of the world
-     */
-    public final Location spawn;
-
-    /**
-     * Game mode of the world
-     */
-    public final GameMode mode;
-
-    /**
-     * Loads locations for a world from config data
-     *
-     * @param data data to load from
-     */
-    public WorldLocations(String world, DataSection data)
+    public PlayerSnapshot(Player player)
     {
-        spawn = LocationData.parse(world, data.getSection("spawn"));
-        mode = GameMode.valueOf(data.getString("gamemode").toUpperCase());
-
-        DataSection warpData = data.getSection("teleports");
-        if (warpData != null)
-        {
-            for (String key : warpData.keys())
-            {
-                warps.put(key, LocationData.parse(world, warpData.getSection(key)));
-            }
-        }
+        update(player);
     }
 
-    /**
-     * Gets a warp point by key
-     *
-     * @param key warp point key
-     *
-     * @return warp point
-     */
-    public Location getWarp(String key)
+    public void update(Player player)
     {
-        return warps.get(key);
+        gameMode = player.getGameMode();
+        ip = player.getAddress().getAddress().getHostAddress();
+        position = player.getLocation();
+        health = player.getHealth();
+        fly = player.isFlying();
+        op = player.isOp();
+        banned = player.isBanned();
+    }
+
+    public JSONObject asJSON()
+    {
+        JSONObject json = new JSONObject();
+        json.set("b", banned ? 1 : 0);
+        json.set("f", fly ? 1 : 0);
+        json.set("g", gameMode.name());
+        json.set("h", health);
+        json.set("i", ip);
+        json.set("o", op ? 1 : 0);
+        json.set("p", LocationData.asJSON(position));
+        return json;
     }
 }

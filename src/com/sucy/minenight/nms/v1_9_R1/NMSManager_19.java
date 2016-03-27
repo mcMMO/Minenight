@@ -9,15 +9,19 @@ import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSManager;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * NMS Manager implementation for 1.9
@@ -53,6 +57,18 @@ public class NMSManager_19
 
         modified = Chunk.class.getDeclaredField("r");
         modified.setAccessible(true);
+    }
+
+    /**
+     * Gets the stats file for a given player using their ID
+     *
+     * @param playerId player UUID
+     * @return stats file
+     */
+    public File getStatsFile(UUID playerId)
+    {
+        File dataDirectory = ((CraftWorld)Bukkit.getWorlds().get(0)).getHandle().getDataManager().getDirectory();
+        return new File(dataDirectory, "stats" + File.separator + playerId.toString() + ".json");
     }
 
     /**

@@ -757,24 +757,24 @@ public class DataSection
      *
      * @param path path to the file
      */
-    public void dump(String path)
+    public void save(String path)
     {
-        dump(new File(path));
+        save(new File(path));
     }
 
     /**
      * Dumps the data contents to a file to the given file
      *
-     * @param file file to dump to
+     * @param file file to save to
      */
-    public void dump(File file)
+    public void save(File file)
     {
         try
         {
             FileOutputStream out = new FileOutputStream(file);
             BufferedWriter write = new BufferedWriter(new OutputStreamWriter(out, Encoder.UTF_8));
 
-            dump(write);
+            save(write);
 
             write.close();
         }
@@ -787,11 +787,11 @@ public class DataSection
     /**
      * Dumps the data contents into the stream
      *
-     * @param write stream to dump to
+     * @param write stream to save to
      *
      * @throws java.io.IOException
      */
-    public void dump(BufferedWriter write) throws IOException
+    public void save(BufferedWriter write) throws IOException
     {
         write.write(toString());
     }

@@ -26,7 +26,7 @@
  */
 package com.sucy.minenight.util.commands;
 
-import com.sucy.minenight.util.config.CommentedConfig;
+import com.sucy.minenight.util.config.Config;
 import com.sucy.minenight.util.config.CustomFilter;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.text.TextFormatter;
@@ -639,7 +639,7 @@ public class ConfigurableCommand extends Command
     public String getMessage(String key, String defaultMessage, CustomFilter... filters)
     {
         // Get the configuration for this command
-        CommentedConfig pluginConfig = CommandManager.getConfig(plugin);
+        Config pluginConfig = CommandManager.getConfig(plugin);
         DataSection main = pluginConfig.getConfig();
         if (!main.has(this.key)) main.createSection(this.key);
         DataSection config = main.getSection(this.key);
@@ -696,7 +696,7 @@ public class ConfigurableCommand extends Command
     private void load(String key, String description, String args, String permission)
     {
         // Get the configuration for this command
-        CommentedConfig pluginConfig = CommandManager.getConfig(plugin);
+        Config pluginConfig = CommandManager.getConfig(plugin);
         DataSection main = pluginConfig.getConfig();
         DataSection config = main.defaultSection(key);
 

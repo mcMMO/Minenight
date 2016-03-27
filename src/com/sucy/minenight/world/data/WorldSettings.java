@@ -29,9 +29,9 @@ package com.sucy.minenight.world.data;
 import com.sucy.minenight.Minenight;
 import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.util.Conversion;
-import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.world.enums.GlobalSetting;
+import com.sucy.minenight.world.enums.TickSetting;
 import com.sucy.minenight.world.enums.ValueSetting;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -47,16 +47,14 @@ import java.util.List;
 public class WorldSettings
 {
     private final HashMap<String, WorldLocations> locations = new HashMap<String, WorldLocations>();
+    private final HashMap<String, TameSettings>   tame      = new HashMap<String, TameSettings>();
 
-    private final HashMap<String, Float> numbers = new HashMap<String, Float>();
+    private final HashMap<String, Float>   numbers = new HashMap<String, Float>();
+    private final HashMap<String, Integer> ticks   = new HashMap<String, Integer>();
 
     private final HashMap<String, Boolean> globals = new HashMap<String, Boolean>();
 
     private final HashSet<String> spawns;
-
-    private final List<String> loginMessage;
-    private final List<String> welcomeMessage;
-    private final List<String> respawnMessage;
 
     public final int stackSize;
     public final int hiddenNBT;
@@ -69,24 +67,59 @@ public class WorldSettings
     public WorldSettings(DataSection config)
     {
         // Load global settings
-        DataSection globalData = config.getSection("players");
+        DataSection globalData = config.getSection("gameplay");
         for (String key : globalData.keys())
             globals.put(key.toUpperCase(), globalData.getBoolean(key));
         globalData = config.getSection("server");
         for (String key : globalData.keys())
             globals.put(key.toUpperCase(), globalData.getBoolean(key));
-        DataSection respawn = config.getSection("respawn");
-        globals.put(GlobalSetting.AUTOMATIC_RESPAWN.key(), respawn.getBoolean(GlobalSetting.AUTOMATIC_RESPAWN.key()));
-        globals.put(GlobalSetting.AUTOMATIC_RESPAWN_VOID.key(), respawn.getBoolean(GlobalSetting.AUTOMATIC_RESPAWN_VOID.key()));
 
-        // Messages
-        loginMessage = config.getSection("login").getList("messages");
-        welcomeMessage = config.getSection("welcome").getList("broadcast");
-        respawnMessage = respawn.getList("messages");
+        // Generics
+        DataSection generic = config.getSection("generic").getSection("amount");
+        for (String key : generic.keys())
+            numbers.put(key.toUpperCase(), generic.getFloat(key));
+
+        // Tame
+        DataSection tamed = config.getSection("tamed");
+        for (String key : tamed.keys())
+            tame.put(key.toUpperCase(), new TameSettings(tamed.getSection(key)));
+
+        // Delay
+        DataSection delay = config.getSection("delay");
+        for (String key : delay.keys())
+        {
+            DataSection subDelay = delay.getSection(key);
+            for (String subkey : subDelay.keys())
+                ticks.put(key.toUpperCase() + subkey.toUpperCase(), subDelay.getInt(subkey));
+        }
+
+        // Stamina
+        DataSection stamina = config.getSection("stamina").getSection("ticks");
+        for (String key : stamina.keys())
+            ticks.put("STAMINA" + key.toUpperCase(), stamina.getInt(key));
+
+        // Damage
+        DataSection dmg = config.getSection("damage");
+        DataSection dmgAmount = dmg.getSection("amount");
+        for (String key : dmgAmount.keys())
+            numbers.put("DAMAGE" + key.toUpperCase(), dmgAmount.getFloat(key));
+        DataSection dmgTicks = dmg.getSection("ticks");
+        for (String key : dmgTicks.keys())
+            ticks.put("DAMAGE" + key.toUpperCase(), dmgTicks.getInt(key));
+
+        // Potions
+        DataSection potions = config.getSection("potions");
+        DataSection potionAmount = potions.getSection("amount");
+        for (String key : potionAmount.keys())
+            numbers.put("POTION" + key.toUpperCase(), potionAmount.getFloat(key));
+        DataSection potionTicks = potions.getSection("ticks");
+        for (String key : potionTicks.keys())
+            ticks.put("POTION" + key.toUpperCase(), potionTicks.getInt(key));
 
         // Stack size
-        DataSection inventory = config.getSection("inventory");
+        DataSection inventory = config.getSection("items");
         stackSize = inventory.getInt("stacksize");
+        globalData.set(GlobalSetting.ARMOR_STAND_DROPS.key(), inventory.getBoolean("armorstanddrops"));
 
         // NBT values to be hidden
         DataSection nbt = inventory.getSection("hide");
@@ -102,10 +135,10 @@ public class WorldSettings
         // Load tick settings
 
         // Exp settings
-        DataSection expFile = Minenight.getConfigData("experience", true, false);
-        globals.put(GlobalSetting.ENCHANTMENTS.key(), expFile.getBoolean(GlobalSetting.ENCHANTMENTS.key()));
-        globals.put(GlobalSetting.ANVILS.key(), expFile.getBoolean(GlobalSetting.ANVILS.key()));
-        globals.put(GlobalSetting.DEATH.key(), expFile.getBoolean(GlobalSetting.DEATH.key()));
+        DataSection exp = config.getSection("experience");
+        globals.put(GlobalSetting.ENCHANTMENTS.key(), exp.getBoolean("enchantments"));
+        globals.put(GlobalSetting.ANVILS.key(), exp.getBoolean("anvils"));
+        globals.put(GlobalSetting.DEATH.key(), exp.getBoolean("death"));
 
         // Spawn settings
         DataSection spawnFile = Minenight.getConfigData("entity", true, false);
@@ -124,12 +157,12 @@ public class WorldSettings
         // Mob spawner settings
         DataSection spawner = spawnFile.getSection("spawner");
         for (String key : spawner.keys())
-            numbers.put(key, spawner.getFloat(key));
+            numbers.put(key.toUpperCase(), spawner.getFloat(key));
 
         // Entity property settings
         DataSection props = spawnFile.getSection("attributes");
         for (String key : props.keys())
-            numbers.put(key, spawner.getFloat(key));
+            numbers.put(key.toUpperCase(), spawner.getFloat(key));
     }
 
     /**
@@ -181,6 +214,17 @@ public class WorldSettings
     }
 
     /**
+     * Gets a tick setting
+     *
+     * @param setting setting to get
+     * @return number of ticks
+     */
+    public int getTicks(TickSetting setting)
+    {
+        return ticks.get(setting.key());
+    }
+
+    /**
      * Checks if an entity is allowed to spawn
      *
      * @param entity entity type
@@ -202,5 +246,16 @@ public class WorldSettings
     public WorldLocations getWorldLocs(World world)
     {
         return locations.get(world.getName());
+    }
+
+    /**
+     * Retrieves tame settings for a given entity type
+     *
+     * @param type entity type (as according to the Conversion class)
+     * @return tamed settings for the entity
+     */
+    public TameSettings getTameSettings(String type)
+    {
+        return tame.get(type);
     }
 }

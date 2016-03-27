@@ -27,6 +27,7 @@
 package com.sucy.minenight.util.config;
 
 import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.config.parse.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -68,6 +69,42 @@ public class LocationData
             data.getDouble("z", 0),
             data.getFloat("yaw", 0),
             data.getFloat("pitch", 0)
+        );
+    }
+
+    /**
+     * Saves location data into JSON format
+     *
+     * @param loc location data to save
+     * @return JSON data
+     */
+    public static JSONObject asJSON(Location loc)
+    {
+        JSONObject json = new JSONObject();
+        json.set("w", loc.getWorld().getName());
+        json.set("x", loc.getX());
+        json.set("y", loc.getY());
+        json.set("z", loc.getZ());
+        json.set("a", loc.getYaw());
+        json.set("p", loc.getPitch());
+        return json;
+    }
+
+    /**
+     * Loads location data from JSON
+     *
+     * @param json JSON data to load from
+     * @return location data
+     */
+    public static Location fromJSON(JSONObject json)
+    {
+        return new Location(
+            Bukkit.getWorld(json.getString("w")),
+            json.getDouble("x"),
+            json.getDouble("y"),
+            json.getDouble("z"),
+            json.getFloat("a"),
+            json.getFloat("p")
         );
     }
 

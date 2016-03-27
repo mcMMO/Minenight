@@ -37,7 +37,7 @@ import java.util.logging.Level;
  * Handles configs with comment and UTF-8 support. Can be used
  * to handle config.yml to preserve/manage comments as well.
  */
-public class CommentedConfig
+public class Config
 {
 
     private final String     fileName;
@@ -53,7 +53,7 @@ public class CommentedConfig
      * @param plugin plugin reference
      * @param name   file name
      */
-    public CommentedConfig(JavaPlugin plugin, String name)
+    public Config(JavaPlugin plugin, String name)
     {
         this.plugin = plugin;
         this.fileName = name + ".yml";
@@ -68,6 +68,14 @@ public class CommentedConfig
         }
         catch (Exception e)
         { /* */ }
+    }
+
+    /**
+     * @return true if config file exists
+     */
+    public boolean exists()
+    {
+        return configFile.exists();
     }
 
     /**
@@ -140,7 +148,7 @@ public class CommentedConfig
         {
             try
             {
-                data.dump(configFile);
+                data.save(configFile);
             }
             catch (Exception ex)
             {
@@ -157,7 +165,7 @@ public class CommentedConfig
         if (!configFile.exists())
         {
             if (defaults == null) defaults = YAMLParser.parseResource(plugin, fileName);
-            defaults.dump(configFile);
+            defaults.save(configFile);
         }
     }
 

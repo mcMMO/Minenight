@@ -27,7 +27,7 @@
 package com.sucy.minenight.util.player;
 
 import com.sucy.minenight.util.ListenerUtil;
-import com.sucy.minenight.util.config.CommentedConfig;
+import com.sucy.minenight.util.config.Config;
 import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -55,7 +55,7 @@ public class PlayerUUIDs implements Listener
     private static final HashMap<String, UUID> ids   = new HashMap<String, UUID>();
     private static final HashMap<UUID, String> names = new HashMap<UUID, String>();
 
-    private CommentedConfig config;
+    private Config config;
 
     /**
      * <p>Sets up the listener to update player UUIDs</p>
@@ -70,7 +70,7 @@ public class PlayerUUIDs implements Listener
     public PlayerUUIDs(JavaPlugin plugin)
     {
         ListenerUtil.register(this);
-        config = new CommentedConfig(plugin, "uuid");
+        config = new Config(plugin, "uuid");
 
         // Load previous data
         DataSection section = config.getConfig();

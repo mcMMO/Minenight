@@ -27,15 +27,11 @@
 package com.sucy.minenight.economy;
 
 import com.sucy.minenight.Minenight;
-import com.sucy.minenight.util.ListenerUtil;
-import com.sucy.minenight.util.config.CommentedConfig;
 import com.sucy.minenight.util.config.parse.DataSection;
-import com.sucy.minenight.util.version.VersionManager;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -43,22 +39,21 @@ import java.util.UUID;
  */
 public class Economy
 {
-    private static HashMap<UUID, PlayerFunds>    playerCurrency = new HashMap<UUID, PlayerFunds>();
-    private static HashMap<String, CurrencyType> currencyTypes  = new HashMap<String, CurrencyType>();
+    private static HashMap<UUID, PlayerFunds>    playerfunds   = new HashMap<UUID, PlayerFunds>();
+    private static HashMap<String, CurrencyType> currencyTypes = new HashMap<String, CurrencyType>();
 
     /**
      * Initializes necessary data on creation
      */
     public Economy()
     {
+        playerfunds.clear();
+        currencyTypes.clear();
+
         DataSection config = Minenight.getConfigData("economy", false, false);
 
         for (String key : config.keys())
             currencyTypes.put(key, new CurrencyType(config.getSection(key)));
-        for (Player player : VersionManager.getOnlinePlayers())
-            initialize(player.getUniqueId());
-
-        ListenerUtil.register(new EconomyListener(this));
     }
 
     /**
@@ -66,39 +61,18 @@ public class Economy
      */
     public void cleanup()
     {
-        for (Map.Entry<UUID, PlayerFunds> entry : playerCurrency.entrySet())
-            save(entry.getKey(), entry.getValue());
-        playerCurrency.clear();
-        currencyTypes.clear();
+
     }
 
     /**
-     * Initializes the data for the player
+     * Adds player funds data
      *
-     * @param id UUID of player to initialize
+     * @param playerId player ID
+     * @param funds    funds data
      */
-    public void initialize(UUID id)
+    public static void load(UUID playerId, PlayerFunds funds)
     {
-        if (playerCurrency.containsKey(id))
-            return;
-
-        PlayerFunds currency = new PlayerFunds();
-        DataSection data = Minenight.getConfigData("data/economy/" + id, false, false);
-        for (String key : currencyTypes.keySet())
-        {
-            currency.addFunds(key, data.getDouble(key, currencyTypes.get(key).initial));
-        }
-    }
-
-    /**
-     * Unloads player data after saving it to disk
-     *
-     * @param player player to unload
-     */
-    public void unload(Player player)
-    {
-        new SaveTask(player.getUniqueId(), playerCurrency.remove(player.getUniqueId()))
-            .runTaskAsynchronously(Minenight.getPlugin());
+        playerfunds.put(playerId, funds);
     }
 
     /**
@@ -108,9 +82,21 @@ public class Economy
      *
      * @return player's funds data
      */
-    public static PlayerFunds getCurrency(Player player)
+    public static PlayerFunds getFunds(Player player)
     {
-        return playerCurrency.get(player.getUniqueId());
+        return playerfunds.get(player.getUniqueId());
+    }
+
+    /**
+     * Retrieves the funds data for a player
+     *
+     * @param id id of the player to get the data for
+     *
+     * @return player's funds data
+     */
+    public static PlayerFunds getFunds(UUID id)
+    {
+        return playerfunds.get(id);
     }
 
     /**
@@ -138,39 +124,10 @@ public class Economy
     }
 
     /**
-     * Saves funds data for a player to disk
-     *
-     * @param id    unique ID of the player
-     * @param funds player funds data
+     * @return available types of currencies;
      */
-    private void save(UUID id, PlayerFunds funds)
+    public static Set<String> getTypes()
     {
-        CommentedConfig file = Minenight.getConfig("data/economy/" + id);
-        DataSection data = file.getConfig();
-        data.clear();
-        for (String key : currencyTypes.keySet())
-            data.set(key, funds.getFunds(key));
-        file.save();
-    }
-
-    /**
-     * Task for saving player funds data asynchronously
-     */
-    private class SaveTask extends BukkitRunnable
-    {
-        private UUID        id;
-        private PlayerFunds currency;
-
-        public SaveTask(UUID id, PlayerFunds currency)
-        {
-            this.id = id;
-            this.currency = currency;
-        }
-
-        @Override
-        public void run()
-        {
-            save(id, currency);
-        }
+        return currencyTypes.keySet();
     }
 }

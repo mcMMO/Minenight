@@ -8,11 +8,22 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
+import java.util.UUID;
+
 /**
  * Handles tapping into the NMS framework for setting up and using custom entities
  */
 public interface NMSManager
 {
+    /**
+     * Gets the stats file for a given player using their ID
+     *
+     * @param playerId player UUID
+     * @return stats file
+     */
+    public File getStatsFile(UUID playerId);
+
     /**
      * Stops chunks from generating in a given world
      *

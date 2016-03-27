@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.enums.TickSetting
+ * com.sucy.minenight.data.InventoryData
  *
  * The MIT License (MIT)
  *
@@ -24,48 +24,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.world.enums;
+package com.sucy.minenight.data;
 
-/**
- * Available settings in the tick category
- */
-public enum TickSetting
+import com.sucy.minenight.util.config.parse.JSONObject;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class InventoryData
 {
-    ACTIONS_COMMANDS,
-    ACTIONS_CHAT,
-    ACTIONS_MENU,
+    private ItemStack[] main;
+    private ItemStack[] armor;
+    private ItemStack   extra;
 
-    DAMAGE_DROWN,
-    DAMAGE_SUFFOCATE,
-    DAMAGE_STARVATION,
-    DAMAGE_CONTACT,
-    DAMAGE_FIRE,
-    DAMAGE_LAVA,
-    DAMAGE_VOID,
+    public InventoryData() { }
 
-    POTION_REGENERATION,
-    POTION_SATURATION,
-    POTION_HUNGER,
-    POTION_EXHAUSTION,
-    POTION_POISON,
-    POTION_WITHER,
-
-    STAMINA_BLOCK,
-    STAMINA_HEALTH,
-    STAMINA_EXHAUSTION,
-    STAMINA_SATURATION,
-    STAMINA_SUFFOCATION,
-
-    TELEPORT_COOLDOWN,
-    TELEPORT_DELAY,
-    TELEPORT_GOD,
-    SPAWN_GOD;
-
-    /**
-     * @return key used in the global settings
-     */
-    public String key()
+    public InventoryData(JSONObject json)
     {
-        return name().replace("_", "");
+
+    }
+
+    public void load(Player player)
+    {
+        main = player.getInventory().getContents();
+        armor = player.getInventory().getArmorContents();
+        extra = player.getInventory().getItemInOffHand();
+    }
+
+    public void apply(Player player)
+    {
+        player.getInventory().setContents(main);
+        player.getInventory().setArmorContents(armor);
+        player.getInventory().setItemInOffHand(extra);
+    }
+
+    public JSONObject asJSON()
+    {
+        return new JSONObject();
     }
 }
