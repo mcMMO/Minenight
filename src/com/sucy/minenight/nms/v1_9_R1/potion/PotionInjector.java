@@ -36,15 +36,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+/**
+ * Handles injecting potion effect overrides into the server
+ */
 public class PotionInjector
 {
     private static Field modifiers;
-
-    private static Field a;
-    private static Field c;
-    private static Field e;
-    private static Field f;
-    private static Field h;
 
     /**
      * Creates and injects overrides for each type of vanilla potion effect
