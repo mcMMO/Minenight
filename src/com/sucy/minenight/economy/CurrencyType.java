@@ -26,6 +26,7 @@
  */
 package com.sucy.minenight.economy;
 
+import com.sucy.minenight.Minenight;
 import com.sucy.minenight.util.config.parse.DataSection;
 
 /**
@@ -33,21 +34,56 @@ import com.sucy.minenight.util.config.parse.DataSection;
  */
 public class CurrencyType
 {
-    public final String symbol;
-    public final float initial;
+    public final String name;
+
     public final float minimum;
     public final float maximum;
+    public final boolean increments;
+    public final int incrementTicks;
+    public final float incrementAmount;
+    public final float playerSteal;
+    public final float mobSteal;
 
     /**
      * Loads the definition from config data
      *
      * @param data config data to load from
      */
-    public CurrencyType(DataSection data)
+    public CurrencyType(String name, DataSection data)
     {
-        symbol = data.getString("symbol");
-        initial = data.getFloat("initial");
+        this.name = name;
+
+        // Limits
         minimum = data.getFloat("minimum");
         maximum = data.getFloat("maximum");
+
+        // Passive gain
+        if (data.has("incremental"))
+        {
+            DataSection increment = data.getSection("incremental");
+            increments = true;
+            incrementAmount = increment.getFloat("value");
+            incrementTicks = increment.getInt("ticks");
+            Minenight.mainThread.registerTicking(this);
+        }
+        else
+        {
+            increments = false;
+            incrementAmount = 0;
+            incrementTicks = 0;
+        }
+
+        // Stolen on kill
+        if (data.has("drop"))
+        {
+            DataSection steal = data.getSection("drop");
+            playerSteal = data.getFloat("players");
+            mobSteal = data.getFloat("entity");
+        }
+        else
+        {
+            playerSteal = 0;
+            mobSteal = 0;
+        }
     }
 }

@@ -174,7 +174,7 @@ public class Holograms
         monsterNameSettings = new NameSettings(identity, "entity");
 
         // Load permanents
-        DataSection perms = config.getSection("holograms");
+        DataSection perms = config.getSection("display");
         for (String key : perms.keys())
         {
             try

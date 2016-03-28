@@ -27,6 +27,7 @@
 package com.sucy.minenight.world.listener;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.util.Conversion;
 import com.sucy.minenight.util.MathFunc;
 import com.sucy.minenight.util.Point;
 import com.sucy.minenight.world.Worlds;
@@ -39,6 +40,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -171,6 +173,16 @@ public class PlayerListener implements Listener
         WorldLocations settings = Worlds.getSettings().getWorldLocs(loc.getWorld());
         if (settings != null)
             event.setRespawnLocation(settings.spawn);
+    }
+
+    @EventHandler
+    public void onTame(EntityTameEvent event)
+    {
+        if (event.getOwner() instanceof Player)
+        {
+            Player player = (Player)event.getOwner();
+            String key = Conversion.getConfigName(event.getEntity());
+        }
     }
 
     /**

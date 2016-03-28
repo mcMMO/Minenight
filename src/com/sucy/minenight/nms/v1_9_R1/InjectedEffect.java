@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.nms.v1_9_R1.potion.InjectedEffect
+ * com.sucy.minenight.nms.v1_9_R1.InjectedEffect
  *
  * The MIT License (MIT)
  *
@@ -24,7 +24,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.nms.v1_9_R1.potion;
+package com.sucy.minenight.nms.v1_9_R1;
 
 import com.sucy.minenight.world.Worlds;
 import com.sucy.minenight.world.enums.TickSetting;

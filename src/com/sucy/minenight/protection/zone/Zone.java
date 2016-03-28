@@ -45,6 +45,7 @@ public class Zone
         Z_INDEX = "priority",
         MIN_Y   = "ymin",
         MAX_Y   = "ymax",
+        RADIUS  = "radius",
         WORLD   = "world",
         FLAGS   = "flag",
         SPAWNS  = "prevent";
@@ -57,6 +58,8 @@ public class Zone
     private int               zIndex;
     private int               minY;
     private int               maxY;
+    private int               radius;
+    private boolean           circle;
 
     private Point min;
     private Point max;
@@ -120,6 +123,16 @@ public class Zone
         {
             center.x /= points.size();
             center.z /= points.size();
+        }
+        if (points.size() == 1)
+        {
+            circle = true;
+            radius = data.getInt(RADIUS);
+            min.x = center.x - radius;
+            min.z = center.z - radius;
+            max.x = center.x + radius;
+            max.z = center.z + radius;
+            radius *= radius;
         }
         if (points.size() == 2)
         {
@@ -299,6 +312,15 @@ public class Zone
         if (loc.getY() < minY || loc.getY() > maxY)
             return false;
 
+        // Circle bounds
+        if (circle)
+        {
+            double dx = loc.getX() - center.x;
+            double dz = loc.getZ() - center.z;
+            return dx * dx + dz * dz < radius;
+        }
+
+        // Polygon bounds
         boolean contained = false;
         int num = points.size();
         for (int i = 0, j = num - 1; i < num; j = i++)

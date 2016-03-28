@@ -1,5 +1,6 @@
 package com.sucy.minenight.nms.v1_9_R1;
 
+import com.sucy.minenight.Minenight;
 import com.sucy.minenight.hologram.display.LineData;
 import com.sucy.minenight.hologram.display.line.HologramLine;
 import com.sucy.minenight.hologram.display.line.ItemLine;
@@ -7,7 +8,7 @@ import com.sucy.minenight.hologram.display.line.TextLine;
 import com.sucy.minenight.log.Logger;
 import com.sucy.minenight.nms.NMSEntityBase;
 import com.sucy.minenight.nms.NMSManager;
-import com.sucy.minenight.nms.v1_9_R1.potion.PotionInjector;
+import com.sucy.minenight.util.config.parse.DataSection;
 import com.sucy.minenight.util.reflect.Reflection;
 import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
@@ -62,9 +63,19 @@ public class NMSManager_19
     /**
      * Overrides potion effects
      */
-    public void overridePotions()
+    public void overrideVanilla()
     {
-        PotionInjector.inject();
+        try
+        {
+            DataSection data = Minenight.getConfigData("stats", true, true);
+            VanillaManipulator.updatePotions();
+            VanillaManipulator.updateStackSize(data.getSection("items"));
+            VanillaManipulator.updateStrengths(data.getSection("blocks"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     /**

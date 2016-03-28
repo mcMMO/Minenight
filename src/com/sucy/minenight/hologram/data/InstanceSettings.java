@@ -49,7 +49,7 @@ public class InstanceSettings
      */
     public InstanceSettings(DataSection data, String key, String subKey)
     {
-        ticks = data.getSection("ticks").getInt(key);
+        ticks = data.getSection(key).getInt("ticks");
         format = TextFormatter.colorStringList(data.getSection(key).getList(subKey));
     }
 

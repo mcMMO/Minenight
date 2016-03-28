@@ -1,59 +1,388 @@
-ticks:
-  hurt: 20
-  heal: 20
-  death: 1200
+animations:
+  safe:
+    ticks: 20
+    format:
+    - "&a"
+    - "&2"
+  unsafe:
+    ticks: 20
+    format:
+    - "&c"
+    - "&4"
+  enchanted:
+    ticks: 20
+    format:
+    - "&b"
+    - "&1"
+items:
+  player:
+  - "{item:name}"
+  entity:
+  - "{item:name}"
 hurt:
+  ticks: 20
   player:
-  - &c{value}
+  - "&c{value}"
   entity:
-  - &c{value}
+  - "&c{value}"
   personal:
-  - &e{value}
+  - "&e{value}"
 heal:
+  ticks: 20
   player:
-  - &a{value}
+  - "&a{value}"
   entity:
-  - &a{value}
+  - "&a{value}"
   personal:
-  - &a{value}
+  - "&a{value}"
 death:
+  ticks: 1200
   player:
-  - {skull:killer}
-  - &f☠ &emurder &f☠
-  - &f{killer}
-  - &f&m{player}
+  - "{item:skull_item:3:killer}"
+  - "&f☠ &eMurder &f☠"
+  - "&f{killer}"
+  - "&f&m{player}"
   entity:
-  - {skull:player}
-  - &f☠ &edeath &f☠
-  - &f{entity}
-  - &f&m{player}
+  - "{item:skull_item:3:player}"
+  - "&f☠ &eDeath &f☠"
+  - "&f&m{player}"
 identity:
   percent: 20
   format:
-    above: &a
-    below: &c
+    above: "&a"
+    below: "&c"
   proportional:
     player: 100
-    entity: {healthmax}
+    entity: {health}*100/{life}
   player:
-  - {format}{name}
-  - &f{health} {format}❤
+  - "{format}{name}"
+  - "&f{health} {format}❤"
   entity:
-  - &f{health} {format}❤
-holograms:
-  hologramone:
-    world: world
-    x: 11
-    y: 70
-    z: 29
+  - "&f{health} {format}❤"
+  tamed:
+  - "{format}{name}"
+  - "&f{health} {format}❤"
+  boss:
+  - "&e★ &f{name} &e★"
+  - "&f{health} &e❤"
+display:
+  AdventureWorldList:
+    world: Adventure
+    x: 84.5
+    y: 92
+    z: 94.5
     format:
-    - {skull:Eniripsa96}
-    - &fHologram
-  hologramtwo:
-    world: world
-    x: 13
-    y: 70
-    z: 29
+    - "&f✪ &eWorlds &f✪"
+    - "&f{player} right click on"
+    - "&fchests to open menus."
+    - ""
+    - "&f★ &e{online}        Total"
+    - "&f★ &e{online:Adventure} Adventure"
+    - "&f★ &e{online:Survival}    Survival"
+    - "&f★ &e{online:Fight}        Fight"
+  AdventureWorldSelectionOne:
+    world: Adventure
+    x: 87.5
+    y: 89.5
+    z: 94.5
     format:
-    - {item:diamond_sword}
-    - &fHologram Two
+    - "&eSelect World"
+  AdventureWorldSelectionTwo:
+    world: Adventure
+    x: 84.5
+    y: 89.5
+    z: 94.5
+    format:
+    - "&eSelect World"
+  AdventureWorldSelectionThree:
+    world: Adventure
+    x: 81.5
+    y: 89.5
+    z: 94.5
+    format:
+    - "&eSelect World"
+  AdventureWorldSkull:
+    world: Adventure
+    x: 88.5
+    y: 101.5
+    z: 57.5
+    format:
+    - "&f★ &cSkull of Knowledge &f★"
+    - "&fEnter command // for quick"
+    - "&faccess to all main menus."
+  AdventureWorldStarting:
+    world: Adventure
+    x: 86.5
+    y: 86
+    z: 51.5
+    format:
+    - "{item:wood_sword}"
+    - "&f✪ {animation:enchanted}{player} &f✪"
+    - "&fStart Adventure"
+  AdventureWorldDetails:
+    world: Adventure
+    x: 86.5
+    y: 86
+    z: 51.5
+    format:
+    - "&f★ {animation:safe}Welcome to Minenight &f★"
+    - "&fNew Resource Pack &a✔"
+    - "&f3D Models & Blocks &a✔"
+    - "&fAnimated Textures &a✔"
+  AdventureWorldIconOne:
+    world: Adventure
+    x: 84.5
+    y: 85
+    z: 51.5
+    format:
+    - "{item:nether_star}"
+  AdventureWorldIconTwo:
+    world: Adventure
+    x: 88.5
+    y: 86.5
+    z: 54.5
+    format:
+    - "{item:nether_star}"
+  AdventureWorldIconThree:
+    world: Adventure
+    x: 85.5
+    y: 85.5
+    z: 57.5
+    format:
+    - "{item:nether_star}"
+  AdventureWorldIconFour:
+    world: Adventure
+    x: 87.5
+    y: 86
+    z: 59.5
+    format:
+    - "{item:nether_star}"
+  AdventureArenaTreasureBoxOne:
+    world: Adventure
+    x: 336
+    y: 5.5
+    z: 28.5
+    format:
+    - "&f❖ {animation:enchanted}Treasure Box &f❖"
+  AdventureArenaTreasureBoxTwo:
+    world: Adventure
+    x: 320
+    y: 5.5
+    z: 188.5
+    format:
+    - "&f❖ {animation:enchanted}Treasure Box &f❖"
+  FightWorldDemonicMerchant:
+    world: Fight
+    x: 21.5
+    y: 49
+    z: 36.5
+    format:
+    - "&eDemonic Merchant"
+  FightWorldBank:
+    world: Fight
+    x: 40.5
+    y: 47
+    z: 20.5
+    format:
+    - "{item:gold_nugget}"
+    - "&e{player}'s Bank"
+  SurvivalEncampmentSpawn:
+    world: Survival
+    x: 2047.5
+    y: 38.5
+    z: 2047.5
+    format:
+    - "{item:skull_item:3}"
+    - "&f★ {animation:safe}Rogue Encampment &f★"
+    - "&fYou are safe from monsters."
+    - "&fTrade coins with villagers."
+  SurvivalEncampmentBank:
+    world: Survival
+    x: 2026.5
+    y: 38
+    z: 2040.5
+    format:
+    - "{item:gold_nugget}"
+    - "&e{player}'s Bank"
+  SurvivalEncampmentWilderness:
+    world: Survival
+    x: 2036.5
+    y: 38.5
+    z: 2047.5
+    format:
+    - "{item:skull_item:2}"
+    - "&f★ {animation:unsafe}Wilderness &f★"
+    - "&fCan harm others here."
+    - "&fKeep items on death."
+  SurvivalEncampmentWeapon:
+    world: Survival
+    x: 2047.5
+    y: 38
+    z: 2054.5
+    format:
+    - "{item:wood_sword}"
+    - "&eWeapon Merchant"
+  SurvivalEncampmentArmor:
+    world: Survival
+    x: 2054.5
+    y: 38
+    z: 2047.5
+    format:
+    - "{item:leather_chestplate}"
+    - "&eArmor Merchant"
+  SurvivalEncampmentUtility:
+    world: Survival
+    x: 2047.5
+    y: 38
+    z: 2040.5
+    format:
+    - "{item:wood_axe}"
+    - "&eUtility Merchant"
+  SurvivalEncampmentGeneral:
+    world: Survival
+    x: 2016.5
+    y: 38
+    z: 1999.5
+    format:
+    - "{item:fishing_rod}"
+    - "&eGeneral Merchant"
+  SurvivalEncampmentMaterial:
+    world: Survival
+    x: 2029.5
+    y: 38
+    z: 2059.5
+    format:
+    - "{item:quartz}"
+    - "&eMaterial Merchant"
+  SurvivalEncampmentPet:
+    world: Survival
+    x: 2057.5
+    y: 37
+    z: 2026.5
+    format:
+    - "{item:monster_egg:120}"
+    - "&ePet Merchant"
+  SurvivalEncampmentPotions:
+    world: Survival
+    x: 2091.5
+    y: 44
+    z: 1983.5
+    format:
+    - "{item:exp_bottle}"
+    - "&ePotions Merchant"
+  SurvivalEncampmentQuests:
+    world: Survival
+    x: 2002.5
+    y: 40
+    z: 2075.5
+    format:
+    - "{item:enchanted_book}"
+    - "&f✪ {animation:enchanted}Quest Master &f✪"
+  SurvivalEncampmentRewards:
+    world: Survival
+    x: 2042.5
+    y: 37
+    z: 2052.5
+    format:
+    - "{item:emerald}"
+    - "&f❖ {animation:enchanted}Daily Rewards &f❖"
+  SurvivalEncampmentVault:
+    world: Survival
+    x: 2042.5
+    y: 37
+    z: 2042.5
+    format:
+    - "{item:diamond}"
+    - "&f❖ {animation:enchanted}Upgrade Vault &f❖"
+  SurvivalFortressSpawn:
+    world: Survival
+    x: 386.5
+    y: 32.5
+    z: 2050.5
+    format:
+    - "{item:skull_item:3}"
+    - "&f★ {animation:safe}Crystal Fortress &f★"
+    - "&fYou are safe from monsters."
+    - "&fTrade items with villagers."
+  SurvivalFortressWeapon:
+    world: Survival
+    x: 388.5
+    y: 32
+    z: 2076.5
+    format:
+    - "{item:ironsword}"
+    - "&eWeapon Merchant"
+  SurvivalFortressArmor:
+    world: Survival
+    x: 384.5
+    y: 32
+    z: 2076.5
+    format:
+    - "{item:iron_chestplate}"
+    - "&eArmor Merchant"
+  SurvivalFortressUtility:
+    world: Survival
+    x: 360.5
+    y: 32
+    z: 2048.5
+    format:
+    - "{item:iron_pickaxe}"
+    - "&eUtility Merchant"
+  SurvivalFortressMaterial:
+    world: Survival
+    x: 388.5
+    y: 32
+    z: 2024.5
+    format:
+    - "{item:quartz}"
+    - "&eMaterial Merchant"
+  SurvivalFortressGeneral:
+    world: Survival
+    x: 388.5
+    y: 32
+    z: 2024.5
+    format:
+    - "{item:fishing_rod}"
+    - "&eGeneral Merchant"
+  SurvivalFortressRewards:
+    world: Survival
+    x: 404.5
+    y: 31
+    z: 2044.5
+    format:
+    - "{item:emerald}"
+    - "&f❖ {animation:enchanted}Daily Rewards &f❖"
+  SurvivalFortressVault:
+    world: Survival
+    x: 404.5
+    y: 31
+    z: 2056.5
+    format:
+    - "{item:diamond}"
+    - "&f❖ {animation:enchanted}Upgrade Vault &f❖"
+  SurvivalFortressWilderness:
+    world: Survival
+    x: 418.5
+    y: 32.5
+    z: 2050.5
+    format:
+    - "{item:skull_item:2}"
+    - "&f★ {animation:unsafe}Wilderness &f★"
+    - "&fCan harm others here."
+    - "&fKeep items on death."
+  SurvivalFortressQuests:
+    world: Survival
+    x: 369.5
+    y: 195
+    z: 2058.5
+    format:
+    - "{item:enchanted_book}"
+    - "&f✪ {animation:enchanted}Quest Master &f✪"
+  SurvivalFortressDungeons:
+    world: Survival
+    x: 386.5
+    y: 23
+    z: 2050.5
+    format:
+    - "{item:enchanted_book}"
+    - "&f✪ {animation:unsafe}Dungeon Master &f✪"

@@ -19,7 +19,7 @@ public interface NMSManager
     /**
      * Overrides potion effects
      */
-    public void overridePotions();
+    public void overrideVanilla();
 
     /**
      * Gets the stats file for a given player using their ID

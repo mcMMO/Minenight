@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.data.TameSettings
+ * com.sucy.minenight.pet.PetData
  *
  * The MIT License (MIT)
  *
@@ -24,29 +24,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.world.data;
+package com.sucy.minenight.pet;
 
-import com.sucy.minenight.util.config.parse.DataSection;
+import com.sucy.minenight.util.Conversion;
+import com.sucy.minenight.world.Worlds;
+import com.sucy.minenight.world.data.TameSettings;
+import org.bukkit.entity.Entity;
 
-public class TameSettings
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
+public class PetData
 {
-    public final int limit;
-    public final int respawn;
-    public final boolean follow;
-    public final boolean teleport;
-    public final boolean protect;
+    private HashMap<String, Integer> counts = new HashMap<String, Integer>();
 
-    public TameSettings(DataSection data)
+    private ArrayList<UUID> pets = new ArrayList<UUID>();
+
+    public void tame(Entity entity)
     {
-        limit = data.getInt("limit");
-        respawn = data.getInt("respawn");
-        follow = data.getBoolean("follow");
-        teleport = data.getBoolean("teleport");
-        protect = data.getBoolean("protect");
+        String name = Conversion.getConfigName(entity);
+        TameSettings settings = Worlds.getSettings().getTameSettings(name);
+        if (settings == null || settings.limit <= getCount(name))
+            return;
+
+        counts.put(name, getCount(name));
+        pets.add(entity.getUniqueId());
     }
 
-    public boolean canRespawn()
+    private int getCount(String key)
     {
-        return respawn > 0;
+        if (counts.containsKey(key))
+            return counts.get(key);
+        else
+            return 0;
     }
 }

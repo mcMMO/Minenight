@@ -30,6 +30,7 @@ import com.sucy.minenight.Minenight;
 import com.sucy.minenight.util.config.parse.DataSection;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -53,7 +54,7 @@ public class Economy
         DataSection config = Minenight.getConfigData("economy", false, false);
 
         for (String key : config.keys())
-            currencyTypes.put(key, new CurrencyType(config.getSection(key)));
+            currencyTypes.put(key, new CurrencyType(key, config.getSection(key)));
     }
 
     /**
@@ -126,8 +127,24 @@ public class Economy
     /**
      * @return available types of currencies;
      */
-    public static Set<String> getTypes()
+    public static Set<String> getTypeNames()
     {
         return currencyTypes.keySet();
+    }
+
+    /**
+     * @return all available types of currency
+     */
+    public static Collection<CurrencyType> getTypes()
+    {
+        return currencyTypes.values();
+    }
+
+    /**
+     * @return all loaded PlayerFunds data
+     */
+    public static Collection<PlayerFunds> getFunds()
+    {
+        return playerfunds.values();
     }
 }

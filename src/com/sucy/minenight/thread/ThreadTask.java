@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.data.TameSettings
+ * com.sucy.minenight.thread.ThreadTask
  *
  * The MIT License (MIT)
  *
@@ -24,29 +24,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.world.data;
+package com.sucy.minenight.thread;
 
-import com.sucy.minenight.util.config.parse.DataSection;
-
-public class TameSettings
+/**
+ * A task that can be added to the main thread
+ */
+public abstract class ThreadTask implements Runnable
 {
-    public final int limit;
-    public final int respawn;
-    public final boolean follow;
-    public final boolean teleport;
-    public final boolean protect;
+    private int delay;
 
-    public TameSettings(DataSection data)
+    /**
+     * Makes a task that runs immediately
+     */
+    public ThreadTask()
     {
-        limit = data.getInt("limit");
-        respawn = data.getInt("respawn");
-        follow = data.getBoolean("follow");
-        teleport = data.getBoolean("teleport");
-        protect = data.getBoolean("protect");
+        delay = 0;
     }
 
-    public boolean canRespawn()
+    /**
+     * Makes a task that runs after a delay
+     *
+     * @param delay delay in ticks
+     */
+    public ThreadTask(int delay)
     {
-        return respawn > 0;
+        this.delay = delay;
+    }
+
+    /**
+     * Ticks the task, checking if it should run
+     *
+     * @return true if should run
+     */
+    public boolean tick()
+    {
+        return --delay <= 0;
     }
 }

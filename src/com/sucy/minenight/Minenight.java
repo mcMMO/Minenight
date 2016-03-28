@@ -37,6 +37,7 @@ import com.sucy.minenight.nms.NBT;
 import com.sucy.minenight.nms.NMS;
 import com.sucy.minenight.permission.Permissions;
 import com.sucy.minenight.protection.Protection;
+import com.sucy.minenight.thread.MainThread;
 import com.sucy.minenight.util.ListenerUtil;
 import com.sucy.minenight.util.commands.CommandManager;
 import com.sucy.minenight.util.config.Config;
@@ -57,6 +58,11 @@ import java.util.logging.Handler;
 public class Minenight extends JavaPlugin
 {
     private static Minenight singleton;
+
+    /**
+     * Main task thread of the plugin
+     */
+    public static MainThread mainThread;
 
     /**
      * @return reference to the plugin instance or null if not enabled
@@ -112,6 +118,8 @@ public class Minenight extends JavaPlugin
 
     private boolean enabled = false;
 
+    private DataSection config;
+
     /**
      * Sets up standalone utilites and logging filter injections
      * when created (before world loading)
@@ -120,8 +128,13 @@ public class Minenight extends JavaPlugin
     {
         singleton = this;
 
+        mainThread = new MainThread();
+
+        config = getConfigData("config", true, true);
+        DataSection segments = config.getSection("plugins");
+
         // Initialize logging config data
-        Logger.loadLevels(getConfigData("config", true, true).getSection("logging"));
+        Logger.loadLevels(config.getSection("logging"));
 
         // Set up standalone utilities
         Reflection.initialize();
@@ -130,17 +143,20 @@ public class Minenight extends JavaPlugin
         VersionManager.initialize();
 
         // Restrict server logging
-        //stopLogging();
+        stopLogging();
 
         // Load utilities related to Bukkit API
         uuidUtil = new PlayerUUIDs(this);
 
         // Create segments
-        worlds = new Worlds(getConfigData("mechanics", true, true));
-        permissions = new Permissions();
-        economy = new Economy();
+        if (segments.getBoolean("worlds"))
+            worlds = new Worlds(getConfigData("mechanics", true, true));
+        if (segments.getBoolean("groups"))
+            permissions = new Permissions();
+        if (segments.getBoolean("economy"))
+            economy = new Economy();
 
-        NMS.getManager().overridePotions();
+        NMS.getManager().overrideVanilla();
     }
 
     /**
@@ -155,12 +171,18 @@ public class Minenight extends JavaPlugin
         }
         enabled = true;
 
+        DataSection segments = config.getSection("plugins");
+
         // Create segments that were unable to do so on startup
-        protection = new Protection();
-        if (NMS.isSupported())
+        if (segments.getBoolean("protection"))
+            protection = new Protection();
+        if (NMS.isSupported() && segments.getBoolean("holograms"))
             hologram = new Holograms();
 
-        ListenerUtil.register(new DataListener());
+        if (segments.getBoolean("database"))
+            ListenerUtil.register(new DataListener());
+
+        mainThread.start();
     }
 
     /**
@@ -175,12 +197,27 @@ public class Minenight extends JavaPlugin
         }
         enabled = false;
 
+        mainThread.interrupt();
+        try
+        {
+            mainThread.join();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
         // Clean up segments
-        hologram.cleanup();
-        protection.cleanup();
-        economy.cleanup();
-        permissions.cleanup();
-        worlds.cleanup();
+        if (hologram != null)
+            hologram.cleanup();
+        if (protection != null)
+            protection.cleanup();
+        if (economy != null)
+            economy.cleanup();
+        if (permissions != null)
+            permissions.cleanup();
+        if (worlds != null)
+            worlds.cleanup();
 
         // Clean up utilities
         uuidUtil.save();

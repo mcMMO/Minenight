@@ -1,10 +1,15 @@
-moneyone:
-  symbol: ✪
-  initial: 0.00
+Donated:
+  minimum: 0.00
+  maximum: 1000000.00
+Attributes:
   minimum: 0.00
   maximum: 100.00
-moneytwo:
-  symbol: ❖
-  initial: 0.00
+Soul:
   minimum: 0.00
   maximum: 100.00
+  incremental:
+    value: 0.01
+    ticks: 20
+  drop:
+    players: 100.00
+    entity: 10.00

@@ -5,13 +5,34 @@
 #   2 is verbose logging,
 #   3 is excessive logging.
 logging:
-  # Messages during initialization.
-  setup: 0
-  # Messages for zone management under protection.
-  zone: 0
-  # Messages for hologram management.
-  hologram: 0
   # Messages from the server.
   server: 0
   # Messages from vanilla minecraft.
   minecraft: 0
+  # Messages during initialization.
+  setup: 0
+  # Messages for database management.
+  database: 0
+  # Messages for economies.
+  economy: 0
+  # Messages for group management.
+  groups: 0
+  # Messages for holograms.
+  holograms: 0
+  # Messages for messages, lol.
+  language: 0
+  # Messages for zone management.
+  protection: 0
+  # Messages for scoreboards.
+  scoreboard: 0
+  # Messages for world configuration.
+  worlds: 0
+plugins:
+  database: true
+  economy: true
+  groups: true
+  holograms: true
+  language: true
+  protection: true
+  scoreboard: true
+  worlds: true

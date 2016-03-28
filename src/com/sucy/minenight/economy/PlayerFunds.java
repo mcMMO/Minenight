@@ -43,8 +43,8 @@ public class PlayerFunds
      */
     public PlayerFunds(JSONObject json)
     {
-        for (String type : Economy.getTypes())
-            funds.put(type, Economy.getCurrencyType(type).initial);
+        for (String type : Economy.getTypeNames())
+            funds.put(type, 0f);
 
         if (json == null) return;
 
@@ -65,19 +65,6 @@ public class PlayerFunds
         if (!funds.containsKey(type))
             return 0;
         return funds.get(type);
-    }
-
-    /**
-     * Gets the player's current balance formatted with
-     * the currency's symbol.
-     *
-     * @param type type of currency
-     *
-     * @return formatted current balance
-     */
-    public String getFormattedFunds(String type)
-    {
-        return (int) getFunds(type) + Economy.getCurrencyType(type).symbol;
     }
 
     /**

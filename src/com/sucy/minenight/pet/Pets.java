@@ -1,6 +1,6 @@
 /**
  * MineNight
- * com.sucy.minenight.world.data.TameSettings
+ * com.sucy.minenight.pet.Pets
  *
  * The MIT License (MIT)
  *
@@ -24,29 +24,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sucy.minenight.world.data;
+package com.sucy.minenight.pet;
 
-import com.sucy.minenight.util.config.parse.DataSection;
-
-public class TameSettings
+public class Pets
 {
-    public final int limit;
-    public final int respawn;
-    public final boolean follow;
-    public final boolean teleport;
-    public final boolean protect;
-
-    public TameSettings(DataSection data)
-    {
-        limit = data.getInt("limit");
-        respawn = data.getInt("respawn");
-        follow = data.getBoolean("follow");
-        teleport = data.getBoolean("teleport");
-        protect = data.getBoolean("protect");
-    }
-
-    public boolean canRespawn()
-    {
-        return respawn > 0;
-    }
 }

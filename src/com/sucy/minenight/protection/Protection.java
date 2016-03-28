@@ -51,7 +51,7 @@ public class Protection
     private static final String ZONES  = "zones";
     private static final String FLAGS  = "flags";
     private static final String TICKS  = "ticks";
-    private static final String AMOUNT = "amount";
+    private static final String AMOUNT = "value";
 
     private FlagTask    flagTask;
     private EffectTimer hurtEffect;

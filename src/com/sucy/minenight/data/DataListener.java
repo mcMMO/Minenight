@@ -27,6 +27,7 @@
 package com.sucy.minenight.data;
 
 import com.sucy.minenight.Minenight;
+import com.sucy.minenight.thread.ThreadTask;
 import com.sucy.minenight.util.config.parse.JSONObject;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -65,13 +66,13 @@ public class DataListener implements Listener
     public void onQuit(PlayerQuitEvent event)
     {
         DataManager.snapshot(event.getPlayer());
-        new UnloadTask(event.getPlayer().getUniqueId()).runTaskLaterAsynchronously(Minenight.getPlugin(), 1);
+        Minenight.mainThread.addTask(new UnloadTask(event.getPlayer().getUniqueId()));
     }
 
     /**
      * Task for unloading player data asynchronously
      */
-    private class UnloadTask extends BukkitRunnable
+    private class UnloadTask extends ThreadTask
     {
         private UUID id;
 
@@ -80,6 +81,7 @@ public class DataListener implements Listener
          */
         public UnloadTask(UUID id)
         {
+            super(2);
             this.id = id;
         }
 

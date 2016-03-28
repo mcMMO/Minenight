@@ -49,7 +49,7 @@ public class NameSettings
      */
     public NameSettings(DataSection data, String key)
     {
-        proportion = data.getInt("proportional", -1);
+        proportion = data.getSection("proportional").getInt(key, -1);
         percent = data.getInt("percent", 20) / 100.0;
 
         DataSection colors = data.getSection("format");
@@ -59,6 +59,11 @@ public class NameSettings
         name = TextFormatter.colorString(data.getList(key).get(0));
     }
 
+    /**
+     * Defines global filters for the entity based on their current health
+     *
+     * @param entity entity to define for
+     */
     public void define(Damageable entity)
     {
         double ratio = entity.getHealth() / entity.getMaxHealth();
